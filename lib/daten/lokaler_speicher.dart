@@ -15,6 +15,7 @@ class LokalerSpeicher {
     final speicher = await SharedPreferences.getInstance();
 
     return TagesEintrag(
+      datum: DateTime.now().toString(), // NEU
       gewicht: speicher.getDouble(_gewichtSchluessel) ?? 80.0,
       wasser: speicher.getInt(_wasserSchluessel) ?? 0,
       schritte: speicher.getInt(_schritteSchluessel) ?? 0,

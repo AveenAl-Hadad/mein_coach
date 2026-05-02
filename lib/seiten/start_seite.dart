@@ -16,7 +16,7 @@ class _StartSeiteStatus extends State<StartSeite> {
   final LokalerSpeicher lokalerSpeicher = LokalerSpeicher();
   final TextEditingController eingabeController = TextEditingController();
 
-  TagesEintrag eintrag = TagesEintrag.standard();
+  TagesEintrag eintrag = TagesEintrag.heute();
   bool wirdGeladen = true;
 
   @override
@@ -64,7 +64,7 @@ class _StartSeiteStatus extends State<StartSeite> {
   /// Setzt alle Tageswerte zurück.
   Future<void> tagZuruecksetzen() async {
     setState(() {
-      eintrag = TagesEintrag.standard();
+      eintrag = TagesEintrag.heute();
     });
 
     await datenSpeichern();
