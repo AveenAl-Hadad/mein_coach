@@ -1,5 +1,7 @@
+/// Datenmodell für einen einzelnen Tag.
+/// Diese Klasse beschreibt, welche Daten pro Tag gespeichert werden.
 class TagesEintrag {
-  String datum; // NEU
+  String datum;
   double gewicht;
   int wasser;
   int schritte;
@@ -13,17 +15,47 @@ class TagesEintrag {
     required this.mahlzeiten,
   });
 
+  /// Erstellt einen neuen Eintrag für heute.
   factory TagesEintrag.heute() {
-    final heute = DateTime.now();
-    final datumText =
-        "${heute.year}-${heute.month}-${heute.day}";
-
     return TagesEintrag(
-      datum: datumText,
+      datum: heutigesDatum(),
       gewicht: 80.0,
       wasser: 0,
       schritte: 0,
       mahlzeiten: [],
     );
+  }
+
+  /// Wandelt den Eintrag in eine Map um.
+  /// Das brauchen wir, damit wir ihn speichern können.
+  Map<String, dynamic> zuMap() {
+    return {
+      'datum': datum,
+      'gewicht': gewicht,
+      'wasser': wasser,
+      'schritte': schritte,
+      'mahlzeiten': mahlzeiten,
+    };
+  }
+
+  /// Erstellt einen TagesEintrag aus gespeicherten Daten.
+  factory TagesEintrag.vonMap(Map<String, dynamic> map) {
+    return TagesEintrag(
+      datum: map['datum'],
+      gewicht: map['gewicht'],
+      wasser: map['wasser'],
+      schritte: map['schritte'],
+      mahlzeiten: List<String>.from(map['mahlzeiten']),
+    );
+  }
+
+  /// Gibt das heutige Datum als Text zurück.
+  static String heutigesDatum() {
+    final heute = DateTime.now();
+
+    final monat = heute.month.toString().padLeft(2, '0');
+    final tag = heute.day.toString().padLeft(2, '0');
+
+    return '${heute.year}-$monat-$tag';
   }
 }
