@@ -44,5 +44,10 @@ class AppStyle {
   static const Icon addIcon = Icon(Icons.add_circle);
   static const Icon historieIcon = Icon(Icons.history);
   static const Icon weiterIcon = Icon(Icons.arrow_forward_ios);
- 
+  static const Icon heuteIcon = Icon(Icons.today);
+  static const Icon navigationHistorieIcon = Icon(Icons.history);
+
+  // String
+  static const String heuteText = 'Heute';
+  static const String historieText = 'Historie';
 }

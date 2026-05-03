@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../seiten/start_seite.dart';
+import '../seiten/haupt_navigation.dart';
 
 /// Hauptklasse der App.
 /// Hier werden Design, Titel und Startseite festgelegt.
@@ -15,7 +15,7 @@ class MeineApp extends StatelessWidget {
         colorSchemeSeed: Colors.green,
         useMaterial3: true,
       ),
-      home: const StartSeite(),
+      home: const HauptNavigation(),
     );
   }
 }

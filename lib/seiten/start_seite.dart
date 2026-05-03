@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
-import 'historie_seite.dart';
+
 
 /// Startseite der App.
 /// Zeigt die Tagesdaten und erlaubt Bearbeitung.
@@ -128,18 +128,6 @@ class _StartSeiteStatus extends State<StartSeite> {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-              tooltip: 'Historie öffnen',
-              icon: AppStyle.historieIcon,
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HistorieSeite(),
-                  ),
-                );
-              },
-            ),
           IconButton(
             tooltip: 'Tag zurücksetzen',
             icon: AppStyle.resetIcon,
