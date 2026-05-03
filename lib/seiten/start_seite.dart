@@ -30,22 +30,22 @@ class _StartSeiteStatus extends State<StartSeite> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Gewicht eingeben'),
+         title: const Text(AppTexte.gewichtEingebenTitel),
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
             decoration: const InputDecoration(
-              hintText: 'z.B. 80.5',
+              hintText: AppTexte.gewichtEingebenHinweis,
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Abbrechen'),
+              child: const Text(AppTexte.abbrechen),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context, controller.text),
-              child: const Text('Speichern'),
+              child: const Text(AppTexte.speichern),
             ),
           ],
         );

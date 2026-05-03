@@ -24,4 +24,8 @@ class AppTexte {
   static const String keineDiagrammDaten = 'Keine Daten für Diagramm';
   static const String gewichtDiagrammTitel = 'Gewichtsverlauf';
   
+  static const String gewichtEingebenTitel = 'Gewicht eingeben';
+  static const String gewichtEingebenHinweis = 'z.B. 80.5';
+  static const String abbrechen = 'Abbrechen';
+  static const String speichern = 'Speichern';
 }
