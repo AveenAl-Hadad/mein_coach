@@ -5,6 +5,7 @@ import '../style/app_style.dart';
 import '../widgets/tracking_karte.dart';
 import '../widgets/mahlzeit_karte.dart';
 import '../widgets/mahlzeit_eingabe.dart';
+import '../style/app_texte.dart';
 
 /// Startseite der App.
 /// Zeigt die Tagesdaten und erlaubt Bearbeitung.
@@ -121,7 +122,7 @@ class _StartSeiteStatus extends State<StartSeite> {
       appBar: AppBar(
         title: Column(
           children: [
-            const Text('Mein Coach'),
+           const Text(AppTexte.appName),
             Text(
               eintrag.datum,
               style: AppStyle.kleinText,
@@ -141,7 +142,7 @@ class _StartSeiteStatus extends State<StartSeite> {
         padding: AppStyle.standardPadding,
         children: [
           const Text(
-            'Heute',
+            AppTexte.heute,
             style: AppStyle.titelGross,
           ),
 
