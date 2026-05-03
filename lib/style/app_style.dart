@@ -55,4 +55,18 @@ class AppStyle {
 // Diagramm
   static const double diagrammHoehe = 200;
   static const double diagrammLinienBreite = 3;
+
+  /// Helles Theme
+  static ThemeData hellesTheme = ThemeData(
+    colorSchemeSeed: Colors.green,
+    brightness: Brightness.light,
+    useMaterial3: true,
+  );
+
+  /// Dunkles Theme
+  static ThemeData dunklesTheme = ThemeData(
+    colorSchemeSeed: Colors.green,
+    brightness: Brightness.dark,
+    useMaterial3: true,
+  );
 }

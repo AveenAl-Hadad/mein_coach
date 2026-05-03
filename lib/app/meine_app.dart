@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mein_coach/style/app_style.dart';
 import 'package:provider/provider.dart';
 
 import '../seiten/haupt_navigation.dart';
 import '../provider/tages_provider.dart';
 import '../provider/historie_provider.dart';
+
 
 /// Hauptklasse der App.
 /// Hier werden Provider, Design und Startseite festgelegt.
@@ -24,10 +26,9 @@ class MeineApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Mein Coach',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorSchemeSeed: Colors.green,
-          useMaterial3: true,
-        ),
+        theme: AppStyle.hellesTheme,
+        darkTheme: AppStyle.dunklesTheme,
+        themeMode: ThemeMode.system,
         home: const HauptNavigation(),
       ),
     );
