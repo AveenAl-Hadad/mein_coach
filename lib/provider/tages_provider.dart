@@ -29,10 +29,9 @@ class TagesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Setzt den heutigen Tag zurück.
+  /// Setzt den aktuell ausgewählten Tag zurück.
   Future<void> tagZuruecksetzen() async {
-    await _service.zuruecksetzen();
-    eintrag = TagesEintrag.heute();
+    eintrag = await _service.tagZuruecksetzen(eintrag.datum);
     notifyListeners();
   }
 

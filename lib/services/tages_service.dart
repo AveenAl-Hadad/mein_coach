@@ -52,9 +52,19 @@ class TagesService {
     await speichern(eintrag);
   }
 
-  Future<void> zuruecksetzen() async {
-    final neu = TagesEintrag.heute();
-    await speichern(neu);
+ /// Setzt einen bestimmten Tag zurück.
+  Future<TagesEintrag> tagZuruecksetzen(String datum) async {
+    final neuerEintrag = TagesEintrag(
+      datum: datum,
+      gewicht: 80.0,
+      wasser: 0,
+      schritte: 0,
+      mahlzeiten: [],
+    );
+
+    await speichern(neuerEintrag);
+
+    return neuerEintrag;
   }
   /// Setzt das Gewicht manuell.
   Future<void> gewichtSetzen(TagesEintrag eintrag, double neuesGewicht,) async {
