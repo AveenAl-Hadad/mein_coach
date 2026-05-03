@@ -21,8 +21,8 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
   bool wirdGeladen = true;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     tageLaden();
   }
 
