@@ -6,6 +6,7 @@ import '../style/app_texte.dart';
 import '../widgets/mahlzeit_eingabe.dart';
 import '../widgets/mahlzeit_karte.dart';
 import '../widgets/tracking_karte.dart';
+import '../widgets/gewicht_dialog.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -28,28 +29,7 @@ class _StartSeiteStatus extends State<StartSeite> {
 
     final eingabe = await showDialog<String>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-         title: const Text(AppTexte.gewichtEingebenTitel),
-          content: TextField(
-            controller: controller,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              hintText: AppTexte.gewichtEingebenHinweis,
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text(AppTexte.abbrechen),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, controller.text),
-              child: const Text(AppTexte.speichern),
-            ),
-          ],
-        );
-      },
+      builder: (context) => GewichtDialog(controller: controller),
     );
 
     if (eingabe == null) return;
