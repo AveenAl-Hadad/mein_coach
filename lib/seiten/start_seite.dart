@@ -27,7 +27,7 @@ class _StartSeiteStatus extends State<StartSeite> {
 
   /// Lädt gespeicherte Daten beim Start der App.
   Future<void> datenLaden() async {
-    final geladenerEintrag = await lokalerSpeicher.tagesEintragLaden();
+    final geladenerEintrag = await lokalerSpeicher.heutigenEintragLaden();
 
     setState(() {
       eintrag = geladenerEintrag;
@@ -37,7 +37,7 @@ class _StartSeiteStatus extends State<StartSeite> {
 
   /// Speichert aktuelle Daten lokal.
   Future<void> datenSpeichern() async {
-    await lokalerSpeicher.tagesEintragSpeichern(eintrag);
+    await lokalerSpeicher.heutigenEintragSpeichern(eintrag);
   }
 
   /// Fügt eine neue Mahlzeit hinzu.
