@@ -9,11 +9,13 @@ class TrackingKarte extends StatelessWidget {
   final IconData? icon;
   final VoidCallback? aktionPlus;
   final VoidCallback? aktionMinus;
+  final VoidCallback? beimTippen;
 
   const TrackingKarte({
     super.key,
     required this.titel,
     required this.untertitel,
+    this.beimTippen,
     this.icon,
     this.aktionPlus,
     this.aktionMinus,
@@ -24,6 +26,7 @@ class TrackingKarte extends StatelessWidget {
     return Card(
       child: ListTile(
         leading: icon == null ? null : Icon(icon),
+        onTap: beimTippen,
         title: Text(titel),
         subtitle: Text(untertitel),
         trailing: Row(

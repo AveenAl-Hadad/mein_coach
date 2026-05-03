@@ -56,4 +56,9 @@ class TagesService {
     final neu = TagesEintrag.heute();
     await speichern(neu);
   }
+  /// Setzt das Gewicht manuell.
+  Future<void> gewichtSetzen(TagesEintrag eintrag, double neuesGewicht,) async {
+    eintrag.gewicht = neuesGewicht;
+    await speichern(eintrag);
+  }
 }

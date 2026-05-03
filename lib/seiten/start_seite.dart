@@ -89,6 +89,48 @@ class _StartSeiteStatus extends State<StartSeite> {
     setState(() {});
   }
 
+  /// Öffnet Dialog zur Eingabe des Gewichts.
+  Future<void> gewichtEingeben() async {
+    final controller = TextEditingController();
+
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Gewicht eingeben'),
+          content: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              hintText: 'z.B. 80.5',
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Abbrechen'),
+            ),
+            TextButton(
+              onPressed: () =>
+                  Navigator.pop(context, controller.text),
+              child: const Text('Speichern'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result == null) return;
+
+    final wert = double.tryParse(result);
+
+    if (wert == null) return;
+
+    await service.gewichtSetzen(eintrag, wert);
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     if (wirdGeladen) {
@@ -127,12 +169,13 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           AppStyle.abstandMittel,
 
-          TrackingKarte(
-            titel: AppTexte.gewicht,
-            untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
-            aktionMinus: gewichtVerringern,
-            aktionPlus: gewichtErhoehen,
-          ),
+         TrackingKarte(
+          titel: AppTexte.gewicht,
+          untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
+          aktionMinus: gewichtVerringern,
+          aktionPlus: gewichtErhoehen,
+          beimTippen: gewichtEingeben, // NEU
+        ),
 
           TrackingKarte(
             titel: AppTexte.wasser,
