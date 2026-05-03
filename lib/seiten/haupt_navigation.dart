@@ -32,6 +32,8 @@ class _HauptNavigationStatus extends State<HauptNavigation> {
     return Scaffold(
       body: seiten[ausgewaehlterIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: AppStyle.navigationTyp,
+        iconSize: AppStyle.navigationIconGroesse,
         currentIndex: ausgewaehlterIndex,
         onTap: seiteWechseln,
         items: const [

@@ -50,4 +50,8 @@ class AppStyle {
   // String
   static const String heuteText = 'Heute';
   static const String historieText = 'Historie';
+
+  // Navigation
+  static const BottomNavigationBarType navigationTyp = BottomNavigationBarType.fixed;
+  static const double navigationIconGroesse = 24;
 }
