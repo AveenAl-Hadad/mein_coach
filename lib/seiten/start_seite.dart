@@ -3,6 +3,7 @@ import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
 import '../widgets/tracking_karte.dart';
+import '../widgets/mahlzeit_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die Tagesdaten und erlaubt Bearbeitung.
@@ -191,15 +192,9 @@ class _StartSeiteStatus extends State<StartSeite> {
          AppStyle.abstandMittel,
 
           for (int i = 0; i < eintrag.mahlzeiten.length; i++)
-            Card(
-              child: ListTile(
-                leading: AppStyle.mahlzeitIcon,
-                title: Text(eintrag.mahlzeiten[i]),
-                trailing: IconButton(
-                  icon: AppStyle.loeschenIcon,
-                  onPressed: () => mahlzeitLoeschen(i),
-                ),
-              ),
+            MahlzeitKarte(
+              mahlzeit: eintrag.mahlzeiten[i],
+              beimLoeschen: () => mahlzeitLoeschen(i),
             ),
         ],
       ),
