@@ -4,6 +4,7 @@ import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
 import '../widgets/tracking_karte.dart';
 import '../widgets/mahlzeit_karte.dart';
+import '../widgets/mahlzeit_eingabe.dart';
 
 /// Startseite der App.
 /// Zeigt die Tagesdaten und erlaubt Bearbeitung.
@@ -172,21 +173,9 @@ class _StartSeiteStatus extends State<StartSeite> {
             style: AppStyle.titelMittel,
           ),
 
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: eingabeController,
-                  decoration: const InputDecoration(
-                    hintText: 'z.B. Haferflocken mit Banane',
-                  ),
-                ),
-              ),
-              IconButton(
-                onPressed: mahlzeitHinzufuegen,
-                icon: AppStyle.addIcon,
-              ),
-            ],
+          MahlzeitEingabe(
+            controller: eingabeController,
+            beimHinzufuegen: mahlzeitHinzufuegen,
           ),
 
          AppStyle.abstandMittel,
