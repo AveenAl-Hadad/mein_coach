@@ -2,6 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
+import '../style/app_texte.dart';
 
 /// Diagramm für Gewichtsverlauf.
 /// Zeigt Gewicht über mehrere Tage.
@@ -16,8 +17,7 @@ class GewichtDiagramm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (tage.isEmpty) {
-      return const Text('Keine Daten für Diagramm');
-    }
+    return const Text(AppTexte.keineDiagrammDaten);    }
 
     final spots = tage.asMap().entries.map((entry) {
       final index = entry.key.toDouble();
@@ -26,7 +26,7 @@ class GewichtDiagramm extends StatelessWidget {
     }).toList();
 
     return SizedBox(
-      height: 200,
+      height: AppStyle.diagrammHoehe,
       child: LineChart(
         LineChartData(
           gridData: FlGridData(show: true),
@@ -37,7 +37,7 @@ class GewichtDiagramm extends StatelessWidget {
               spots: spots,
               isCurved: true,
               color: AppStyle.hauptFarbe,
-              barWidth: 3,
+              barWidth: AppStyle.diagrammLinienBreite,
               dotData: FlDotData(show: true),
             ),
           ],

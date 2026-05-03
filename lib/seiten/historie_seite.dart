@@ -56,6 +56,11 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
             AppTexte.gespeicherteTage,
             style: AppStyle.titelGross,
           ),
+          const Text(
+            AppTexte.gewichtDiagrammTitel,
+            style: AppStyle.titelMittel,
+          ),
+          AppStyle.abstandKlein,
 
           AppStyle.abstandMittel,
           GewichtDiagramm(tage:   tage),

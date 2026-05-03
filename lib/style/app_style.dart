@@ -50,4 +50,8 @@ class AppStyle {
   // Navigation
   static const BottomNavigationBarType navigationTyp = BottomNavigationBarType.fixed;
   static const double navigationIconGroesse = 24;
+
+// Diagramm
+  static const double diagrammHoehe = 200;
+  static const double diagrammLinienBreite = 3;
 }

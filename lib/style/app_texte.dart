@@ -20,4 +20,8 @@ class AppTexte {
 
   static const String tagZuruecksetzen = 'Tag zurücksetzen';
   static const String historieOeffnen = 'Historie öffnen';
+
+  static const String keineDiagrammDaten = 'Keine Daten für Diagramm';
+  static const String gewichtDiagrammTitel = 'Gewichtsverlauf';
+  
 }
