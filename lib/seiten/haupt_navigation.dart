@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../style/app_style.dart';
 import 'start_seite.dart';
 import 'historie_seite.dart';
+import '../style/app_texte.dart';
 
 /// Hauptnavigation der App.
 /// Hier wird zwischen Heute und Historie gewechselt.
@@ -39,11 +40,11 @@ class _HauptNavigationStatus extends State<HauptNavigation> {
         items: const [
           BottomNavigationBarItem(
             icon: AppStyle.heuteIcon,
-            label: AppStyle.heuteText,
+            label: AppTexte.heute,
           ),
           BottomNavigationBarItem(
             icon: AppStyle.navigationHistorieIcon,
-            label: AppStyle.historieText,
+            label: AppTexte.historie,
           ),
         ],
       ),

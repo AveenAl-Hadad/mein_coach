@@ -47,10 +47,6 @@ class AppStyle {
   static const Icon heuteIcon = Icon(Icons.today);
   static const Icon navigationHistorieIcon = Icon(Icons.history);
 
-  // String
-  static const String heuteText = 'Heute';
-  static const String historieText = 'Historie';
-
   // Navigation
   static const BottomNavigationBarType navigationTyp = BottomNavigationBarType.fixed;
   static const double navigationIconGroesse = 24;

@@ -3,6 +3,7 @@ import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
 import 'tag_detail_seite.dart';
+import '../style/app_texte.dart';
 
 /// Zeigt alle gespeicherten TagesEinträge an.
 class HistorieSeite extends StatefulWidget {
@@ -44,21 +45,21 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Historie'),
+        title: const Text(AppTexte.historie),
         centerTitle: true,
       ),
       body: ListView(
         padding: AppStyle.standardPadding,
         children: [
           const Text(
-            'Gespeicherte Tage',
+            AppTexte.gespeicherteTage,
             style: AppStyle.titelGross,
           ),
 
           AppStyle.abstandMittel,
 
           if (tage.isEmpty)
-            const Text('Noch keine Tage gespeichert.'),
+            const Text(AppTexte.keineTage),
 
           for (final tag in tage)
             Card(

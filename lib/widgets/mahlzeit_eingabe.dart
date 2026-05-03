@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../style/app_style.dart';
+import '../style/app_texte.dart';
 
 /// Eingabefeld zum Hinzufügen einer neuen Mahlzeit.
 class MahlzeitEingabe extends StatelessWidget {
@@ -20,7 +21,7 @@ class MahlzeitEingabe extends StatelessWidget {
           child: TextField(
             controller: controller,
             decoration: const InputDecoration(
-              hintText: 'z.B. Haferflocken mit Banane',
+              hintText: AppTexte.mahlzeitHinweis,
             ),
           ),
         ),
