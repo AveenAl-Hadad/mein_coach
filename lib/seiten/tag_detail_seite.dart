@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mein_coach/style/app_texte.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
 import '../widgets/mahlzeit_karte.dart';
+import '../widgets/detail_karte.dart';
 
 /// Detailseite für einen gespeicherten Tag.
 /// Diese Seite zeigt alle Daten eines Tages.
@@ -30,26 +32,20 @@ class TagDetailSeite extends StatelessWidget {
 
           AppStyle.abstandMittel,
 
-          Card(
-            child: ListTile(
-              title: const Text('Gewicht'),
-              subtitle: Text('${tag.gewicht.toStringAsFixed(1)} kg'),
-            ),
-          ),
+         DetailKarte(
+          titel: AppTexte.gewicht,
+          wert: '${tag.gewicht.toStringAsFixed(1)} kg',
+        ),
 
-          Card(
-            child: ListTile(
-              title: const Text('Wasser'),
-              subtitle: Text('${tag.wasser} Gläser'),
-            ),
-          ),
+        DetailKarte(
+          titel: AppTexte.wasser,
+          wert: '${tag.wasser} Gläser',
+        ),
 
-          Card(
-            child: ListTile(
-              title: const Text('Schritte'),
-              subtitle: Text('${tag.schritte} Schritte'),
-            ),
-          ),
+        DetailKarte(
+          titel: AppTexte.schritte,
+          wert: '${tag.schritte} Schritte',
+        ),
 
           AppStyle.abstandGross,
 
