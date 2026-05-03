@@ -1,21 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Provider für das App-Theme.
-/// Verwaltet, ob die App hell oder dunkel angezeigt wird.
+/// Speichert, ob hell oder dunkel aktiv ist.
 class ThemeProvider extends ChangeNotifier {
+  static const String _themeSchluessel = 'theme_mode';
+
   ThemeMode themeMode = ThemeMode.system;
 
-  /// Wechselt zwischen hell und dunkel.
-  void themeWechseln() {
-    if (themeMode == ThemeMode.dark) {
+  bool get istDunkel => themeMode == ThemeMode.dark;
+
+  /// Lädt das gespeicherte Theme beim App-Start.
+  Future<void> themeLaden() async {
+    final speicher = await SharedPreferences.getInstance();
+    final gespeicherterWert = speicher.getString(_themeSchluessel);
+
+    if (gespeicherterWert == 'dark') {
+      themeMode = ThemeMode.dark;
+    } else if (gespeicherterWert == 'light') {
       themeMode = ThemeMode.light;
     } else {
-      themeMode = ThemeMode.dark;
+      themeMode = ThemeMode.system;
     }
 
     notifyListeners();
   }
 
-  /// Prüft, ob aktuell Dark Mode aktiv ist.
-  bool get istDunkel => themeMode == ThemeMode.dark;
+  /// Wechselt zwischen hell und dunkel und speichert die Auswahl.
+  Future<void> themeWechseln() async {
+    final speicher = await SharedPreferences.getInstance();
+
+    if (themeMode == ThemeMode.dark) {
+      themeMode = ThemeMode.light;
+      await speicher.setString(_themeSchluessel, 'light');
+    } else {
+      themeMode = ThemeMode.dark;
+      await speicher.setString(_themeSchluessel, 'dark');
+    }
+
+    notifyListeners();
+  }
 }
