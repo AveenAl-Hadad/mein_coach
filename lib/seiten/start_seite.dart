@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
-
+import '../widgets/tracking_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die Tagesdaten und erlaubt Bearbeitung.
@@ -145,46 +145,23 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           AppStyle.abstandMittel,
 
-          Card(
-            child: ListTile(
-              title: const Text('Gewicht'),
-              subtitle: Text('${eintrag.gewicht.toStringAsFixed(1)} kg'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: gewichtVerringern,
-                    icon: AppStyle.gewichtMinus,
-                  ),
-                  IconButton(
-                    onPressed: gewichtErhoehen,
-                    icon: AppStyle.gewichtPlus,
-                  ),
-                ],
-              ),
-            ),
+         TrackingKarte(
+            titel: 'Gewicht',
+            untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
+            aktionMinus: gewichtVerringern,
+            aktionPlus: gewichtErhoehen,
           ),
 
-          Card(
-            child: ListTile(
-              title: const Text('Wasser'),
-              subtitle: Text('${eintrag.wasser} Gläser'),
-              trailing: IconButton(
-                onPressed: wasserErhoehen,
-                icon: AppStyle.gewichtPlus,
-              ),
-            ),
+          TrackingKarte(
+            titel: 'Wasser',
+            untertitel: '${eintrag.wasser} Gläser',
+            aktionPlus: wasserErhoehen,
           ),
 
-          Card(
-            child: ListTile(
-              title: const Text('Schritte'),
-              subtitle: Text('${eintrag.schritte} Schritte'),
-              trailing: IconButton(
-                onPressed: schritteErhoehen,
-                icon: AppStyle.schritteIcon,
-              ),
-            ),
+          TrackingKarte(
+            titel: 'Schritte',
+            untertitel: '${eintrag.schritte} Schritte',
+            aktionPlus: schritteErhoehen,
           ),
 
         AppStyle.abstandGross,
