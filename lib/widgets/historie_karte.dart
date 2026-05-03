@@ -20,12 +20,7 @@ class HistorieKarte extends StatelessWidget {
     return Card(
       child: ListTile(
         title: Text(tag.datum),
-        subtitle: Text(
-          '${tag.gewicht.toStringAsFixed(1)} kg • '
-          '${tag.wasser} Gläser • '
-          '${tag.schritte} Schritte • '
-          '${tag.mahlzeiten.length} Mahlzeiten',
-        ),
+        subtitle: Text(tag.zusammenfassung()),
         trailing: AppStyle.weiterIcon,
         onTap: beimTippen,
       ),

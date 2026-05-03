@@ -58,4 +58,12 @@ class TagesEintrag {
 
     return '${heute.year}-$monat-$tag';
   }
+
+  /// Erstellt eine kurze Zusammenfassung für Listen.
+  String zusammenfassung() {
+    return '${gewicht.toStringAsFixed(1)} kg • '
+        '$wasser Gläser • '
+        '$schritte Schritte • '
+        '${mahlzeiten.length} Mahlzeiten';
+  }
 }
