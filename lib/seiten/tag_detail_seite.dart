@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
+import '../widgets/mahlzeit_karte.dart';
 
 /// Detailseite für einen gespeicherten Tag.
 /// Diese Seite zeigt alle Daten eines Tages.
@@ -63,12 +64,7 @@ class TagDetailSeite extends StatelessWidget {
             const Text('Keine Mahlzeiten gespeichert.'),
 
           for (final mahlzeit in tag.mahlzeiten)
-            Card(
-              child: ListTile(
-                leading: AppStyle.mahlzeitIcon,
-                title: Text(mahlzeit),
-              ),
-            ),
+            MahlzeitKarte(mahlzeit: mahlzeit),
         ],
       ),
     );
