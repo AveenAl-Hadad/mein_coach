@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../modelle/tages_eintrag.dart';
-import '../services/tages_service.dart';
+import 'package:provider/provider.dart';
+import '../provider/tages_provider.dart';
 import '../style/app_style.dart';
 import '../style/app_texte.dart';
 import '../widgets/mahlzeit_eingabe.dart';
@@ -8,7 +8,8 @@ import '../widgets/mahlzeit_karte.dart';
 import '../widgets/tracking_karte.dart';
 
 /// Startseite der App.
-/// Zeigt die Tagesdaten und erlaubt Bearbeitung.
+/// Zeigt die heutigen Daten und nutzt den TagesProvider
+/// für Laden, Speichern und Änderungen.
 class StartSeite extends StatefulWidget {
   const StartSeite({super.key});
 
@@ -18,82 +19,14 @@ class StartSeite extends StatefulWidget {
 
 class _StartSeiteStatus extends State<StartSeite> {
   final TextEditingController eingabeController = TextEditingController();
-  final TagesService service = TagesService();
 
-  TagesEintrag eintrag = TagesEintrag.heute();
-  bool wirdGeladen = true;
-
-  @override
-  void initState() {
-    super.initState();
-    datenLaden();
-  }
-
-  /// Lädt den gespeicherten Eintrag für heute.
-  Future<void> datenLaden() async {
-    final geladenerEintrag = await service.laden();
-
-    setState(() {
-      eintrag = geladenerEintrag;
-      wirdGeladen = false;
-    });
-  }
-
-  /// Fügt eine neue Mahlzeit hinzu.
-  Future<void> mahlzeitHinzufuegen() async {
-    await service.mahlzeitHinzufuegen(
-      eintrag,
-      eingabeController.text,
+  /// Öffnet einen Dialog, damit der Nutzer das Gewicht manuell eingeben kann.
+  Future<void> gewichtEingeben(TagesProvider provider) async {
+    final controller = TextEditingController(
+      text: provider.eintrag.gewicht.toStringAsFixed(1),
     );
 
-    eingabeController.clear();
-    setState(() {});
-  }
-
-  /// Löscht eine Mahlzeit.
-  Future<void> mahlzeitLoeschen(int index) async {
-    await service.mahlzeitLoeschen(eintrag, index);
-    setState(() {});
-  }
-
-  /// Setzt den heutigen Tag zurück.
-  Future<void> tagZuruecksetzen() async {
-    await service.zuruecksetzen();
-
-    setState(() {
-      eintrag = TagesEintrag.heute();
-    });
-  }
-
-  /// Erhöht das Gewicht.
-  Future<void> gewichtErhoehen() async {
-    await service.gewichtErhoehen(eintrag);
-    setState(() {});
-  }
-
-  /// Verringert das Gewicht.
-  Future<void> gewichtVerringern() async {
-    await service.gewichtVerringern(eintrag);
-    setState(() {});
-  }
-
-  /// Erhöht Wasser um ein Glas.
-  Future<void> wasserErhoehen() async {
-    await service.wasserErhoehen(eintrag);
-    setState(() {});
-  }
-
-  /// Erhöht Schritte um 500.
-  Future<void> schritteErhoehen() async {
-    await service.schritteErhoehen(eintrag);
-    setState(() {});
-  }
-
-  /// Öffnet Dialog zur Eingabe des Gewichts.
-  Future<void> gewichtEingeben() async {
-    final controller = TextEditingController();
-
-    final result = await showDialog<String>(
+    final eingabe = await showDialog<String>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -111,8 +44,7 @@ class _StartSeiteStatus extends State<StartSeite> {
               child: const Text('Abbrechen'),
             ),
             TextButton(
-              onPressed: () =>
-                  Navigator.pop(context, controller.text),
+              onPressed: () => Navigator.pop(context, controller.text),
               child: const Text('Speichern'),
             ),
           ],
@@ -120,20 +52,20 @@ class _StartSeiteStatus extends State<StartSeite> {
       },
     );
 
-    if (result == null) return;
+    if (eingabe == null) return;
 
-    final wert = double.tryParse(result);
-
+    final wert = double.tryParse(eingabe.replaceAll(',', '.'));
     if (wert == null) return;
 
-    await service.gewichtSetzen(eintrag, wert);
-
-    setState(() {});
+    await provider.gewichtSetzen(wert);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (wirdGeladen) {
+    final provider = context.watch<TagesProvider>();
+    final eintrag = provider.eintrag;
+
+    if (provider.wirdGeladen) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -155,7 +87,7 @@ class _StartSeiteStatus extends State<StartSeite> {
           IconButton(
             tooltip: AppTexte.tagZuruecksetzen,
             icon: AppStyle.resetIcon,
-            onPressed: tagZuruecksetzen,
+            onPressed: provider.tagZuruecksetzen,
           ),
         ],
       ),
@@ -169,24 +101,24 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           AppStyle.abstandMittel,
 
-         TrackingKarte(
-          titel: AppTexte.gewicht,
-          untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
-          aktionMinus: gewichtVerringern,
-          aktionPlus: gewichtErhoehen,
-          beimTippen: gewichtEingeben, // NEU
-        ),
+          TrackingKarte(
+            titel: AppTexte.gewicht,
+            untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
+            aktionMinus: provider.gewichtVerringern,
+            aktionPlus: provider.gewichtErhoehen,
+            beimTippen: () => gewichtEingeben(provider),
+          ),
 
           TrackingKarte(
             titel: AppTexte.wasser,
             untertitel: '${eintrag.wasser} Gläser',
-            aktionPlus: wasserErhoehen,
+            aktionPlus: provider.wasserErhoehen,
           ),
 
           TrackingKarte(
             titel: AppTexte.schritte,
             untertitel: '${eintrag.schritte} Schritte',
-            aktionPlus: schritteErhoehen,
+            aktionPlus: provider.schritteErhoehen,
           ),
 
           AppStyle.abstandGross,
@@ -198,7 +130,10 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           MahlzeitEingabe(
             controller: eingabeController,
-            beimHinzufuegen: mahlzeitHinzufuegen,
+            beimHinzufuegen: () {
+              provider.mahlzeitHinzufuegen(eingabeController.text);
+              eingabeController.clear();
+            },
           ),
 
           AppStyle.abstandMittel,
@@ -206,7 +141,7 @@ class _StartSeiteStatus extends State<StartSeite> {
           for (int i = 0; i < eintrag.mahlzeiten.length; i++)
             MahlzeitKarte(
               mahlzeit: eintrag.mahlzeiten[i],
-              beimLoeschen: () => mahlzeitLoeschen(i),
+              beimLoeschen: () => provider.mahlzeitLoeschen(i),
             ),
         ],
       ),
