@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../seiten/haupt_navigation.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../provider/tages_provider.dart';
+
 import '../seiten/haupt_navigation.dart';
+import '../provider/tages_provider.dart';
+import '../provider/historie_provider.dart';
 
 /// Hauptklasse der App.
 /// Hier werden Provider, Design und Startseite festgelegt.
@@ -12,8 +12,15 @@ class MeineApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TagesProvider()..datenLaden(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => TagesProvider()..datenLaden(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => HistorieProvider(),
+        ),
+      ],
       child: MaterialApp(
         title: 'Mein Coach',
         debugShowCheckedModeBanner: false,
