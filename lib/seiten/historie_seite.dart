@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import '../daten/lokaler_speicher.dart';
-import '../modelle/tages_eintrag.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/historie_provider.dart';
 import '../style/app_style.dart';
-import 'tag_detail_seite.dart';
 import '../style/app_texte.dart';
 import '../widgets/gewicht_diagramm.dart';
+import 'tag_detail_seite.dart';
 
-/// Zeigt alle gespeicherten TagesEinträge an.
+/// Historie-Seite.
+/// Zeigt alle gespeicherten Tage und den Gewichtsverlauf.
 class HistorieSeite extends StatefulWidget {
   const HistorieSeite({super.key});
 
@@ -15,30 +17,21 @@ class HistorieSeite extends StatefulWidget {
 }
 
 class _HistorieSeiteStatus extends State<HistorieSeite> {
-  final LokalerSpeicher lokalerSpeicher = LokalerSpeicher();
-
-  List<TagesEintrag> tage = [];
-  bool wirdGeladen = true;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    tageLaden();
-  }
+  void initState() {
+    super.initState();
 
-  /// Lädt alle gespeicherten Tage aus dem lokalen Speicher.
-  Future<void> tageLaden() async {
-    final geladeneTage = await lokalerSpeicher.alleTageLaden();
-
-    setState(() {
-      tage = geladeneTage.reversed.toList();
-      wirdGeladen = false;
+    Future.microtask(() {
+      context.read<HistorieProvider>().tageLaden();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (wirdGeladen) {
+    final provider = context.watch<HistorieProvider>();
+    final tage = provider.tage;
+
+    if (provider.wirdGeladen) {
       return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
@@ -56,14 +49,18 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
             AppTexte.gespeicherteTage,
             style: AppStyle.titelGross,
           ),
+
+          AppStyle.abstandMittel,
+
           const Text(
             AppTexte.gewichtDiagrammTitel,
             style: AppStyle.titelMittel,
           ),
+
           AppStyle.abstandKlein,
 
-          AppStyle.abstandMittel,
-          GewichtDiagramm(tage:   tage),
+          GewichtDiagramm(tage: tage),
+
           AppStyle.abstandGross,
 
           if (tage.isEmpty)
