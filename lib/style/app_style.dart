@@ -42,5 +42,6 @@ class AppStyle {
   static const Icon mahlzeitIcon = Icon(Icons.restaurant);
   static const Icon resetIcon = Icon(Icons.refresh);
   static const Icon addIcon = Icon(Icons.add_circle);
+  static const Icon historieIcon = Icon(Icons.history);
  
 }

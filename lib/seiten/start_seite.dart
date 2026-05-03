@@ -130,7 +130,7 @@ class _StartSeiteStatus extends State<StartSeite> {
         actions: [
           IconButton(
               tooltip: 'Historie öffnen',
-              icon: const Icon(Icons.history),
+              icon: AppStyle.historieIcon,
               onPressed: () {
                 Navigator.push(
                   context,
