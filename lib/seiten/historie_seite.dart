@@ -4,6 +4,7 @@ import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
 import 'tag_detail_seite.dart';
 import '../style/app_texte.dart';
+import '../widgets/gewicht_diagramm.dart';
 
 /// Zeigt alle gespeicherten TagesEinträge an.
 class HistorieSeite extends StatefulWidget {
@@ -57,6 +58,8 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
           ),
 
           AppStyle.abstandMittel,
+          GewichtDiagramm(tage:   tage),
+          AppStyle.abstandGross,
 
           if (tage.isEmpty)
             const Text(AppTexte.keineTage),
