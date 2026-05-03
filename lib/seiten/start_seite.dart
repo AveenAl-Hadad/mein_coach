@@ -26,18 +26,32 @@ class _StartSeiteStatus extends State<StartSeite> {
     final controller = TextEditingController(
       text: provider.eintrag.gewicht.toStringAsFixed(1),
     );
-
     final eingabe = await showDialog<String>(
       context: context,
       builder: (context) => GewichtDialog(controller: controller),
     );
-
     if (eingabe == null) return;
-
     final wert = double.tryParse(eingabe.replaceAll(',', '.'));
     if (wert == null) return;
-
     await provider.gewichtSetzen(wert);
+  }
+
+  /// Öffnet den Kalender und wechselt zum ausgewählten Datum.
+  Future<void> datumAuswaehlen(TagesProvider provider) async {
+    final ausgewaehltesDatum = await showDatePicker(
+      context: context,
+      initialDate: DateTime.parse(provider.eintrag.datum),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2100),
+    );
+
+    if (ausgewaehltesDatum == null) return;
+
+    final monat = ausgewaehltesDatum.month.toString().padLeft(2, '0');
+    final tag = ausgewaehltesDatum.day.toString().padLeft(2, '0');
+    final datumText = '${ausgewaehltesDatum.year}-$monat-$tag';
+
+    await provider.datumWechseln(datumText);
   }
 
   @override
@@ -64,6 +78,11 @@ class _StartSeiteStatus extends State<StartSeite> {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            tooltip: AppTexte.datumAuswaehlen,
+            icon: AppStyle.kalenderIcon,
+            onPressed: () => datumAuswaehlen(provider),
+          ),
           IconButton(
             tooltip: AppTexte.tagZuruecksetzen,
             icon: AppStyle.resetIcon,

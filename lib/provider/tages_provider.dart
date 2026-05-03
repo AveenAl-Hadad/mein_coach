@@ -65,4 +65,15 @@ class TagesProvider extends ChangeNotifier {
     await _service.schritteErhoehen(eintrag);
     notifyListeners();
   }
+
+  /// Wechselt zu einem bestimmten Datum.
+  Future<void> datumWechseln(String datum) async {
+    wirdGeladen = true;
+    notifyListeners();
+
+    eintrag = await _service.eintragFuerDatumLaden(datum);
+
+    wirdGeladen = false;
+    notifyListeners();
+  }
 }

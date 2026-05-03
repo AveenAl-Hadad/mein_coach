@@ -28,4 +28,5 @@ class AppTexte {
   static const String gewichtEingebenHinweis = 'z.B. 80.5';
   static const String abbrechen = 'Abbrechen';
   static const String speichern = 'Speichern';
+  static const String datumAuswaehlen = 'Datum auswählen';
 }

@@ -61,4 +61,22 @@ class TagesService {
     eintrag.gewicht = neuesGewicht;
     await speichern(eintrag);
   }
+
+  /// Lädt einen Eintrag für ein bestimmtes Datum.
+  /// Falls es keinen Eintrag gibt, wird ein neuer erstellt.
+  Future<TagesEintrag> eintragFuerDatumLaden(String datum) async {
+    final tage = await _speicher.alleTageLaden();
+
+    try {
+      return tage.firstWhere((e) => e.datum == datum);
+    } catch (_) {
+      return TagesEintrag(
+        datum: datum,
+        gewicht: 80.0,
+        wasser: 0,
+        schritte: 0,
+        mahlzeiten: [],
+      );
+    }
+  }
 }

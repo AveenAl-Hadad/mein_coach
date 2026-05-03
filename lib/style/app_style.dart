@@ -46,7 +46,8 @@ class AppStyle {
   static const Icon weiterIcon = Icon(Icons.arrow_forward_ios);
   static const Icon heuteIcon = Icon(Icons.today);
   static const Icon navigationHistorieIcon = Icon(Icons.history);
-
+  static const Icon kalenderIcon = Icon(Icons.calendar_month);
+  
   // Navigation
   static const BottomNavigationBarType navigationTyp = BottomNavigationBarType.fixed;
   static const double navigationIconGroesse = 24;
