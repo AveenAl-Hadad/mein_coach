@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
+import 'tag_detail_seite.dart';
 
 /// Zeigt alle gespeicherten TagesEinträge an.
 class HistorieSeite extends StatefulWidget {
@@ -69,6 +70,15 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
                   '${tag.schritte} Schritte • '
                   '${tag.mahlzeiten.length} Mahlzeiten',
                 ),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TagDetailSeite(tag: tag),
+                    ),
+                  );
+                },
               ),
             ),
         ],
