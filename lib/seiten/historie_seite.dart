@@ -6,6 +6,7 @@ import '../style/app_style.dart';
 import '../style/app_texte.dart';
 import '../widgets/gewicht_diagramm.dart';
 import 'tag_detail_seite.dart';
+import '../widgets/historie_karte.dart';
 
 /// Historie-Seite.
 /// Zeigt alle gespeicherten Tage und den Gewichtsverlauf.
@@ -67,17 +68,9 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
             const Text(AppTexte.keineTage),
 
           for (final tag in tage)
-            Card(
-              child: ListTile(
-                title: Text(tag.datum),
-                subtitle: Text(
-                  '${tag.gewicht.toStringAsFixed(1)} kg • '
-                  '${tag.wasser} Gläser • '
-                  '${tag.schritte} Schritte • '
-                  '${tag.mahlzeiten.length} Mahlzeiten',
-                ),
-                trailing: AppStyle.weiterIcon,
-                onTap: () {
+              HistorieKarte(
+                tag: tag,
+                beimTippen: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -86,7 +79,6 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
                   );
                 },
               ),
-            ),
         ],
       ),
     );
