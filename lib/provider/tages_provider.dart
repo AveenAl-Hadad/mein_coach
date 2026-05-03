@@ -75,4 +75,9 @@ class TagesProvider extends ChangeNotifier {
     wirdGeladen = false;
     notifyListeners();
   }
+
+  /// Exportiert Daten als JSON.
+  Future<String> exportieren() {
+    return _service.exportieren();
+  }
 }

@@ -1,5 +1,7 @@
 import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
+import 'dart:convert';
+
 
 /// Service für alle Logik rund um TagesEintrag.
 /// UI soll nur anzeigen – Logik passiert hier.
@@ -89,4 +91,19 @@ class TagesService {
       );
     }
   }
+
+  /// Exportiert alle Daten als JSON String.
+Future<String> exportieren() async {
+  final tage = await _speicher.alleTageLaden();
+
+  final liste = tage.map((e) => {
+        'datum': e.datum,
+        'gewicht': e.gewicht,
+        'wasser': e.wasser,
+        'schritte': e.schritte,
+        'mahlzeiten': e.mahlzeiten,
+      }).toList();
+
+  return jsonEncode(liste);
+}
 }

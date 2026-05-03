@@ -8,6 +8,7 @@ import '../widgets/mahlzeit_karte.dart';
 import '../widgets/tracking_karte.dart';
 import '../widgets/gewicht_dialog.dart';
 import '../provider/theme_provider.dart';
+import 'dart:html' as html; // für Web
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -55,6 +56,19 @@ class _StartSeiteStatus extends State<StartSeite> {
     await provider.datumWechseln(datumText);
   }
 
+  Future<void> datenExportieren(TagesProvider provider) async {
+  final json = await provider.exportieren();
+
+  final blob = html.Blob([json]);
+  final url = html.Url.createObjectUrlFromBlob(blob);
+
+  final anchor = html.AnchorElement(href: url)
+    ..setAttribute("download", "mein_coach_backup.json")
+    ..click();
+
+  html.Url.revokeObjectUrl(url);
+}
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TagesProvider>();
@@ -80,6 +94,11 @@ class _StartSeiteStatus extends State<StartSeite> {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            tooltip: 'Export',
+            icon: const Icon(Icons.download),
+            onPressed: () => datenExportieren(provider),
+          ),
           IconButton(
             icon: themeProvider.istDunkel
                 ? AppStyle.hellIcon
