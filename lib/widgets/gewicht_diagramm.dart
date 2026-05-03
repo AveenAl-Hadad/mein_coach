@@ -19,7 +19,9 @@ class GewichtDiagramm extends StatelessWidget {
     if (tage.isEmpty) {
     return const Text(AppTexte.keineDiagrammDaten);    }
 
-    final spots = tage.asMap().entries.map((entry) {
+    final sortierteTage = [...tage]
+    ..sort((a, b) => a.datum.compareTo(b.datum));
+    final spots = sortierteTage.asMap().entries.map((entry) {
       final index = entry.key.toDouble();
       final gewicht = entry.value.gewicht;
       return FlSpot(index, gewicht);
