@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
+import '../style/app_style.dart';
 
 /// Startseite der App.
-/// Hier sieht der Nutzer seine aktuellen Tagesdaten
-/// und kann diese bearbeiten.
+/// Zeigt die Tagesdaten und erlaubt Bearbeitung.
 class StartSeite extends StatefulWidget {
   const StartSeite({super.key});
 
@@ -25,7 +25,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     datenLaden();
   }
 
-  /// Lädt gespeicherte Daten beim Start der App.
+  /// Lädt den gespeicherten Eintrag für heute.
   Future<void> datenLaden() async {
     final geladenerEintrag = await lokalerSpeicher.heutigenEintragLaden();
 
@@ -35,7 +35,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     });
   }
 
-  /// Speichert aktuelle Daten lokal.
+  /// Speichert den aktuellen TagesEintrag.
   Future<void> datenSpeichern() async {
     await lokalerSpeicher.heutigenEintragSpeichern(eintrag);
   }
@@ -52,7 +52,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     await datenSpeichern();
   }
 
-  /// Löscht eine Mahlzeit anhand des Index.
+  /// Löscht eine Mahlzeit.
   Future<void> mahlzeitLoeschen(int index) async {
     setState(() {
       eintrag.mahlzeiten.removeAt(index);
@@ -61,7 +61,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     await datenSpeichern();
   }
 
-  /// Setzt alle Tageswerte zurück.
+  /// Setzt den heutigen Tag zurück.
   Future<void> tagZuruecksetzen() async {
     setState(() {
       eintrag = TagesEintrag.heute();
@@ -70,7 +70,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     await datenSpeichern();
   }
 
-  /// Gewicht erhöhen
+  /// Erhöht das Gewicht.
   Future<void> gewichtErhoehen() async {
     setState(() {
       eintrag.gewicht += 0.1;
@@ -79,7 +79,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     await datenSpeichern();
   }
 
-  /// Gewicht verringern
+  /// Verringert das Gewicht.
   Future<void> gewichtVerringern() async {
     setState(() {
       eintrag.gewicht -= 0.1;
@@ -88,7 +88,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     await datenSpeichern();
   }
 
-  /// Wasser erhöhen
+  /// Erhöht Wasser um ein Glas.
   Future<void> wasserErhoehen() async {
     setState(() {
       eintrag.wasser++;
@@ -97,7 +97,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     await datenSpeichern();
   }
 
-  /// Schritte erhöhen
+  /// Erhöht Schritte um 500.
   Future<void> schritteErhoehen() async {
     setState(() {
       eintrag.schritte += 500;
@@ -116,26 +116,34 @@ class _StartSeiteStatus extends State<StartSeite> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mein Coach'),
+        title: Column(
+          children: [
+            const Text('Mein Coach'),
+            Text(
+              eintrag.datum,
+              style: AppStyle.kleinText,
+            ),
+          ],
+        ),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            tooltip: 'Tag zurücksetzen',
+            icon: AppStyle.resetIcon,
             onPressed: tagZuruecksetzen,
           ),
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: AppStyle.standardPadding,
         children: [
           const Text(
             'Heute',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            style: AppStyle.titelGross,
           ),
 
-          const SizedBox(height: 16),
+          AppStyle.abstandMittel,
 
-          // Gewicht
           Card(
             child: ListTile(
               title: const Text('Gewicht'),
@@ -145,46 +153,44 @@ class _StartSeiteStatus extends State<StartSeite> {
                 children: [
                   IconButton(
                     onPressed: gewichtVerringern,
-                    icon: const Icon(Icons.remove),
+                    icon: AppStyle.gewichtMinus,
                   ),
                   IconButton(
                     onPressed: gewichtErhoehen,
-                    icon: const Icon(Icons.add),
+                    icon: AppStyle.gewichtPlus,
                   ),
                 ],
               ),
             ),
           ),
 
-          // Wasser
           Card(
             child: ListTile(
               title: const Text('Wasser'),
               subtitle: Text('${eintrag.wasser} Gläser'),
               trailing: IconButton(
                 onPressed: wasserErhoehen,
-                icon: const Icon(Icons.add),
+                icon: AppStyle.gewichtPlus,
               ),
             ),
           ),
 
-          // Schritte
           Card(
             child: ListTile(
               title: const Text('Schritte'),
               subtitle: Text('${eintrag.schritte} Schritte'),
               trailing: IconButton(
                 onPressed: schritteErhoehen,
-                icon: const Icon(Icons.directions_walk),
+                icon: AppStyle.schritteIcon,
               ),
             ),
           ),
 
-          const SizedBox(height: 20),
+        AppStyle.abstandGross,
 
           const Text(
             'Mahlzeiten',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            style: AppStyle.titelMittel,
           ),
 
           Row(
@@ -199,21 +205,20 @@ class _StartSeiteStatus extends State<StartSeite> {
               ),
               IconButton(
                 onPressed: mahlzeitHinzufuegen,
-                icon: const Icon(Icons.add_circle),
+                icon: AppStyle.addIcon,
               ),
             ],
           ),
 
           const SizedBox(height: 12),
 
-          // Liste mit Löschen-Button
           for (int i = 0; i < eintrag.mahlzeiten.length; i++)
             Card(
               child: ListTile(
-                leading: const Icon(Icons.restaurant),
+                leading: AppStyle.mahlzeitIcon,
                 title: Text(eintrag.mahlzeiten[i]),
                 trailing: IconButton(
-                  icon: const Icon(Icons.delete),
+                  icon: AppStyle.loeschenIcon,
                   onPressed: () => mahlzeitLoeschen(i),
                 ),
               ),
