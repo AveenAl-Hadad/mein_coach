@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
+import '../services/tages_service.dart';
 import '../style/app_style.dart';
-import '../widgets/tracking_karte.dart';
-import '../widgets/mahlzeit_karte.dart';
-import '../widgets/mahlzeit_eingabe.dart';
 import '../style/app_texte.dart';
+import '../widgets/mahlzeit_eingabe.dart';
+import '../widgets/mahlzeit_karte.dart';
+import '../widgets/tracking_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die Tagesdaten und erlaubt Bearbeitung.
@@ -17,8 +17,8 @@ class StartSeite extends StatefulWidget {
 }
 
 class _StartSeiteStatus extends State<StartSeite> {
-  final LokalerSpeicher lokalerSpeicher = LokalerSpeicher();
   final TextEditingController eingabeController = TextEditingController();
+  final TagesService service = TagesService();
 
   TagesEintrag eintrag = TagesEintrag.heute();
   bool wirdGeladen = true;
@@ -31,7 +31,7 @@ class _StartSeiteStatus extends State<StartSeite> {
 
   /// Lädt den gespeicherten Eintrag für heute.
   Future<void> datenLaden() async {
-    final geladenerEintrag = await lokalerSpeicher.heutigenEintragLaden();
+    final geladenerEintrag = await service.laden();
 
     setState(() {
       eintrag = geladenerEintrag;
@@ -39,75 +39,54 @@ class _StartSeiteStatus extends State<StartSeite> {
     });
   }
 
-  /// Speichert den aktuellen TagesEintrag.
-  Future<void> datenSpeichern() async {
-    await lokalerSpeicher.heutigenEintragSpeichern(eintrag);
-  }
-
   /// Fügt eine neue Mahlzeit hinzu.
   Future<void> mahlzeitHinzufuegen() async {
-    if (eingabeController.text.trim().isEmpty) return;
+    await service.mahlzeitHinzufuegen(
+      eintrag,
+      eingabeController.text,
+    );
 
-    setState(() {
-      eintrag.mahlzeiten.add(eingabeController.text.trim());
-      eingabeController.clear();
-    });
-
-    await datenSpeichern();
+    eingabeController.clear();
+    setState(() {});
   }
 
   /// Löscht eine Mahlzeit.
   Future<void> mahlzeitLoeschen(int index) async {
-    setState(() {
-      eintrag.mahlzeiten.removeAt(index);
-    });
-
-    await datenSpeichern();
+    await service.mahlzeitLoeschen(eintrag, index);
+    setState(() {});
   }
 
   /// Setzt den heutigen Tag zurück.
   Future<void> tagZuruecksetzen() async {
+    await service.zuruecksetzen();
+
     setState(() {
       eintrag = TagesEintrag.heute();
     });
-
-    await datenSpeichern();
   }
 
   /// Erhöht das Gewicht.
   Future<void> gewichtErhoehen() async {
-    setState(() {
-      eintrag.gewicht += 0.1;
-    });
-
-    await datenSpeichern();
+    await service.gewichtErhoehen(eintrag);
+    setState(() {});
   }
 
   /// Verringert das Gewicht.
   Future<void> gewichtVerringern() async {
-    setState(() {
-      eintrag.gewicht -= 0.1;
-    });
-
-    await datenSpeichern();
+    await service.gewichtVerringern(eintrag);
+    setState(() {});
   }
 
   /// Erhöht Wasser um ein Glas.
   Future<void> wasserErhoehen() async {
-    setState(() {
-      eintrag.wasser++;
-    });
-
-    await datenSpeichern();
+    await service.wasserErhoehen(eintrag);
+    setState(() {});
   }
 
   /// Erhöht Schritte um 500.
   Future<void> schritteErhoehen() async {
-    setState(() {
-      eintrag.schritte += 500;
-    });
-
-    await datenSpeichern();
+    await service.schritteErhoehen(eintrag);
+    setState(() {});
   }
 
   @override
@@ -122,7 +101,7 @@ class _StartSeiteStatus extends State<StartSeite> {
       appBar: AppBar(
         title: Column(
           children: [
-           const Text(AppTexte.appName),
+            const Text(AppTexte.appName),
             Text(
               eintrag.datum,
               style: AppStyle.kleinText,
@@ -132,7 +111,7 @@ class _StartSeiteStatus extends State<StartSeite> {
         centerTitle: true,
         actions: [
           IconButton(
-            tooltip: 'Tag zurücksetzen',
+            tooltip: AppTexte.tagZuruecksetzen,
             icon: AppStyle.resetIcon,
             onPressed: tagZuruecksetzen,
           ),
@@ -148,29 +127,29 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           AppStyle.abstandMittel,
 
-         TrackingKarte(
-            titel: 'Gewicht',
+          TrackingKarte(
+            titel: AppTexte.gewicht,
             untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
             aktionMinus: gewichtVerringern,
             aktionPlus: gewichtErhoehen,
           ),
 
           TrackingKarte(
-            titel: 'Wasser',
+            titel: AppTexte.wasser,
             untertitel: '${eintrag.wasser} Gläser',
             aktionPlus: wasserErhoehen,
           ),
 
           TrackingKarte(
-            titel: 'Schritte',
+            titel: AppTexte.schritte,
             untertitel: '${eintrag.schritte} Schritte',
             aktionPlus: schritteErhoehen,
           ),
 
-        AppStyle.abstandGross,
+          AppStyle.abstandGross,
 
           const Text(
-            'Mahlzeiten',
+            AppTexte.mahlzeiten,
             style: AppStyle.titelMittel,
           ),
 
@@ -179,7 +158,7 @@ class _StartSeiteStatus extends State<StartSeite> {
             beimHinzufuegen: mahlzeitHinzufuegen,
           ),
 
-         AppStyle.abstandMittel,
+          AppStyle.abstandMittel,
 
           for (int i = 0; i < eintrag.mahlzeiten.length; i++)
             MahlzeitKarte(
