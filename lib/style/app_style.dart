@@ -43,5 +43,6 @@ class AppStyle {
   static const Icon resetIcon = Icon(Icons.refresh);
   static const Icon addIcon = Icon(Icons.add_circle);
   static const Icon historieIcon = Icon(Icons.history);
+  static const Icon weiterIcon = Icon(Icons.arrow_forward_ios);
  
 }

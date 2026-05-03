@@ -70,7 +70,7 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
                   '${tag.schritte} Schritte • '
                   '${tag.mahlzeiten.length} Mahlzeiten',
                 ),
-                trailing: const Icon(Icons.arrow_forward_ios),
+                trailing: AppStyle.weiterIcon,
                 onTap: () {
                   Navigator.push(
                     context,
