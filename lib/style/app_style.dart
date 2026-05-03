@@ -69,4 +69,8 @@ class AppStyle {
     brightness: Brightness.dark,
     useMaterial3: true,
   );
+
+  static const Icon hellIcon = Icon(Icons.light_mode);
+  static const Icon dunkelIcon = Icon(Icons.dark_mode);
+  
 }

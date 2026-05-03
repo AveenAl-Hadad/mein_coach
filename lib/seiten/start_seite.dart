@@ -7,6 +7,7 @@ import '../widgets/mahlzeit_eingabe.dart';
 import '../widgets/mahlzeit_karte.dart';
 import '../widgets/tracking_karte.dart';
 import '../widgets/gewicht_dialog.dart';
+import '../provider/theme_provider.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -57,6 +58,7 @@ class _StartSeiteStatus extends State<StartSeite> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TagesProvider>();
+    final themeProvider = context.watch<ThemeProvider>();
     final eintrag = provider.eintrag;
 
     if (provider.wirdGeladen) {
@@ -78,6 +80,12 @@ class _StartSeiteStatus extends State<StartSeite> {
         ),
         centerTitle: true,
         actions: [
+          IconButton(
+            icon: themeProvider.istDunkel
+                ? AppStyle.hellIcon
+                : AppStyle.dunkelIcon,
+            onPressed: themeProvider.themeWechseln,
+          ),
           IconButton(
             tooltip: AppTexte.datumAuswaehlen,
             icon: AppStyle.kalenderIcon,

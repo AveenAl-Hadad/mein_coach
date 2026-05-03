@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../seiten/haupt_navigation.dart';
 import '../provider/tages_provider.dart';
 import '../provider/historie_provider.dart';
+import '../provider/theme_provider.dart';
+
 
 
 /// Hauptklasse der App.
@@ -17,20 +19,27 @@ class MeineApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+      ),
+        ChangeNotifierProvider(
           create: (_) => TagesProvider()..datenLaden(),
         ),
         ChangeNotifierProvider(
           create: (_) => HistorieProvider(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Mein Coach',
-        debugShowCheckedModeBanner: false,
-        theme: AppStyle.hellesTheme,
-        darkTheme: AppStyle.dunklesTheme,
-        themeMode: ThemeMode.system,
-        home: const HauptNavigation(),
-      ),
+     child: Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Mein Coach',
+          debugShowCheckedModeBanner: false,
+          theme: AppStyle.hellesTheme,
+          darkTheme: AppStyle.dunklesTheme,
+          themeMode: themeProvider.themeMode,
+          home: const HauptNavigation(),
+        );
+      },
+    ),
     );
   }
 }
