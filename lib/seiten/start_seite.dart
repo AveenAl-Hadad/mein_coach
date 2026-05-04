@@ -11,6 +11,7 @@ import '../provider/theme_provider.dart';
 import '../services/backup_service.dart';
 import '../provider/einstellungen_provider.dart';
 import '../widgets/profil_uebersicht_karte.dart';
+import '../widgets/coach_hinweis_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -154,6 +155,13 @@ Future<void> backupImportieren() async {
             groesse: einstellungenProvider.groesse,
             aktuellesGewicht: provider.eintrag.gewicht,
             startGewicht: einstellungenProvider.startGewicht,
+            zielGewicht: einstellungenProvider.zielGewicht,
+          ),
+          AppStyle.abstandKlein,
+
+          CoachHinweisKarte(
+            groesse: einstellungenProvider.groesse,
+            aktuellesGewicht: provider.eintrag.gewicht,
             zielGewicht: einstellungenProvider.zielGewicht,
           ),
           AppStyle.abstandMittel,
