@@ -5,13 +5,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Hier speichern wir Werte, die für die ganze App gelten.
 /// Beispiel: Zielgewicht.
 class EinstellungenProvider extends ChangeNotifier {
-  static const String _zielGewichtSchluessel = 'ziel_gewicht';
-  double zielGewicht = 75.0;
-  bool wirdGeladen = true;
+  
+  static const String _zielGewichtSchluessel = 'ziel_gewicht'; 
   static const String _nameSchluessel = 'name';
   static const String _groesseSchluessel = 'groesse';
   static const String _startGewichtSchluessel = 'start_gewicht';
+  static const String _wasserZielSchluessel = 'wasser_ziel';
+  static const String _schritteZielSchluessel = 'schritte_ziel';
 
+  double zielGewicht = 75.0;
+  bool wirdGeladen = true;
+  int wasserZiel = 8;
+  int schritteZiel = 8000;
   String name = '';
   int groesse = 170;
   double startGewicht = 80.0;
@@ -25,6 +30,8 @@ class EinstellungenProvider extends ChangeNotifier {
     groesse = speicher.getInt(_groesseSchluessel) ?? 170;
     startGewicht = speicher.getDouble(_startGewichtSchluessel) ?? 80.0;
     wirdGeladen = false;
+    wasserZiel = speicher.getInt(_wasserZielSchluessel) ?? 8;
+    schritteZiel = speicher.getInt(_schritteZielSchluessel) ?? 8000;
 
     notifyListeners();
   }
@@ -40,14 +47,14 @@ class EinstellungenProvider extends ChangeNotifier {
   }
 
   /// Speichert den Namen des Nutzers.
-Future<void> nameSpeichern(String neuerName) async {
-  final speicher = await SharedPreferences.getInstance();
+  Future<void> nameSpeichern(String neuerName) async {
+    final speicher = await SharedPreferences.getInstance();
 
-  name = neuerName;
-  await speicher.setString(_nameSchluessel, neuerName);
+    name = neuerName;
+    await speicher.setString(_nameSchluessel, neuerName);
 
-  notifyListeners();
-}
+    notifyListeners();
+  }
 
   /// Speichert die Körpergröße.
   Future<void> groesseSpeichern(int neueGroesse) async {
@@ -65,6 +72,25 @@ Future<void> nameSpeichern(String neuerName) async {
 
     startGewicht = neuesStartGewicht;
     await speicher.setDouble(_startGewichtSchluessel, neuesStartGewicht);
+
+    notifyListeners();
+  }
+  /// Speichert das tägliche Wasserziel.
+  Future<void> wasserZielSpeichern(int neuesWasserZiel) async {
+    final speicher = await SharedPreferences.getInstance();
+
+    wasserZiel = neuesWasserZiel;
+    await speicher.setInt(_wasserZielSchluessel, neuesWasserZiel);
+
+    notifyListeners();
+  }
+
+  /// Speichert das tägliche Schritteziel.
+  Future<void> schritteZielSpeichern(int neuesSchritteZiel) async {
+    final speicher = await SharedPreferences.getInstance();
+
+    schritteZiel = neuesSchritteZiel;
+    await speicher.setInt(_schritteZielSchluessel, neuesSchritteZiel);
 
     notifyListeners();
   }

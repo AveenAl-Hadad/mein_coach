@@ -176,14 +176,19 @@ Future<void> backupImportieren() async {
 
           TrackingKarte(
             titel: AppTexte.wasser,
-            untertitel: '${eintrag.wasser} Gläser',
+            untertitel:'${eintrag.wasser} / ${einstellungenProvider.wasserZiel} Gläser',
             aktionPlus: provider.wasserErhoehen,
           ),
-
+            LinearProgressIndicator(
+              value: (eintrag.wasser / einstellungenProvider.wasserZiel).clamp(0, 1),
+            ),
           TrackingKarte(
             titel: AppTexte.schritte,
-            untertitel: '${eintrag.schritte} Schritte',
+            untertitel: '${eintrag.schritte} / ${einstellungenProvider.schritteZiel} Schritte',
             aktionPlus: provider.schritteErhoehen,
+          ),
+          LinearProgressIndicator(
+            value: (eintrag.schritte / einstellungenProvider.schritteZiel).clamp(0, 1),
           ),
 
           AppStyle.abstandGross,
