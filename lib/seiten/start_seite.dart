@@ -9,6 +9,8 @@ import '../widgets/tracking_karte.dart';
 import '../widgets/gewicht_dialog.dart';
 import '../provider/theme_provider.dart';
 import '../services/backup_service.dart';
+import '../provider/einstellungen_provider.dart';
+import '../widgets/profil_uebersicht_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -90,6 +92,7 @@ Future<void> backupImportieren() async {
     final provider = context.watch<TagesProvider>();
     final themeProvider = context.watch<ThemeProvider>();
     final eintrag = provider.eintrag;
+    final einstellungenProvider = context.watch<EinstellungenProvider>();
 
     if (provider.wirdGeladen) {
       return const Scaffold(
@@ -145,7 +148,14 @@ Future<void> backupImportieren() async {
             AppTexte.heute,
             style: AppStyle.titelGross,
           ),
+          AppStyle.abstandKlein,
 
+          ProfilUebersichtKarte(
+            groesse: einstellungenProvider.groesse,
+            aktuellesGewicht: provider.eintrag.gewicht,
+            startGewicht: einstellungenProvider.startGewicht,
+            zielGewicht: einstellungenProvider.zielGewicht,
+          ),
           AppStyle.abstandMittel,
 
           TrackingKarte(

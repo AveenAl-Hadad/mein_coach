@@ -40,4 +40,5 @@ class AppTexte {
   static const String name = 'Name';
   static const String groesse = 'Größe';
   static const String startGewicht = 'Startgewicht';
+  static const String profilUebersicht = 'Profilübersicht';
 }
