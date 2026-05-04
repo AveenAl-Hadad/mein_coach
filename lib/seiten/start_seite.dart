@@ -8,7 +8,6 @@ import '../widgets/mahlzeit_karte.dart';
 import '../widgets/tracking_karte.dart';
 import '../widgets/gewicht_dialog.dart';
 import '../provider/theme_provider.dart';
-import 'dart:html' as html; // für Web
 import '../services/backup_service.dart';
 
 /// Startseite der App.
@@ -58,18 +57,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     await provider.datumWechseln(datumText);
   }
 
-  Future<void> datenExportieren(TagesProvider provider) async {
-  final json = await provider.exportieren();
-
-  final blob = html.Blob([json]);
-  final url = html.Url.createObjectUrlFromBlob(blob);
-
-  final anchor = html.AnchorElement(href: url)
-    ..setAttribute("download", "mein_coach_backup.json")
-    ..click();
-
-  html.Url.revokeObjectUrl(url);
-}
+  
 Future<void> backupExportieren() async {
   await backupService.backupExportieren();
 
@@ -80,15 +68,20 @@ Future<void> backupExportieren() async {
   );
 }
 
+/// Importiert ein Backup und lädt danach die aktuellen Tagesdaten neu.
 Future<void> backupImportieren() async {
+  final tagesProvider = context.read<TagesProvider>();
+
   await backupService.backupImportieren();
 
   if (!mounted) return;
 
-  await context.read<TagesProvider>().datenLaden();
+  await tagesProvider.datenLaden();
+
+  if (!mounted) return;
 
   ScaffoldMessenger.of(context).showSnackBar(
-   const SnackBar(content: Text(AppTexte.backupImportiert)),
+    const SnackBar(content: Text(AppTexte.backupImportiert)),
   );
 }
 

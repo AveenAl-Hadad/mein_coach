@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../modelle/tages_eintrag.dart';
 import '../services/tages_service.dart';
+import 'historie_provider.dart';
 
 /// Provider für den aktuellen TagesEintrag.
 /// Er verwaltet Daten, Ladezustand und Änderungen.
 class TagesProvider extends ChangeNotifier {
   final TagesService _service = TagesService();
-
+  HistorieProvider? historieProvider;
   TagesEintrag eintrag = TagesEintrag.heute();
   bool wirdGeladen = true;
 
@@ -20,48 +21,59 @@ class TagesProvider extends ChangeNotifier {
   /// Fügt eine Mahlzeit hinzu.
   Future<void> mahlzeitHinzufuegen(String text) async {
     await _service.mahlzeitHinzufuegen(eintrag, text);
+    await historieAktualisieren();
+
     notifyListeners();
   }
 
   /// Löscht eine Mahlzeit.
   Future<void> mahlzeitLoeschen(int index) async {
     await _service.mahlzeitLoeschen(eintrag, index);
+    await historieAktualisieren();
     notifyListeners();
   }
 
   /// Setzt den aktuell ausgewählten Tag zurück.
   Future<void> tagZuruecksetzen() async {
     eintrag = await _service.tagZuruecksetzen(eintrag.datum);
+    await historieAktualisieren();
     notifyListeners();
   }
 
   /// Erhöht das Gewicht.
   Future<void> gewichtErhoehen() async {
     await _service.gewichtErhoehen(eintrag);
+    await historieAktualisieren();
     notifyListeners();
   }
 
   /// Verringert das Gewicht.
   Future<void> gewichtVerringern() async {
     await _service.gewichtVerringern(eintrag);
+    await historieAktualisieren();
     notifyListeners();
   }
 
   /// Setzt das Gewicht manuell.
   Future<void> gewichtSetzen(double wert) async {
     await _service.gewichtSetzen(eintrag, wert);
+    await historieAktualisieren();
     notifyListeners();
   }
 
   /// Erhöht Wasser.
   Future<void> wasserErhoehen() async {
     await _service.wasserErhoehen(eintrag);
+      await historieAktualisieren();
+
     notifyListeners();
   }
 
   /// Erhöht Schritte.
   Future<void> schritteErhoehen() async {
     await _service.schritteErhoehen(eintrag);
+      await historieAktualisieren();
+
     notifyListeners();
   }
 
@@ -73,11 +85,21 @@ class TagesProvider extends ChangeNotifier {
     eintrag = await _service.eintragFuerDatumLaden(datum);
 
     wirdGeladen = false;
+    await historieAktualisieren();
     notifyListeners();
   }
 
   /// Exportiert Daten als JSON.
   Future<String> exportieren() {
     return _service.exportieren();
+  }
+  /// Verbindet den TagesProvider mit dem HistorieProvider.
+  /// So kann die Historie nach Änderungen automatisch neu geladen werden.
+  void historieProviderSetzen(HistorieProvider provider) {
+    historieProvider = provider;
+  }
+  /// Aktualisiert die Historie, falls sie verbunden ist.
+  Future<void> historieAktualisieren() async {
+    await historieProvider?.aktualisieren();
   }
 }

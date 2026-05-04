@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mein_coach/style/app_style.dart';
+import '../style/app_style.dart';
 
 /// Wiederverwendbare Karte für Tracking-Werte.
-/// Beispiel: Gewicht, Wasser, Schritte.
+/// Beispiel: Gewicht, Wasser oder Schritte.
 class TrackingKarte extends StatelessWidget {
   final String titel;
   final String untertitel;
@@ -15,10 +15,10 @@ class TrackingKarte extends StatelessWidget {
     super.key,
     required this.titel,
     required this.untertitel,
-    this.beimTippen,
     this.icon,
     this.aktionPlus,
     this.aktionMinus,
+    this.beimTippen,
   });
 
   @override
@@ -40,7 +40,7 @@ class TrackingKarte extends StatelessWidget {
             if (aktionPlus != null)
               IconButton(
                 onPressed: aktionPlus,
-                icon:AppStyle.wasserIcon,
+                icon: AppStyle.gewichtPlus,
               ),
           ],
         ),

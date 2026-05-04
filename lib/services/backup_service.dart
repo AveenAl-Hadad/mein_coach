@@ -5,7 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../daten/lokaler_speicher.dart';
-import '../modelle/tages_eintrag.dart';
+
 
 /// Service für Backup Export und Import.
 /// Exportiert und importiert alle gespeicherten Tagesdaten als JSON.
@@ -25,9 +25,11 @@ class BackupService {
 
     await datei.writeAsString(jsonText);
 
-    await Share.shareXFiles(
-      [XFile(datei.path)],
-      text: 'Mein Coach Backup',
+   await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile(datei.path)],
+        text: 'Mein Coach Backup',
+      ),
     );
   }
 

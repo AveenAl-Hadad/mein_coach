@@ -15,18 +15,25 @@ class MeineApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => ThemeProvider()..themeLaden(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => TagesProvider()..datenLaden(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => HistorieProvider(),
-        ),
-      ],
-     child: Consumer<ThemeProvider>(
+    providers: [
+      ChangeNotifierProvider(
+        create: (_) => ThemeProvider()..themeLaden(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => HistorieProvider()..tageLaden(),
+      ),
+      ChangeNotifierProxyProvider<HistorieProvider, TagesProvider>(
+        create: (_) => TagesProvider()..datenLaden(),
+        update: (_, historieProvider, tagesProvider) {
+          final provider = tagesProvider ?? TagesProvider();
+
+          provider.historieProviderSetzen(historieProvider);
+
+          return provider;
+        },
+      ),
+    ],
+    child: Consumer<ThemeProvider>(
       builder: (context, themeProvider, child) {
         return MaterialApp(
           title: 'Mein Coach',
@@ -38,6 +45,6 @@ class MeineApp extends StatelessWidget {
         );
       },
     ),
-    );
+  );
   }
 }

@@ -23,6 +23,8 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
     super.initState();
 
     Future.microtask(() {
+      if (!mounted) return;
+
       context.read<HistorieProvider>().tageLaden();
     });
   }
