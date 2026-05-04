@@ -46,7 +46,32 @@ class TagDetailSeite extends StatelessWidget {
           titel: AppTexte.schritte,
           wert: '${tag.schritte} Schritte',
         ),
+        AppStyle.abstandMittel,
 
+        Card(
+          child: Padding(
+            padding: AppStyle.standardPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Tagesreflexion',
+                  style: AppStyle.titelMittel,
+                ),
+
+                AppStyle.abstandKlein,
+
+                Text('Stimmung: ${tag.stimmung}'),
+
+                AppStyle.abstandKlein,
+
+                Text(
+                  tag.notiz.isEmpty ? 'Keine Notiz vorhanden' : tag.notiz,
+                ),
+              ],
+            ),
+          ),
+        ),
           AppStyle.abstandGross,
 
           const Text(
