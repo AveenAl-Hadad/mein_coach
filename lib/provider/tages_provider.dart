@@ -18,11 +18,18 @@ class TagesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Fügt eine Mahlzeit hinzu.
-  Future<void> mahlzeitHinzufuegen(String text) async {
-    await _service.mahlzeitHinzufuegen(eintrag, text);
-    await historieAktualisieren();
+  /// Fügt eine Mahlzeit mit Kategorie hinzu.
+  Future<void> mahlzeitHinzufuegen(
+    String text, {
+    String kategorie = 'Sonstiges',
+  }) async {
+    await _service.mahlzeitHinzufuegen(
+      eintrag,
+      text,
+      kategorie: kategorie,
+    );
 
+    await historieAktualisieren();
     notifyListeners();
   }
 

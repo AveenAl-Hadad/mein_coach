@@ -200,8 +200,11 @@ Future<void> backupImportieren() async {
 
           MahlzeitEingabe(
             controller: eingabeController,
-            beimHinzufuegen: () {
-              provider.mahlzeitHinzufuegen(eingabeController.text);
+            beimHinzufuegen: (text, kategorie) {
+              provider.mahlzeitHinzufuegen(
+                text,
+                kategorie: kategorie,
+              );
               eingabeController.clear();
             },
           ),
