@@ -74,6 +74,8 @@ class TagesService {
       gewicht: 80.0,
       wasser: 0,
       schritte: 0,
+      stimmung: '🙂',
+      notiz: '',
       mahlzeiten: [],
     );
 
@@ -100,6 +102,8 @@ class TagesService {
         gewicht: 80.0,
         wasser: 0,
         schritte: 0,
+        stimmung: '🙂',
+        notiz: '',
         mahlzeiten: [],
       );
     }
@@ -114,9 +118,22 @@ Future<String> exportieren() async {
         'gewicht': e.gewicht,
         'wasser': e.wasser,
         'schritte': e.schritte,
+        'stimmung': e.stimmung,
+        'notiz': e.notiz,
         'mahlzeiten': e.mahlzeiten.map((m) => m.zuJson()).toList(),
       }).toList();
 
   return jsonEncode(liste);
+}
+/// Speichert die Stimmung für den aktuellen Tag.
+Future<void> stimmungSpeichern(TagesEintrag eintrag, String stimmung) async {
+  eintrag.stimmung = stimmung;
+  await speichern(eintrag);
+}
+
+/// Speichert eine Tagesnotiz.
+Future<void> notizSpeichern(TagesEintrag eintrag, String notiz) async {
+  eintrag.notiz = notiz;
+  await speichern(eintrag);
 }
 }

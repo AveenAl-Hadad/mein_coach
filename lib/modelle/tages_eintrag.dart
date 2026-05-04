@@ -8,6 +8,8 @@ class TagesEintrag {
   int wasser;
   int schritte;
   List<Mahlzeit> mahlzeiten;
+  String stimmung;
+  String notiz;
 
   TagesEintrag({
     required this.datum,
@@ -15,6 +17,8 @@ class TagesEintrag {
     required this.wasser,
     required this.schritte,
     required this.mahlzeiten,
+    required this.stimmung,
+    required this.notiz,
   });
 
   /// Erstellt einen neuen Eintrag für heute.
@@ -24,6 +28,8 @@ class TagesEintrag {
       gewicht: 80.0,
       wasser: 0,
       schritte: 0,
+      stimmung: '🙂',
+      notiz: '',
       mahlzeiten: [],
     );
   }
@@ -36,6 +42,8 @@ class TagesEintrag {
       'gewicht': gewicht,
       'wasser': wasser,
       'schritte': schritte,
+      'stimmung': stimmung,
+      'notiz': notiz,
       'mahlzeiten': mahlzeiten.map((mahlzeit) => mahlzeit.zuJson()).toList(),
     };
   }
@@ -49,6 +57,8 @@ class TagesEintrag {
       gewicht: (map['gewicht'] as num).toDouble(),
       wasser: map['wasser'],
       schritte: map['schritte'],
+      stimmung: map['stimmung'],
+      notiz: map['notiz'],
       mahlzeiten: gespeicherteMahlzeiten.map<Mahlzeit>((mahlzeit) {
         if (mahlzeit is String) {
           return Mahlzeit(

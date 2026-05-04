@@ -109,4 +109,17 @@ class TagesProvider extends ChangeNotifier {
   Future<void> historieAktualisieren() async {
     await historieProvider?.aktualisieren();
   }
+  /// Ändert die Stimmung und speichert sie.
+Future<void> stimmungSpeichern(String stimmung) async {
+  await _service.stimmungSpeichern(eintrag, stimmung);
+  await historieAktualisieren();
+  notifyListeners();
+}
+
+/// Ändert die Tagesnotiz und speichert sie.
+Future<void> notizSpeichern(String notiz) async {
+  await _service.notizSpeichern(eintrag, notiz);
+  await historieAktualisieren();
+  notifyListeners();
+}
 }

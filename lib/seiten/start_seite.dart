@@ -12,6 +12,7 @@ import '../services/backup_service.dart';
 import '../provider/einstellungen_provider.dart';
 import '../widgets/profil_uebersicht_karte.dart';
 import '../widgets/coach_hinweis_karte.dart';
+import '../widgets/tages_reflexion_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -164,8 +165,16 @@ Future<void> backupImportieren() async {
             aktuellesGewicht: provider.eintrag.gewicht,
             zielGewicht: einstellungenProvider.zielGewicht,
           ),
-          AppStyle.abstandMittel,
+          
+          AppStyle.abstandKlein,
 
+          TagesReflexionKarte(
+            stimmung: eintrag.stimmung,
+            notiz: eintrag.notiz,
+            beimStimmungAendern: provider.stimmungSpeichern,
+            beimNotizAendern: provider.notizSpeichern,
+          ),
+          AppStyle.abstandKlein,
           TrackingKarte(
             titel: AppTexte.gewicht,
             untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
