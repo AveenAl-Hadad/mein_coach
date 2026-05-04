@@ -7,6 +7,8 @@ import '../provider/tages_provider.dart';
 import '../provider/historie_provider.dart';
 import '../provider/theme_provider.dart';
 
+import '../provider/einstellungen_provider.dart';
+
 /// Hauptklasse der App.
 /// Hier werden Provider, Design und Startseite festgelegt.
 class MeineApp extends StatelessWidget {
@@ -18,6 +20,9 @@ class MeineApp extends StatelessWidget {
     providers: [
       ChangeNotifierProvider(
         create: (_) => ThemeProvider()..themeLaden(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => EinstellungenProvider()..einstellungenLaden(),
       ),
       ChangeNotifierProvider(
         create: (_) => HistorieProvider()..tageLaden(),

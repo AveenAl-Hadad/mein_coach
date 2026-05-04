@@ -3,6 +3,7 @@ import '../style/app_style.dart';
 import 'start_seite.dart';
 import 'historie_seite.dart';
 import '../style/app_texte.dart';
+import 'einstellungen_seite.dart';
 
 /// Hauptnavigation der App.
 /// Hier wird zwischen Heute und Historie gewechselt.
@@ -19,6 +20,7 @@ class _HauptNavigationStatus extends State<HauptNavigation> {
   final List<Widget> seiten = const [
     StartSeite(),
     HistorieSeite(),
+    EinstellungenSeite(),
   ];
 
   /// Ändert die aktive Seite der Bottom Navigation.
@@ -45,6 +47,10 @@ class _HauptNavigationStatus extends State<HauptNavigation> {
           BottomNavigationBarItem(
             icon: AppStyle.navigationHistorieIcon,
             label: AppTexte.historie,
+          ),
+          BottomNavigationBarItem(
+            icon: AppStyle.einstellungenIcon,
+            label: AppTexte.einstellungen,
           ),
         ],
       ),

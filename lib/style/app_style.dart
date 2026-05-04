@@ -47,6 +47,8 @@ class AppStyle {
   static const Icon heuteIcon = Icon(Icons.today);
   static const Icon navigationHistorieIcon = Icon(Icons.history);
   static const Icon kalenderIcon = Icon(Icons.calendar_month);
+  static const Icon einstellungenIcon = Icon(Icons.settings);
+  static const Icon zielIcon = Icon(Icons.flag);
   
   // Navigation
   static const BottomNavigationBarType navigationTyp = BottomNavigationBarType.fixed;

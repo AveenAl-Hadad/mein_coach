@@ -7,6 +7,7 @@ import '../style/app_texte.dart';
 import '../widgets/gewicht_diagramm.dart';
 import 'tag_detail_seite.dart';
 import '../widgets/historie_karte.dart';
+import '../provider/einstellungen_provider.dart';
 
 /// Historie-Seite.
 /// Zeigt alle gespeicherten Tage und den Gewichtsverlauf.
@@ -33,6 +34,7 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
   Widget build(BuildContext context) {
     final provider = context.watch<HistorieProvider>();
     final tage = provider.tage;
+    final einstellungenProvider = context.watch<EinstellungenProvider>();
 
     if (provider.wirdGeladen) {
       return const Scaffold(
@@ -55,7 +57,10 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
 
           AppStyle.abstandMittel,
           
-          GewichtDiagramm(tage: tage),
+        GewichtDiagramm(
+          tage: tage,
+          zielGewicht: einstellungenProvider.zielGewicht,
+        ),
 
           AppStyle.abstandGross,
 

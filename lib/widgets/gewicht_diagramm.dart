@@ -12,11 +12,12 @@ import '../style/app_texte.dart';
 class GewichtDiagramm extends StatelessWidget {
   final List<TagesEintrag> tage;
   final double zielGewicht;
+  
 
   const GewichtDiagramm({
     super.key,
     required this.tage,
-    this.zielGewicht = 75.0,
+    required this.zielGewicht,
   });
 
   @override
@@ -61,7 +62,7 @@ class GewichtDiagramm extends StatelessWidget {
                 LineChartData(
                   minY: minY,
                   maxY: maxY,
-                  extraLinesData: ExtraLinesData(
+                 extraLinesData: ExtraLinesData(
                     horizontalLines: [
                       HorizontalLine(
                         y: zielGewicht,

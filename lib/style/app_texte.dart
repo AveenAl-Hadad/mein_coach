@@ -33,4 +33,7 @@ class AppTexte {
   static const String backupImportieren = 'Backup importieren';
   static const String backupExportiert = 'Backup exportiert';
   static const String backupImportiert = 'Backup importiert';
+  static const String einstellungen = 'Einstellungen';
+  static const String zielGewicht = 'Zielgewicht';
+  static const String zielGewichtAendern = 'Zielgewicht ändern';
 }
