@@ -4,11 +4,13 @@ class Mahlzeit {
   final String text;
   final String kategorie;
   final String uhrzeit;
+  final String? bildPfad;
 
   Mahlzeit({
     required this.text,
     required this.kategorie,
     required this.uhrzeit,
+    this.bildPfad,
   });
 
   Map<String, dynamic> zuJson() {
@@ -16,6 +18,7 @@ class Mahlzeit {
       'text': text,
       'kategorie': kategorie,
       'uhrzeit': uhrzeit,
+      'bildPfad': bildPfad,
     };
   }
 
@@ -24,6 +27,7 @@ class Mahlzeit {
       text: json['text'] ?? '',
       kategorie: json['kategorie'] ?? '',
       uhrzeit: json['uhrzeit'] ?? '',
+      bildPfad: json['bildPfad'],
     );
   }
 }

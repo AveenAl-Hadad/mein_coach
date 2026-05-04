@@ -19,14 +19,16 @@ class TagesProvider extends ChangeNotifier {
   }
 
   /// Fügt eine Mahlzeit mit Kategorie hinzu.
-  Future<void> mahlzeitHinzufuegen(
+    Future<void> mahlzeitHinzufuegen(
     String text, {
     String kategorie = 'Sonstiges',
+    String? bildPfad,
   }) async {
     await _service.mahlzeitHinzufuegen(
       eintrag,
       text,
       kategorie: kategorie,
+      bildPfad: bildPfad,
     );
 
     await historieAktualisieren();

@@ -37,11 +37,11 @@ class TagesService {
     await speichern(eintrag);
   }
 
-  /// Fügt eine Mahlzeit mit Kategorie und Uhrzeit hinzu.
   Future<void> mahlzeitHinzufuegen(
     TagesEintrag eintrag,
     String text, {
     String kategorie = 'Sonstiges',
+    String? bildPfad,
   }) async {
     if (text.trim().isEmpty) return;
 
@@ -53,6 +53,7 @@ class TagesService {
       text: text.trim(),
       kategorie: kategorie,
       uhrzeit: '$stunde:$minute',
+      bildPfad: bildPfad,
     );
 
     eintrag.mahlzeiten.add(mahlzeit);
