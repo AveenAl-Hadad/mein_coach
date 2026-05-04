@@ -1,6 +1,7 @@
 import '../daten/lokaler_speicher.dart';
 import '../modelle/tages_eintrag.dart';
 import 'dart:convert';
+import '../modelle/mahlzeit.dart';
 
 
 /// Service für alle Logik rund um TagesEintrag.
@@ -36,13 +37,25 @@ class TagesService {
     await speichern(eintrag);
   }
 
+  /// Fügt eine Mahlzeit mit Kategorie und Uhrzeit hinzu.
   Future<void> mahlzeitHinzufuegen(
     TagesEintrag eintrag,
-    String text,
-  ) async {
+    String text, {
+    String kategorie = 'Sonstiges',
+  }) async {
     if (text.trim().isEmpty) return;
 
-    eintrag.mahlzeiten.add(text.trim());
+    final jetzt = DateTime.now();
+    final stunde = jetzt.hour.toString().padLeft(2, '0');
+    final minute = jetzt.minute.toString().padLeft(2, '0');
+
+    final mahlzeit = Mahlzeit(
+      text: text.trim(),
+      kategorie: kategorie,
+      uhrzeit: '$stunde:$minute',
+    );
+
+    eintrag.mahlzeiten.add(mahlzeit);
     await speichern(eintrag);
   }
 
@@ -101,7 +114,7 @@ Future<String> exportieren() async {
         'gewicht': e.gewicht,
         'wasser': e.wasser,
         'schritte': e.schritte,
-        'mahlzeiten': e.mahlzeiten,
+        'mahlzeiten': e.mahlzeiten.map((m) => m.zuJson()).toList(),
       }).toList();
 
   return jsonEncode(liste);

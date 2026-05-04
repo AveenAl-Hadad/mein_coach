@@ -1,3 +1,5 @@
+import 'mahlzeit.dart';
+
 /// Datenmodell für einen einzelnen Tag.
 /// Diese Klasse beschreibt, welche Daten pro Tag gespeichert werden.
 class TagesEintrag {
@@ -5,7 +7,7 @@ class TagesEintrag {
   double gewicht;
   int wasser;
   int schritte;
-  List<String> mahlzeiten;
+  List<Mahlzeit> mahlzeiten;
 
   TagesEintrag({
     required this.datum,
@@ -34,18 +36,30 @@ class TagesEintrag {
       'gewicht': gewicht,
       'wasser': wasser,
       'schritte': schritte,
-      'mahlzeiten': mahlzeiten,
+      'mahlzeiten': mahlzeiten.map((mahlzeit) => mahlzeit.zuJson()).toList(),
     };
   }
 
   /// Erstellt einen TagesEintrag aus gespeicherten Daten.
   factory TagesEintrag.vonMap(Map<String, dynamic> map) {
+    final gespeicherteMahlzeiten = map['mahlzeiten'] ?? [];
+
     return TagesEintrag(
       datum: map['datum'],
-      gewicht: map['gewicht'],
+      gewicht: (map['gewicht'] as num).toDouble(),
       wasser: map['wasser'],
       schritte: map['schritte'],
-      mahlzeiten: List<String>.from(map['mahlzeiten']),
+      mahlzeiten: gespeicherteMahlzeiten.map<Mahlzeit>((mahlzeit) {
+        if (mahlzeit is String) {
+          return Mahlzeit(
+            text: mahlzeit,
+            kategorie: 'Sonstiges',
+            uhrzeit: '',
+          );
+        }
+
+        return Mahlzeit.vonJson(Map<String, dynamic>.from(mahlzeit));
+      }).toList(),
     );
   }
 

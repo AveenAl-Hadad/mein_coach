@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../style/app_style.dart';
+
+import '../modelle/mahlzeit.dart';
 
 /// Karte für eine einzelne Mahlzeit.
 /// Zeigt den Namen der Mahlzeit und optional einen Lösch-Button.
 class MahlzeitKarte extends StatelessWidget {
-  final String mahlzeit;
+  final Mahlzeit mahlzeit;
   final VoidCallback? beimLoeschen;
 
   const MahlzeitKarte({
@@ -17,15 +18,14 @@ class MahlzeitKarte extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: AppStyle.mahlzeitIcon,
-        title: Text(mahlzeit),
-        trailing: beimLoeschen == null
-            ? null
-            : IconButton(
-                icon: AppStyle.loeschenIcon,
-                onPressed: beimLoeschen,
-              ),
-      ),
+        leading: const Icon(Icons.restaurant),
+        title: Text(mahlzeit.text),
+        subtitle: Text('${mahlzeit.kategorie} • ${mahlzeit.uhrzeit}'),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          onPressed: beimLoeschen,
+        ),
+      )
     );
   }
 }
