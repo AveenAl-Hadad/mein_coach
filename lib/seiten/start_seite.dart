@@ -211,11 +211,31 @@ Future<void> backupImportieren() async {
 
           AppStyle.abstandMittel,
 
-          for (int i = 0; i < eintrag.mahlzeiten.length; i++)
-            MahlzeitKarte(
-              mahlzeit: eintrag.mahlzeiten[i],
-              beimLoeschen: () => provider.mahlzeitLoeschen(i),
-            ),
+          for (final kategorie in [
+            'Frühstück',
+            'Mittagessen',
+            'Abendessen',
+            'Snack',
+            'Getränk',
+            'Sonstiges',
+          ])
+            ...[
+              if (eintrag.mahlzeiten.any((mahlzeit) => mahlzeit.kategorie == kategorie))
+                Padding(
+                  padding: const EdgeInsets.only(top: 12, bottom: 4),
+                  child: Text(
+                    kategorie,
+                    style: AppStyle.titelKlein,
+                  ),
+                ),
+
+              for (int i = 0; i < eintrag.mahlzeiten.length; i++)
+                if (eintrag.mahlzeiten[i].kategorie == kategorie)
+                  MahlzeitKarte(
+                    mahlzeit: eintrag.mahlzeiten[i],
+                    beimLoeschen: () => provider.mahlzeitLoeschen(i),
+                  ),
+            ],
         ],
       ),
     );

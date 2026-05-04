@@ -24,6 +24,10 @@ class AppStyle {
   static const TextStyle normalText = TextStyle(
     fontSize: 16,
   );
+  static const TextStyle titelKlein = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+  );
 
   // Padding
   static const EdgeInsets standardPadding = EdgeInsets.all(16);
