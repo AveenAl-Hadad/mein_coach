@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Eingabefeld für neue Mahlzeiten.
-/// Der Nutzer kann Text und Kategorie auswählen.
+/// Der Nutzer kann Text, Kategorie und optional ein Foto auswählen.
 class MahlzeitEingabe extends StatefulWidget {
   final TextEditingController controller;
-  final void Function(String text, String kategorie) beimHinzufuegen;
+  final void Function(String text, String kategorie, String? bildPfad)
+      beimHinzufuegen;
 
   const MahlzeitEingabe({
     super.key,
@@ -17,7 +21,10 @@ class MahlzeitEingabe extends StatefulWidget {
 }
 
 class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
+  final ImagePicker bildAuswahl = ImagePicker();
+
   String ausgewaehlteKategorie = 'Sonstiges';
+  String? bildPfad;
 
   final List<String> kategorien = const [
     'Frühstück',
@@ -28,12 +35,38 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
     'Sonstiges',
   ];
 
-  /// Gibt Text und Kategorie an die Startseite weiter.
+  /// Öffnet die Galerie und speichert den Bildpfad.
+  Future<void> fotoAuswaehlen() async {
+    final bild = await bildAuswahl.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 70,
+    );
+
+    if (bild == null) return;
+
+    setState(() {
+      bildPfad = bild.path;
+    });
+  }
+
+  /// Entfernt das ausgewählte Foto wieder.
+  void fotoEntfernen() {
+    setState(() {
+      bildPfad = null;
+    });
+  }
+
+  /// Gibt Text, Kategorie und Bildpfad an die Startseite weiter.
   void mahlzeitHinzufuegen() {
     widget.beimHinzufuegen(
       widget.controller.text,
       ausgewaehlteKategorie,
+      bildPfad,
     );
+
+    setState(() {
+      bildPfad = null;
+    });
   }
 
   @override
@@ -41,7 +74,7 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
     return Column(
       children: [
         DropdownButtonFormField<String>(
-         initialValue: ausgewaehlteKategorie,
+          initialValue: ausgewaehlteKategorie,
           decoration: const InputDecoration(
             labelText: 'Kategorie',
           ),
@@ -71,11 +104,32 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
               ),
             ),
             IconButton(
+              onPressed: fotoAuswaehlen,
+              icon: const Icon(Icons.photo_camera),
+            ),
+            IconButton(
               onPressed: mahlzeitHinzufuegen,
               icon: const Icon(Icons.add_circle),
             ),
           ],
         ),
+
+        if (bildPfad != null)
+          Card(
+            child: ListTile(
+              leading: Image.file(
+                File(bildPfad!),
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+              ),
+              title: const Text('Foto ausgewählt'),
+              trailing: IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: fotoEntfernen,
+              ),
+            ),
+          ),
       ],
     );
   }
