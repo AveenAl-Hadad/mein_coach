@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-
 import '../modelle/mahlzeit.dart';
+import 'package:flutter/foundation.dart';
+import '../seiten/foto_detail_seite.dart';
 
 /// Karte für eine gespeicherte Mahlzeit.
 /// Zeigt Text, Kategorie, Uhrzeit und optional ein Foto.
@@ -25,17 +25,33 @@ class MahlzeitKarte extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: hatFoto
-            ? ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.file(
-                  File(mahlzeit.bildPfad!),
-                  width: 56,
-                  height: 56,
-                  fit: BoxFit.cover,
-                ),
-              )
-            : const Icon(Icons.restaurant),
+         onTap: hatFoto
+            ? () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FotoDetailSeite(
+                      bildPfad: mahlzeit.bildPfad!,
+                      titel: mahlzeit.text,
+                    ),
+                  ),
+                );
+              }
+            : null,
+       leading: hatFoto
+          ? ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: kIsWeb
+                  ? const Icon(Icons.image_not_supported)
+                  : Image.file(
+                      File(mahlzeit.bildPfad!),
+                      width: 56,
+                      height: 56,
+                      fit: BoxFit.cover,
+                    ),
+            )
+          : const Icon(Icons.restaurant),
+       
         title: Text(mahlzeit.text),
         subtitle: Text('${mahlzeit.kategorie} • ${mahlzeit.uhrzeit}'),
         trailing: beimLoeschen == null
