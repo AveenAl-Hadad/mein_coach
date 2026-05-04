@@ -20,6 +20,8 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController groesseController = TextEditingController();
   final TextEditingController startGewichtController = TextEditingController();
+  final TextEditingController wasserZielController = TextEditingController();
+  final TextEditingController schritteZielController = TextEditingController();
 
   @override
   void dispose() {
@@ -27,6 +29,8 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
     nameController.dispose();
     groesseController.dispose();
     startGewichtController.dispose();
+    wasserZielController.dispose();
+    schritteZielController.dispose();
     super.dispose();
   }
 
@@ -191,6 +195,79 @@ Future<void> startGewichtAendern() async {
   if (neuesStartGewicht == null) return;
   await provider.startGewichtSpeichern(neuesStartGewicht);
 }
+/// Ändert das tägliche Wasserziel.
+Future<void> wasserZielAendern() async {
+  final provider = context.read<EinstellungenProvider>();
+  wasserZielController.text = provider.wasserZiel.toString();
+
+  final neuesZiel = await showDialog<int>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text(AppTexte.wasserZielAendern),
+        content: TextField(
+          controller: wasserZielController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(labelText: AppTexte.wasserZiel),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(AppTexte.abbrechen),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final wert = int.tryParse(wasserZielController.text);
+              if (wert == null || wert <= 0) return;
+              Navigator.pop(context, wert);
+            },
+            child: const Text(AppTexte.speichern),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (neuesZiel == null) return;
+  await provider.wasserZielSpeichern(neuesZiel);
+}
+
+/// Ändert das tägliche Schritteziel.
+Future<void> schritteZielAendern() async {
+  final provider = context.read<EinstellungenProvider>();
+  schritteZielController.text = provider.schritteZiel.toString();
+
+  final neuesZiel = await showDialog<int>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text(AppTexte.schritteZielAendern),
+        content: TextField(
+          controller: schritteZielController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(labelText: AppTexte.schritteZiel),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(AppTexte.abbrechen),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final wert = int.tryParse(schritteZielController.text);
+              if (wert == null || wert <= 0) return;
+              Navigator.pop(context, wert);
+            },
+            child: const Text(AppTexte.speichern),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (neuesZiel == null) return;
+  await provider.schritteZielSpeichern(neuesZiel);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -248,6 +325,23 @@ Future<void> startGewichtAendern() async {
               subtitle: Text('${provider.zielGewicht.toStringAsFixed(1)} kg'),
               trailing: AppStyle.weiterIcon,
               onTap: zielGewichtAendern,
+            ),
+          ),
+          Card(
+            child: ListTile(
+              title: const Text(AppTexte.wasserZiel),
+              subtitle: Text('${provider.wasserZiel} Gläser'),
+              trailing: AppStyle.weiterIcon,
+              onTap: wasserZielAendern,
+            ),
+          ),
+
+          Card(
+            child: ListTile(
+              title: const Text(AppTexte.schritteZiel),
+              subtitle: Text('${provider.schritteZiel} Schritte'),
+              trailing: AppStyle.weiterIcon,
+              onTap: schritteZielAendern,
             ),
           ),
         ],

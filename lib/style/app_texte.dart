@@ -41,4 +41,8 @@ class AppTexte {
   static const String groesse = 'Größe';
   static const String startGewicht = 'Startgewicht';
   static const String profilUebersicht = 'Profilübersicht';
+  static const String wasserZiel = 'Wasserziel';
+  static const String schritteZiel = 'Schritteziel';
+  static const String wasserZielAendern = 'Wasserziel ändern';
+  static const String schritteZielAendern = 'Schritteziel ändern';
 }
