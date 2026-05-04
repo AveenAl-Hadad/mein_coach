@@ -9,6 +9,7 @@ import '../widgets/tracking_karte.dart';
 import '../widgets/gewicht_dialog.dart';
 import '../provider/theme_provider.dart';
 import 'dart:html' as html; // für Web
+import '../services/backup_service.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -22,6 +23,7 @@ class StartSeite extends StatefulWidget {
 
 class _StartSeiteStatus extends State<StartSeite> {
   final TextEditingController eingabeController = TextEditingController();
+  final BackupService backupService = BackupService();
 
   /// Öffnet einen Dialog, damit der Nutzer das Gewicht manuell eingeben kann.
   Future<void> gewichtEingeben(TagesProvider provider) async {
@@ -68,6 +70,27 @@ class _StartSeiteStatus extends State<StartSeite> {
 
   html.Url.revokeObjectUrl(url);
 }
+Future<void> backupExportieren() async {
+  await backupService.backupExportieren();
+
+  if (!mounted) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text(AppTexte.backupExportiert)),
+  );
+}
+
+Future<void> backupImportieren() async {
+  await backupService.backupImportieren();
+
+  if (!mounted) return;
+
+  await context.read<TagesProvider>().datenLaden();
+
+  ScaffoldMessenger.of(context).showSnackBar(
+   const SnackBar(content: Text(AppTexte.backupImportiert)),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -94,10 +117,15 @@ class _StartSeiteStatus extends State<StartSeite> {
         ),
         centerTitle: true,
         actions: [
+         IconButton(
+            tooltip: AppTexte.backupExportieren,
+            icon: AppStyle.backupExportIcon,
+            onPressed: backupExportieren,
+          ),
           IconButton(
-            tooltip: 'Export',
-            icon: const Icon(Icons.download),
-            onPressed: () => datenExportieren(provider),
+            tooltip: AppTexte.backupImportieren,
+            icon: AppStyle.backupImportIcon,
+            onPressed: backupImportieren,
           ),
           IconButton(
             icon: themeProvider.istDunkel

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -32,27 +31,9 @@ class BackupService {
     );
   }
 
-  /// Importiert ein JSON-Backup und speichert die Daten lokal.
-  Future<void> backupImportieren() async {
-    final ergebnis = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['json'],
-    );
-
-    if (ergebnis == null) return;
-
-    final pfad = ergebnis.files.single.path;
-    if (pfad == null) return;
-
-    final datei = File(pfad);
-    final jsonText = await datei.readAsString();
-
-    final List<dynamic> daten = jsonDecode(jsonText);
-
-    final tage = daten
-        .map((eintrag) => TagesEintrag.vonMap(eintrag))
-        .toList();
-
-    await _speicher.alleTageSpeichern(tage);
-  }
+  /// Import wird später eingebaut.
+/// Aktuell deaktiviert, damit die App stabil läuft.
+Future<void> backupImportieren() async {
+  return;
+}
 }

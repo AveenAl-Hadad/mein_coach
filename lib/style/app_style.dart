@@ -72,5 +72,8 @@ class AppStyle {
 
   static const Icon hellIcon = Icon(Icons.light_mode);
   static const Icon dunkelIcon = Icon(Icons.dark_mode);
+
+  static const Icon backupExportIcon = Icon(Icons.upload_file);
+  static const Icon backupImportIcon = Icon(Icons.download);
   
 }

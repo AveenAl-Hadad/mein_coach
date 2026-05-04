@@ -29,4 +29,8 @@ class AppTexte {
   static const String abbrechen = 'Abbrechen';
   static const String speichern = 'Speichern';
   static const String datumAuswaehlen = 'Datum auswählen';
+  static const String backupExportieren = 'Backup exportieren';
+  static const String backupImportieren = 'Backup importieren';
+  static const String backupExportiert = 'Backup exportiert';
+  static const String backupImportiert = 'Backup importiert';
 }
