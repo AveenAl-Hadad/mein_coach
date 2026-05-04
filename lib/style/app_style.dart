@@ -52,9 +52,12 @@ class AppStyle {
   static const BottomNavigationBarType navigationTyp = BottomNavigationBarType.fixed;
   static const double navigationIconGroesse = 24;
 
-// Diagramm
-  static const double diagrammHoehe = 200;
+  // Diagramm
+  static const double diagrammHoehe = 240;
   static const double diagrammLinienBreite = 3;
+  static const double diagrammPunktGroesse = 4;
+  static const double diagrammRandLinks = 40;
+  static const double diagrammRandUnten = 32;
 
   /// Helles Theme
   static ThemeData hellesTheme = ThemeData(
