@@ -36,4 +36,8 @@ class AppTexte {
   static const String einstellungen = 'Einstellungen';
   static const String zielGewicht = 'Zielgewicht';
   static const String zielGewichtAendern = 'Zielgewicht ändern';
+  static const String profil = 'Profil';
+  static const String name = 'Name';
+  static const String groesse = 'Größe';
+  static const String startGewicht = 'Startgewicht';
 }
