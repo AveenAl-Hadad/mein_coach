@@ -373,12 +373,20 @@ Future<void> schritteZielAendern() async {
             ),
           ),
           Card(
-            child: ListTile(
-              leading: const Icon(Icons.schedule),
-              title: const Text('Wasser-Erinnerungen planen'),
+            child: SwitchListTile(
+              secondary: const Icon(Icons.notifications_active),
+              title: const Text('Wasser-Erinnerungen'),
               subtitle: const Text('08:00 bis 20:00 alle 2 Stunden'),
-              trailing: AppStyle.weiterIcon,
-              onTap: erinnerungService.wasserErinnerungenZuEchtenZeitenStarten,
+              value: provider.wasserErinnerungAktiv,
+              onChanged: (aktiv) async {
+                if (aktiv) {
+                  await erinnerungService.wasserErinnerungenZuEchtenZeitenStarten();
+                } else {
+                  await erinnerungService.stopAlleErinnerungen();
+                }
+
+                await provider.wasserErinnerungAktivSpeichern(aktiv);
+              },
             ),
           ),
         ],

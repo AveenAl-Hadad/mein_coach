@@ -12,6 +12,9 @@ class EinstellungenProvider extends ChangeNotifier {
   static const String _startGewichtSchluessel = 'start_gewicht';
   static const String _wasserZielSchluessel = 'wasser_ziel';
   static const String _schritteZielSchluessel = 'schritte_ziel';
+  static const String _wasserErinnerungAktivSchluessel = 'wasser_erinnerung_aktiv';
+
+bool wasserErinnerungAktiv = false;
 
   double zielGewicht = 75.0;
   bool wirdGeladen = true;
@@ -32,10 +35,20 @@ class EinstellungenProvider extends ChangeNotifier {
     wirdGeladen = false;
     wasserZiel = speicher.getInt(_wasserZielSchluessel) ?? 8;
     schritteZiel = speicher.getInt(_schritteZielSchluessel) ?? 8000;
+    wasserErinnerungAktiv =
+    speicher.getBool(_wasserErinnerungAktivSchluessel) ?? false;
 
     notifyListeners();
   }
+  /// Speichert, ob Wasser-Erinnerungen aktiv sind.
+  Future<void> wasserErinnerungAktivSpeichern(bool aktiv) async {
+    final speicher = await SharedPreferences.getInstance();
 
+    wasserErinnerungAktiv = aktiv;
+    await speicher.setBool(_wasserErinnerungAktivSchluessel, aktiv);
+
+    notifyListeners();
+  }
   /// Speichert ein neues Zielgewicht.
   Future<void> zielGewichtSpeichern(double neuesZielGewicht) async {
     final speicher = await SharedPreferences.getInstance();
