@@ -59,9 +59,24 @@ class StreakKarte extends StatelessWidget {
 
             AppStyle.abstandKlein,
 
-            Text('💧 Wasserziel: $wasserStreak Tage'),
-            Text('🚶 Schritteziel: $schritteStreak Tage'),
-            Text('📝 Tagesnotiz: $notizStreak Tage'),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                Chip(
+                  avatar: const Icon(Icons.water_drop, size: 18),
+                  label: Text('$wasserStreak Tage Wasser'),
+                ),
+                Chip(
+                  avatar: const Icon(Icons.directions_walk, size: 18),
+                  label: Text('$schritteStreak Tage Schritte'),
+                ),
+                Chip(
+                  avatar: const Icon(Icons.edit_note, size: 18),
+                  label: Text('$notizStreak Tage Notiz'),
+                ),
+              ],
+            ),
           ],
         ),
       ),
