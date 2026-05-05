@@ -372,6 +372,15 @@ Future<void> schritteZielAendern() async {
               },
             ),
           ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.schedule),
+              title: const Text('Wasser-Erinnerungen planen'),
+              subtitle: const Text('08:00 bis 20:00 alle 2 Stunden'),
+              trailing: AppStyle.weiterIcon,
+              onTap: erinnerungService.wasserErinnerungenZuEchtenZeitenStarten,
+            ),
+          ),
         ],
       ),
     );
