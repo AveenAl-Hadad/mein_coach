@@ -16,6 +16,7 @@ import '../widgets/tages_reflexion_karte.dart';
 import '../provider/historie_provider.dart';
 import '../widgets/erfolge_karte.dart';
 import '../widgets/streak_karte.dart';
+import '../widgets/ziel_fortschritt_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -179,6 +180,25 @@ class _StartSeiteStatus extends State<StartSeite> {
           ),
           AppStyle.abstandKlein,
 
+          ZielFortschrittKarte(
+            titel: 'Wasser',
+            aktuell: eintrag.wasser,
+            ziel: einstellungenProvider.wasserZiel,
+            einheit: 'Gläser',
+            icon: Icons.water_drop,
+          ),
+
+          AppStyle.abstandKlein,
+
+          ZielFortschrittKarte(
+            titel: 'Schritte',
+            aktuell: eintrag.schritte,
+            ziel: einstellungenProvider.schritteZiel,
+            einheit: 'Schritte',
+            icon: Icons.directions_walk,
+          ),
+          AppStyle.abstandKlein,
+
           TagesReflexionKarte(
             stimmung: eintrag.stimmung,
             notiz: eintrag.notiz,
@@ -200,23 +220,14 @@ class _StartSeiteStatus extends State<StartSeite> {
                 '${eintrag.wasser} / ${einstellungenProvider.wasserZiel} Gläser',
             aktionPlus: provider.wasserErhoehen,
           ),
-          LinearProgressIndicator(
-            value: (eintrag.wasser / einstellungenProvider.wasserZiel).clamp(
-              0,
-              1,
-            ),
-          ),
+          
           TrackingKarte(
             titel: AppTexte.schritte,
             untertitel:
                 '${eintrag.schritte} / ${einstellungenProvider.schritteZiel} Schritte',
             aktionPlus: provider.schritteErhoehen,
           ),
-          LinearProgressIndicator(
-            value: (eintrag.schritte / einstellungenProvider.schritteZiel)
-                .clamp(0, 1),
-          ),
-
+         
           AppStyle.abstandGross,
 
           const Text(AppTexte.mahlzeiten, style: AppStyle.titelMittel),
