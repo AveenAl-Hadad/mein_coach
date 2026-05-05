@@ -126,7 +126,21 @@ Map<String, int> mahlzeitenNachKategorieZaehlen(List<TagesEintrag> letzteTage) {
             ),
 
             for (final eintrag in mahlzeitenNachKategorie.entries)
-              Text('${eintrag.key}: ${eintrag.value}'),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${eintrag.key}: ${eintrag.value}'),
+                    AppStyle.abstandKlein,
+                    LinearProgressIndicator(
+                      value: mahlzeitenGesamt == 0
+                          ? 0
+                          : eintrag.value / mahlzeitenGesamt,
+                    ),
+                  ],
+                ),
+              ),
 
             AppStyle.abstandKlein,
 
