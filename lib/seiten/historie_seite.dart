@@ -80,7 +80,11 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
         ),
         AppStyle.abstandKlein,
 
-        WochenListeKarte(tage: tage),
+        WochenListeKarte(
+          tage: tage,
+          wasserZiel: einstellungenProvider.wasserZiel,
+          schritteZiel: einstellungenProvider.schritteZiel,
+        ),
 
         AppStyle.abstandGross,
 
@@ -94,7 +98,11 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TagDetailSeite(tag: tag),
+                      builder: (context) => TagDetailSeite(
+                        tag: tag,
+                        wasserZiel: einstellungenProvider.wasserZiel,
+                        schritteZiel: einstellungenProvider.schritteZiel,
+                      ),
                     ),
                   );
                 },

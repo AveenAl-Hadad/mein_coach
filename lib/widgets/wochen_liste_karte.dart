@@ -8,10 +8,14 @@ import '../seiten/tag_detail_seite.dart';
 /// Jeder Tag ist klickbar und öffnet die Detailseite.
 class WochenListeKarte extends StatelessWidget {
   final List<TagesEintrag> tage;
+  final int wasserZiel;
+  final int schritteZiel;
 
   const WochenListeKarte({
     super.key,
     required this.tage,
+    required this.wasserZiel,
+    required this.schritteZiel,
   });
 
   List<TagesEintrag> letzteSiebenTage() {
@@ -50,7 +54,11 @@ class WochenListeKarte extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => TagDetailSeite(tag: tag),
+                      builder: (_) => TagDetailSeite(
+                        tag: tag,
+                        wasserZiel: wasserZiel,
+                        schritteZiel: schritteZiel,
+                      ),
                     ),
                   );
                 },

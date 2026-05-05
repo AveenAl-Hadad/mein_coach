@@ -4,15 +4,20 @@ import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
 import '../widgets/mahlzeit_karte.dart';
 import '../widgets/detail_karte.dart';
+import '../widgets/erfolge_karte.dart';
 
 /// Detailseite für einen gespeicherten Tag.
 /// Diese Seite zeigt alle Daten eines Tages.
 class TagDetailSeite extends StatelessWidget {
   final TagesEintrag tag;
+  final int wasserZiel;
+  final int schritteZiel;
 
   const TagDetailSeite({
     super.key,
     required this.tag,
+    required this.wasserZiel,
+    required this.schritteZiel,
   });
 
   @override
@@ -45,6 +50,13 @@ class TagDetailSeite extends StatelessWidget {
         DetailKarte(
           titel: AppTexte.schritte,
           wert: '${tag.schritte} Schritte',
+        ),
+        AppStyle.abstandMittel,
+
+        ErfolgeKarte(
+          eintrag: tag,
+          wasserZiel: wasserZiel,
+          schritteZiel: schritteZiel,
         ),
         AppStyle.abstandMittel,
 
