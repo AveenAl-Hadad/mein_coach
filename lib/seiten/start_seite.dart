@@ -14,6 +14,7 @@ import '../widgets/profil_uebersicht_karte.dart';
 import '../widgets/coach_hinweis_karte.dart';
 import '../widgets/tages_reflexion_karte.dart';
 import '../provider/historie_provider.dart';
+import '../widgets/erfolge_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -167,6 +168,13 @@ Future<void> backupImportieren() async {
             aktuellesGewicht: eintrag.gewicht,
             zielGewicht: einstellungenProvider.zielGewicht,
             tage: historieProvider.tage,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+          AppStyle.abstandKlein,
+
+          ErfolgeKarte(
+            eintrag: eintrag,
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
           ),
