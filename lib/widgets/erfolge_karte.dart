@@ -56,11 +56,17 @@ class ErfolgeKarte extends StatelessWidget {
             const Text('Erfolge heute', style: AppStyle.titelMittel),
             AppStyle.abstandKlein,
 
-            for (final erfolg in erfolge)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: Text(erfolg),
-              ),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final erfolg in erfolge)
+                  Chip(
+                    label: Text(erfolg),
+                    avatar: const Icon(Icons.emoji_events, size: 18),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
