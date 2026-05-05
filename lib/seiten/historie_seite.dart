@@ -78,6 +78,13 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
           ),
+          AppStyle.abstandKlein,
+
+          WochenListeKarte(
+            tage: tage,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
 
           AppStyle.abstandGross,
 
