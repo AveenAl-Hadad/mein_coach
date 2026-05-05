@@ -10,6 +10,7 @@ import '../widgets/historie_karte.dart';
 import '../provider/einstellungen_provider.dart';
 import '../widgets/gewicht_statistik_karte.dart';
 import '../widgets/wochenanalyse_karte.dart';
+import '../widgets/wochen_liste_karte.dart';
 
 /// Historie-Seite.
 /// Zeigt alle gespeicherten Tage und den Gewichtsverlauf.
@@ -77,6 +78,9 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
           wasserZiel: einstellungenProvider.wasserZiel,
           schritteZiel: einstellungenProvider.schritteZiel,
         ),
+        AppStyle.abstandKlein,
+
+        WochenListeKarte(tage: tage),
 
         AppStyle.abstandGross,
 
