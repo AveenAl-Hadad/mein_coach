@@ -16,7 +16,6 @@ class EinstellungenSeite extends StatefulWidget {
 }
 
 class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
-  
   final TextEditingController zielGewichtController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController groesseController = TextEditingController();
@@ -83,193 +82,190 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
 
     await provider.zielGewichtSpeichern(neuesZielGewicht);
   }
+
   /// Ändert den Namen.
-Future<void> nameAendern() async {
-  final provider = context.read<EinstellungenProvider>();
-  nameController.text = provider.name;
+  Future<void> nameAendern() async {
+    final provider = context.read<EinstellungenProvider>();
+    nameController.text = provider.name;
 
-  final neuerName = await showDialog<String>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text(AppTexte.name),
-        content: TextField(
-          controller: nameController,
-          decoration: const InputDecoration(
-            labelText: AppTexte.name,
+    final neuerName = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(AppTexte.name),
+          content: TextField(
+            controller: nameController,
+            decoration: const InputDecoration(labelText: AppTexte.name),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(AppTexte.abbrechen),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(AppTexte.abbrechen),
+            ),
+            ElevatedButton(
+              onPressed: () =>
+                  Navigator.pop(context, nameController.text.trim()),
+              child: const Text(AppTexte.speichern),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (neuerName == null) return;
+    await provider.nameSpeichern(neuerName);
+  }
+
+  /// Ändert die Körpergröße.
+  Future<void> groesseAendern() async {
+    final provider = context.read<EinstellungenProvider>();
+    groesseController.text = provider.groesse.toString();
+
+    final neueGroesse = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(AppTexte.groesse),
+          content: TextField(
+            controller: groesseController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(labelText: 'Größe in cm'),
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, nameController.text.trim()),
-            child: const Text(AppTexte.speichern),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(AppTexte.abbrechen),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final wert = int.tryParse(groesseController.text);
+                if (wert == null || wert <= 0) return;
+                Navigator.pop(context, wert);
+              },
+              child: const Text(AppTexte.speichern),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (neueGroesse == null) return;
+    await provider.groesseSpeichern(neueGroesse);
+  }
+
+  /// Ändert das Startgewicht.
+  Future<void> startGewichtAendern() async {
+    final provider = context.read<EinstellungenProvider>();
+    startGewichtController.text = provider.startGewicht.toStringAsFixed(1);
+
+    final neuesStartGewicht = await showDialog<double>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(AppTexte.startGewicht),
+          content: TextField(
+            controller: startGewichtController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(labelText: 'Startgewicht in kg'),
           ),
-        ],
-      );
-    },
-  );
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(AppTexte.abbrechen),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final wert = double.tryParse(
+                  startGewichtController.text.replaceAll(',', '.'),
+                );
 
-  if (neuerName == null) return;
-  await provider.nameSpeichern(neuerName);
-}
+                if (wert == null || wert <= 0) return;
+                Navigator.pop(context, wert);
+              },
+              child: const Text(AppTexte.speichern),
+            ),
+          ],
+        );
+      },
+    );
 
-/// Ändert die Körpergröße.
-Future<void> groesseAendern() async {
-  final provider = context.read<EinstellungenProvider>();
-  groesseController.text = provider.groesse.toString();
+    if (neuesStartGewicht == null) return;
+    await provider.startGewichtSpeichern(neuesStartGewicht);
+  }
 
-  final neueGroesse = await showDialog<int>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text(AppTexte.groesse),
-        content: TextField(
-          controller: groesseController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Größe in cm',
+  /// Ändert das tägliche Wasserziel.
+  Future<void> wasserZielAendern() async {
+    final provider = context.read<EinstellungenProvider>();
+    wasserZielController.text = provider.wasserZiel.toString();
+
+    final neuesZiel = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(AppTexte.wasserZielAendern),
+          content: TextField(
+            controller: wasserZielController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(labelText: AppTexte.wasserZiel),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(AppTexte.abbrechen),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(AppTexte.abbrechen),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final wert = int.tryParse(wasserZielController.text);
+                if (wert == null || wert <= 0) return;
+                Navigator.pop(context, wert);
+              },
+              child: const Text(AppTexte.speichern),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (neuesZiel == null) return;
+    await provider.wasserZielSpeichern(neuesZiel);
+  }
+
+  /// Ändert das tägliche Schritteziel.
+  Future<void> schritteZielAendern() async {
+    final provider = context.read<EinstellungenProvider>();
+    schritteZielController.text = provider.schritteZiel.toString();
+
+    final neuesZiel = await showDialog<int>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(AppTexte.schritteZielAendern),
+          content: TextField(
+            controller: schritteZielController,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(labelText: AppTexte.schritteZiel),
           ),
-          ElevatedButton(
-            onPressed: () {
-              final wert = int.tryParse(groesseController.text);
-              if (wert == null || wert <= 0) return;
-              Navigator.pop(context, wert);
-            },
-            child: const Text(AppTexte.speichern),
-          ),
-        ],
-      );
-    },
-  );
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(AppTexte.abbrechen),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final wert = int.tryParse(schritteZielController.text);
+                if (wert == null || wert <= 0) return;
+                Navigator.pop(context, wert);
+              },
+              child: const Text(AppTexte.speichern),
+            ),
+          ],
+        );
+      },
+    );
 
-  if (neueGroesse == null) return;
-  await provider.groesseSpeichern(neueGroesse);
-}
-
-/// Ändert das Startgewicht.
-Future<void> startGewichtAendern() async {
-  final provider = context.read<EinstellungenProvider>();
-  startGewichtController.text = provider.startGewicht.toStringAsFixed(1);
-
-  final neuesStartGewicht = await showDialog<double>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text(AppTexte.startGewicht),
-        content: TextField(
-          controller: startGewichtController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            labelText: 'Startgewicht in kg',
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(AppTexte.abbrechen),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final wert = double.tryParse(
-                startGewichtController.text.replaceAll(',', '.'),
-              );
-
-              if (wert == null || wert <= 0) return;
-              Navigator.pop(context, wert);
-            },
-            child: const Text(AppTexte.speichern),
-          ),
-        ],
-      );
-    },
-  );
-
-  if (neuesStartGewicht == null) return;
-  await provider.startGewichtSpeichern(neuesStartGewicht);
-}
-/// Ändert das tägliche Wasserziel.
-Future<void> wasserZielAendern() async {
-  final provider = context.read<EinstellungenProvider>();
-  wasserZielController.text = provider.wasserZiel.toString();
-
-  final neuesZiel = await showDialog<int>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text(AppTexte.wasserZielAendern),
-        content: TextField(
-          controller: wasserZielController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: AppTexte.wasserZiel),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(AppTexte.abbrechen),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final wert = int.tryParse(wasserZielController.text);
-              if (wert == null || wert <= 0) return;
-              Navigator.pop(context, wert);
-            },
-            child: const Text(AppTexte.speichern),
-          ),
-        ],
-      );
-    },
-  );
-
-  if (neuesZiel == null) return;
-  await provider.wasserZielSpeichern(neuesZiel);
-}
-
-/// Ändert das tägliche Schritteziel.
-Future<void> schritteZielAendern() async {
-  final provider = context.read<EinstellungenProvider>();
-  schritteZielController.text = provider.schritteZiel.toString();
-
-  final neuesZiel = await showDialog<int>(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: const Text(AppTexte.schritteZielAendern),
-        content: TextField(
-          controller: schritteZielController,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(labelText: AppTexte.schritteZiel),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(AppTexte.abbrechen),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final wert = int.tryParse(schritteZielController.text);
-              if (wert == null || wert <= 0) return;
-              Navigator.pop(context, wert);
-            },
-            child: const Text(AppTexte.speichern),
-          ),
-        ],
-      );
-    },
-  );
-
-  if (neuesZiel == null) return;
-  await provider.schritteZielSpeichern(neuesZiel);
-}
+    if (neuesZiel == null) return;
+    await provider.schritteZielSpeichern(neuesZiel);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -283,43 +279,40 @@ Future<void> schritteZielAendern() async {
       body: ListView(
         padding: AppStyle.standardPadding,
         children: [
-          const Text(
-          AppTexte.profil,
-          style: AppStyle.titelMittel,
-        ),
+          const Text(AppTexte.profil, style: AppStyle.titelMittel),
 
-        AppStyle.abstandKlein,
+          AppStyle.abstandKlein,
 
-        Card(
-          child: ListTile(
-            title: const Text(AppTexte.name),
-            subtitle: Text(
-              provider.name.isEmpty ? 'Nicht gesetzt' : provider.name,
+          Card(
+            child: ListTile(
+              title: const Text(AppTexte.name),
+              subtitle: Text(
+                provider.name.isEmpty ? 'Nicht gesetzt' : provider.name,
+              ),
+              trailing: AppStyle.weiterIcon,
+              onTap: nameAendern,
             ),
-            trailing: AppStyle.weiterIcon,
-            onTap: nameAendern,
           ),
-        ),
 
-        Card(
-          child: ListTile(
-            title: const Text(AppTexte.groesse),
-            subtitle: Text('${provider.groesse} cm'),
-            trailing: AppStyle.weiterIcon,
-            onTap: groesseAendern,
+          Card(
+            child: ListTile(
+              title: const Text(AppTexte.groesse),
+              subtitle: Text('${provider.groesse} cm'),
+              trailing: AppStyle.weiterIcon,
+              onTap: groesseAendern,
+            ),
           ),
-        ),
 
-        Card(
-          child: ListTile(
-            title: const Text(AppTexte.startGewicht),
-            subtitle: Text('${provider.startGewicht.toStringAsFixed(1)} kg'),
-            trailing: AppStyle.weiterIcon,
-            onTap: startGewichtAendern,
+          Card(
+            child: ListTile(
+              title: const Text(AppTexte.startGewicht),
+              subtitle: Text('${provider.startGewicht.toStringAsFixed(1)} kg'),
+              trailing: AppStyle.weiterIcon,
+              onTap: startGewichtAendern,
+            ),
           ),
-        ),
 
-        AppStyle.abstandMittel,
+          AppStyle.abstandMittel,
           Card(
             child: ListTile(
               leading: AppStyle.zielIcon,
@@ -380,7 +373,8 @@ Future<void> schritteZielAendern() async {
               value: provider.wasserErinnerungAktiv,
               onChanged: (aktiv) async {
                 if (aktiv) {
-                  await erinnerungService.wasserErinnerungenZuEchtenZeitenStarten();
+                  await erinnerungService
+                      .wasserErinnerungenZuEchtenZeitenStarten();
                 } else {
                   await erinnerungService.stopAlleErinnerungen();
                 }

@@ -11,6 +11,7 @@ import '../provider/einstellungen_provider.dart';
 import '../widgets/gewicht_statistik_karte.dart';
 import '../widgets/wochenanalyse_karte.dart';
 import '../widgets/wochen_liste_karte.dart';
+import '../widgets/streak_karte.dart';
 
 /// Historie-Seite.
 /// Zeigt alle gespeicherten Tage und den Gewichtsverlauf.
@@ -40,73 +41,64 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
     final einstellungenProvider = context.watch<EinstellungenProvider>();
 
     if (provider.wirdGeladen) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(AppTexte.historie),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text(AppTexte.historie), centerTitle: true),
       body: ListView(
         padding: AppStyle.standardPadding,
         children: [
-          const Text(
-            AppTexte.gespeicherteTage,
-            style: AppStyle.titelGross,
+          const Text(AppTexte.gespeicherteTage, style: AppStyle.titelGross),
+
+          AppStyle.abstandKlein,
+          GewichtDiagramm(
+            tage: tage,
+            zielGewicht: einstellungenProvider.zielGewicht,
+            startGewicht: einstellungenProvider.startGewicht,
           ),
 
-        AppStyle.abstandKlein,          
-        GewichtDiagramm(
-          tage: tage,
-          zielGewicht: einstellungenProvider.zielGewicht,
-          startGewicht: einstellungenProvider.startGewicht,
-        ),
-        
-        AppStyle.abstandMittel,
-        GewichtStatistikKarte(
-          aktuellesGewicht: tage.isEmpty ? 0 : tage.first.gewicht,
-          startGewicht: einstellungenProvider.startGewicht,
-          zielGewicht: einstellungenProvider.zielGewicht,
-        ),
+          AppStyle.abstandMittel,
+          GewichtStatistikKarte(
+            aktuellesGewicht: tage.isEmpty ? 0 : tage.first.gewicht,
+            startGewicht: einstellungenProvider.startGewicht,
+            zielGewicht: einstellungenProvider.zielGewicht,
+          ),
 
-        AppStyle.abstandKlein,
-        WochenanalyseKarte(
-          tage: tage,
-          wasserZiel: einstellungenProvider.wasserZiel,
-          schritteZiel: einstellungenProvider.schritteZiel,
-        ),
-        AppStyle.abstandKlein,
+          AppStyle.abstandKlein,
+          WochenanalyseKarte(
+            tage: tage,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+          AppStyle.abstandKlein,
 
-        WochenListeKarte(
-          tage: tage,
-          wasserZiel: einstellungenProvider.wasserZiel,
-          schritteZiel: einstellungenProvider.schritteZiel,
-        ),
+          StreakKarte(
+            tage: tage,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
 
-        AppStyle.abstandGross,
+          AppStyle.abstandGross,
 
-        if (tage.isEmpty)
-          const Text(AppTexte.keineTage),
+          if (tage.isEmpty) const Text(AppTexte.keineTage),
 
           for (final tag in tage)
-              HistorieKarte(
-                tag: tag,
-                beimTippen: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TagDetailSeite(
-                        tag: tag,
-                        wasserZiel: einstellungenProvider.wasserZiel,
-                        schritteZiel: einstellungenProvider.schritteZiel,
-                      ),
+            HistorieKarte(
+              tag: tag,
+              beimTippen: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TagDetailSeite(
+                      tag: tag,
+                      wasserZiel: einstellungenProvider.wasserZiel,
+                      schritteZiel: einstellungenProvider.schritteZiel,
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );

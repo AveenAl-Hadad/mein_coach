@@ -63,33 +63,32 @@ class _StartSeiteStatus extends State<StartSeite> {
     await provider.datumWechseln(datumText);
   }
 
-  
-Future<void> backupExportieren() async {
-  await backupService.backupExportieren();
+  Future<void> backupExportieren() async {
+    await backupService.backupExportieren();
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text(AppTexte.backupExportiert)),
-  );
-}
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text(AppTexte.backupExportiert)));
+  }
 
-/// Importiert ein Backup und lädt danach die aktuellen Tagesdaten neu.
-Future<void> backupImportieren() async {
-  final tagesProvider = context.read<TagesProvider>();
+  /// Importiert ein Backup und lädt danach die aktuellen Tagesdaten neu.
+  Future<void> backupImportieren() async {
+    final tagesProvider = context.read<TagesProvider>();
 
-  await backupService.backupImportieren();
+    await backupService.backupImportieren();
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  await tagesProvider.datenLaden();
+    await tagesProvider.datenLaden();
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text(AppTexte.backupImportiert)),
-  );
-}
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text(AppTexte.backupImportiert)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,9 +99,7 @@ Future<void> backupImportieren() async {
     final historieProvider = context.watch<HistorieProvider>();
 
     if (provider.wirdGeladen) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     return Scaffold(
@@ -110,15 +107,12 @@ Future<void> backupImportieren() async {
         title: Column(
           children: [
             const Text(AppTexte.appName),
-            Text(
-              eintrag.datum,
-              style: AppStyle.kleinText,
-            ),
+            Text(eintrag.datum, style: AppStyle.kleinText),
           ],
         ),
         centerTitle: true,
         actions: [
-         IconButton(
+          IconButton(
             tooltip: AppTexte.backupExportieren,
             icon: AppStyle.backupExportIcon,
             onPressed: backupExportieren,
@@ -149,10 +143,7 @@ Future<void> backupImportieren() async {
       body: ListView(
         padding: AppStyle.standardPadding,
         children: [
-          const Text(
-            AppTexte.heute,
-            style: AppStyle.titelGross,
-          ),
+          const Text(AppTexte.heute, style: AppStyle.titelGross),
           AppStyle.abstandKlein,
 
           ProfilUebersichtKarte(
@@ -197,27 +188,30 @@ Future<void> backupImportieren() async {
 
           TrackingKarte(
             titel: AppTexte.wasser,
-            untertitel:'${eintrag.wasser} / ${einstellungenProvider.wasserZiel} Gläser',
+            untertitel:
+                '${eintrag.wasser} / ${einstellungenProvider.wasserZiel} Gläser',
             aktionPlus: provider.wasserErhoehen,
           ),
-            LinearProgressIndicator(
-              value: (eintrag.wasser / einstellungenProvider.wasserZiel).clamp(0, 1),
+          LinearProgressIndicator(
+            value: (eintrag.wasser / einstellungenProvider.wasserZiel).clamp(
+              0,
+              1,
             ),
+          ),
           TrackingKarte(
             titel: AppTexte.schritte,
-            untertitel: '${eintrag.schritte} / ${einstellungenProvider.schritteZiel} Schritte',
+            untertitel:
+                '${eintrag.schritte} / ${einstellungenProvider.schritteZiel} Schritte',
             aktionPlus: provider.schritteErhoehen,
           ),
           LinearProgressIndicator(
-            value: (eintrag.schritte / einstellungenProvider.schritteZiel).clamp(0, 1),
+            value: (eintrag.schritte / einstellungenProvider.schritteZiel)
+                .clamp(0, 1),
           ),
 
           AppStyle.abstandGross,
 
-          const Text(
-            AppTexte.mahlzeiten,
-            style: AppStyle.titelMittel,
-          ),
+          const Text(AppTexte.mahlzeiten, style: AppStyle.titelMittel),
 
           MahlzeitEingabe(
             controller: eingabeController,
@@ -240,24 +234,22 @@ Future<void> backupImportieren() async {
             'Snack',
             'Getränk',
             'Sonstiges',
-          ])
-            ...[
-              if (eintrag.mahlzeiten.any((mahlzeit) => mahlzeit.kategorie == kategorie))
-                Padding(
-                  padding: const EdgeInsets.only(top: 12, bottom: 4),
-                  child: Text(
-                    kategorie,
-                    style: AppStyle.titelKlein,
-                  ),
-                ),
+          ]) ...[
+            if (eintrag.mahlzeiten.any(
+              (mahlzeit) => mahlzeit.kategorie == kategorie,
+            ))
+              Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 4),
+                child: Text(kategorie, style: AppStyle.titelKlein),
+              ),
 
-              for (int i = 0; i < eintrag.mahlzeiten.length; i++)
-                if (eintrag.mahlzeiten[i].kategorie == kategorie)
-                  MahlzeitKarte(
-                    mahlzeit: eintrag.mahlzeiten[i],
-                    beimLoeschen: () => provider.mahlzeitLoeschen(i),
-                  ),
-            ],
+            for (int i = 0; i < eintrag.mahlzeiten.length; i++)
+              if (eintrag.mahlzeiten[i].kategorie == kategorie)
+                MahlzeitKarte(
+                  mahlzeit: eintrag.mahlzeiten[i],
+                  beimLoeschen: () => provider.mahlzeitLoeschen(i),
+                ),
+          ],
         ],
       ),
     );
