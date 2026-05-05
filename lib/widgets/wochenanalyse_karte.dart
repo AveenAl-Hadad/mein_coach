@@ -4,16 +4,19 @@ import '../modelle/tages_eintrag.dart';
 import '../style/app_style.dart';
 
 /// Karte für die Wochenanalyse.
-/// Sie berechnet Durchschnittswerte der letzten 7 gespeicherten Tage.
+/// Sie berechnet Durchschnittswerte und erstellt einfache Bewertungen.
 class WochenanalyseKarte extends StatelessWidget {
   final List<TagesEintrag> tage;
+  final int wasserZiel;
+  final int schritteZiel;
 
   const WochenanalyseKarte({
     super.key,
     required this.tage,
+    required this.wasserZiel,
+    required this.schritteZiel,
   });
 
-  /// Gibt maximal die letzten 7 Tage zurück.
   List<TagesEintrag> letzteSiebenTage() {
     final sortierteTage = [...tage]
       ..sort((a, b) => b.datum.compareTo(a.datum));
@@ -21,16 +24,50 @@ class WochenanalyseKarte extends StatelessWidget {
     return sortierteTage.take(7).toList();
   }
 
-  /// Berechnet den Durchschnitt eines double-Wertes.
   double durchschnittDouble(List<double> werte) {
     if (werte.isEmpty) return 0;
     return werte.reduce((a, b) => a + b) / werte.length;
   }
 
-  /// Berechnet den Durchschnitt eines int-Wertes.
   double durchschnittInt(List<int> werte) {
     if (werte.isEmpty) return 0;
     return werte.reduce((a, b) => a + b) / werte.length;
+  }
+
+  String wasserBewertung(double durchschnittWasser) {
+    if (durchschnittWasser >= wasserZiel) {
+      return 'Wasserziel gut erreicht 💧';
+    }
+
+    return 'Wasserziel noch nicht erreicht';
+  }
+
+  String schritteBewertung(double durchschnittSchritte) {
+    if (durchschnittSchritte >= schritteZiel) {
+      return 'Schritteziel gut erreicht 🚶';
+    }
+
+    return 'Mehr Bewegung wäre hilfreich';
+  }
+
+  String gewichtsTrendBewertung(List<TagesEintrag> letzteTage) {
+    if (letzteTage.length < 2) {
+      return 'Noch zu wenig Daten für Gewichtstrend';
+    }
+
+    final neuestesGewicht = letzteTage.first.gewicht;
+    final aeltestesGewicht = letzteTage.last.gewicht;
+    final differenz = neuestesGewicht - aeltestesGewicht;
+
+    if (differenz < -0.2) {
+      return 'Gewicht ist diese Woche gesunken';
+    }
+
+    if (differenz > 0.2) {
+      return 'Gewicht ist diese Woche gestiegen';
+    }
+
+    return 'Gewicht ist diese Woche stabil';
   }
 
   @override
@@ -61,12 +98,20 @@ class WochenanalyseKarte extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Wochenanalyse', style: AppStyle.titelMittel),
+
             AppStyle.abstandKlein,
+
             Text('Tage ausgewertet: ${letzteTage.length}'),
             Text('Ø Gewicht: ${durchschnittGewicht.toStringAsFixed(1)} kg'),
             Text('Ø Wasser: ${durchschnittWasser.toStringAsFixed(1)} Gläser'),
             Text('Ø Schritte: ${durchschnittSchritte.toStringAsFixed(0)}'),
             Text('Mahlzeiten gesamt: $mahlzeitenGesamt'),
+
+            AppStyle.abstandKlein,
+
+            Text(wasserBewertung(durchschnittWasser)),
+            Text(schritteBewertung(durchschnittSchritte)),
+            Text(gewichtsTrendBewertung(letzteTage)),
           ],
         ),
       ),
