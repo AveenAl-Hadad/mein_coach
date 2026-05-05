@@ -18,8 +18,7 @@ class WochenanalyseKarte extends StatelessWidget {
   });
 
   List<TagesEintrag> letzteSiebenTage() {
-    final sortierteTage = [...tage]
-      ..sort((a, b) => b.datum.compareTo(a.datum));
+    final sortierteTage = [...tage]..sort((a, b) => b.datum.compareTo(a.datum));
 
     return sortierteTage.take(7).toList();
   }
@@ -69,18 +68,22 @@ class WochenanalyseKarte extends StatelessWidget {
 
     return 'Gewicht ist diese Woche stabil';
   }
-  /// Zählt Mahlzeiten nach Kategorie.
-Map<String, int> mahlzeitenNachKategorieZaehlen(List<TagesEintrag> letzteTage) {
-  final Map<String, int> zaehler = {};
 
-  for (final tag in letzteTage) {
-    for (final mahlzeit in tag.mahlzeiten) {
-      zaehler[mahlzeit.kategorie] = (zaehler[mahlzeit.kategorie] ?? 0) + 1;
+  /// Zählt Mahlzeiten nach Kategorie.
+  Map<String, int> mahlzeitenNachKategorieZaehlen(
+    List<TagesEintrag> letzteTage,
+  ) {
+    final Map<String, int> zaehler = {};
+
+    for (final tag in letzteTage) {
+      for (final mahlzeit in tag.mahlzeiten) {
+        zaehler[mahlzeit.kategorie] = (zaehler[mahlzeit.kategorie] ?? 0) + 1;
+      }
     }
+
+    return zaehler;
   }
 
-  return zaehler;
-}
   @override
   Widget build(BuildContext context) {
     final letzteTage = letzteSiebenTage();
@@ -101,6 +104,17 @@ Map<String, int> mahlzeitenNachKategorieZaehlen(List<TagesEintrag> letzteTage) {
       0,
       (summe, tag) => summe + tag.mahlzeiten.length,
     );
+    final wasserZielErreicht = letzteTage.where((tag) {
+      return tag.wasser >= wasserZiel;
+    }).length;
+
+    final schritteZielErreicht = letzteTage.where((tag) {
+      return tag.schritte >= schritteZiel;
+    }).length;
+
+    final tageMitNotiz = letzteTage.where((tag) {
+      return tag.notiz.isNotEmpty;
+    }).length;
     final mahlzeitenNachKategorie = mahlzeitenNachKategorieZaehlen(letzteTage);
 
     return Card(
@@ -147,6 +161,23 @@ Map<String, int> mahlzeitenNachKategorieZaehlen(List<TagesEintrag> letzteTage) {
             Text(wasserBewertung(durchschnittWasser)),
             Text(schritteBewertung(durchschnittSchritte)),
             Text(gewichtsTrendBewertung(letzteTage)),
+
+            AppStyle.abstandKlein,
+
+            const Text(
+              'Erfolge diese Woche:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+
+            Text(
+              'Wasserziel erreicht: $wasserZielErreicht / ${letzteTage.length} Tage',
+            ),
+            Text(
+              'Schritteziel erreicht: $schritteZielErreicht / ${letzteTage.length} Tage',
+            ),
+            Text(
+              'Tagesnotiz geschrieben: $tageMitNotiz / ${letzteTage.length} Tage',
+            ),
           ],
         ),
       ),
