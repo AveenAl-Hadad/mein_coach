@@ -69,7 +69,18 @@ class WochenanalyseKarte extends StatelessWidget {
 
     return 'Gewicht ist diese Woche stabil';
   }
+  /// Zählt Mahlzeiten nach Kategorie.
+Map<String, int> mahlzeitenNachKategorieZaehlen(List<TagesEintrag> letzteTage) {
+  final Map<String, int> zaehler = {};
 
+  for (final tag in letzteTage) {
+    for (final mahlzeit in tag.mahlzeiten) {
+      zaehler[mahlzeit.kategorie] = (zaehler[mahlzeit.kategorie] ?? 0) + 1;
+    }
+  }
+
+  return zaehler;
+}
   @override
   Widget build(BuildContext context) {
     final letzteTage = letzteSiebenTage();
@@ -90,6 +101,7 @@ class WochenanalyseKarte extends StatelessWidget {
       0,
       (summe, tag) => summe + tag.mahlzeiten.length,
     );
+    final mahlzeitenNachKategorie = mahlzeitenNachKategorieZaehlen(letzteTage);
 
     return Card(
       child: Padding(
@@ -106,6 +118,15 @@ class WochenanalyseKarte extends StatelessWidget {
             Text('Ø Wasser: ${durchschnittWasser.toStringAsFixed(1)} Gläser'),
             Text('Ø Schritte: ${durchschnittSchritte.toStringAsFixed(0)}'),
             Text('Mahlzeiten gesamt: $mahlzeitenGesamt'),
+            AppStyle.abstandKlein,
+
+            const Text(
+              'Mahlzeiten nach Kategorie:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+
+            for (final eintrag in mahlzeitenNachKategorie.entries)
+              Text('${eintrag.key}: ${eintrag.value}'),
 
             AppStyle.abstandKlein,
 
