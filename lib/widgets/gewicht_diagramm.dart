@@ -11,13 +11,13 @@ import '../style/app_texte.dart';
 /// Diese Klasse zeigt gespeicherte Gewichtswerte über mehrere Tage.
 class GewichtDiagramm extends StatelessWidget {
   final List<TagesEintrag> tage;
-  final double zielGewicht;
-  
-
+  final double zielGewicht;  
+  final double startGewicht;
   const GewichtDiagramm({
     super.key,
     required this.tage,
     required this.zielGewicht,
+    required this.startGewicht,
   });
 
   @override
@@ -38,6 +38,7 @@ class GewichtDiagramm extends StatelessWidget {
     final werte = [
       ...sortierteTage.map((tag) => tag.gewicht),
       zielGewicht,
+      startGewicht,
     ];
     final minGewicht = werte.reduce(min);
     final maxGewicht = werte.reduce(max);
@@ -73,6 +74,18 @@ class GewichtDiagramm extends StatelessWidget {
                           show: true,
                           alignment: Alignment.topRight,
                           labelResolver: (_) => 'Ziel ${zielGewicht.toStringAsFixed(1)} kg',
+                          style: AppStyle.kleinText,
+                        ),
+                      ),
+                      HorizontalLine(
+                        y: startGewicht,
+                        color: Colors.blueGrey,
+                        strokeWidth: 2,
+                        dashArray: [4, 4],
+                        label: HorizontalLineLabel(
+                          show: true,
+                          alignment: Alignment.bottomRight,
+                          labelResolver: (_) => 'Start ${startGewicht.toStringAsFixed(1)} kg',
                           style: AppStyle.kleinText,
                         ),
                       ),

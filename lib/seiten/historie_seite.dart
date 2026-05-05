@@ -57,10 +57,11 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
 
           AppStyle.abstandMittel,
           
-        GewichtDiagramm(
-          tage: tage,
-          zielGewicht: einstellungenProvider.zielGewicht,
-        ),
+       GewichtDiagramm(
+        tage: tage,
+        zielGewicht: einstellungenProvider.zielGewicht,
+        startGewicht: einstellungenProvider.startGewicht,
+      ),
 
           AppStyle.abstandGross,
 
