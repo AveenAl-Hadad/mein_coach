@@ -15,6 +15,7 @@ import '../widgets/coach_hinweis_karte.dart';
 import '../widgets/tages_reflexion_karte.dart';
 import '../provider/historie_provider.dart';
 import '../widgets/erfolge_karte.dart';
+import '../widgets/streak_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -166,6 +167,13 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           ErfolgeKarte(
             eintrag: eintrag,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+          AppStyle.abstandKlein,
+
+          StreakKarte(
+            tage: historieProvider.tage,
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
           ),
