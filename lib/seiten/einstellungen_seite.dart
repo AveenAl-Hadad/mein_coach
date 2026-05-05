@@ -355,6 +355,23 @@ Future<void> schritteZielAendern() async {
               onTap: erinnerungService.testErinnerungAnzeigen,
             ),
           ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.water_drop),
+              title: const Text('Wasser-Erinnerung starten'),
+              subtitle: const Text('Alle 2 Stunden (Test: jede Minute)'),
+              onTap: erinnerungService.wasserErinnerungStarten,
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.stop),
+              title: const Text('Erinnerung stoppen'),
+              onTap: () async {
+                await erinnerungService.stopAlleErinnerungen();
+              },
+            ),
+          ),
         ],
       ),
     );

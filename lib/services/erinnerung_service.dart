@@ -52,4 +52,32 @@ class ErinnerungService {
       notificationDetails: details,
     );
   }
+  /// Startet eine wiederholende Wasser-Erinnerung.
+  /// Alle 2 Stunden wird eine Benachrichtigung angezeigt.
+  Future<void> wasserErinnerungStarten() async {
+    const androidDetails = AndroidNotificationDetails(
+      'wasser_erinnerung',
+      'Wasser Erinnerung',
+      channelDescription: 'Erinnerungen zum Wasser trinken',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    const details = NotificationDetails(
+      android: androidDetails,
+    );
+
+   await _plugin.periodicallyShow(
+    id: 2,
+    title: 'Wasser trinken 💧',
+    body: 'Zeit für ein Glas Wasser.',
+    repeatInterval: RepeatInterval.everyMinute,
+    notificationDetails: details,
+    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+  );
+  }
+  /// Stoppt alle Erinnerungen.
+  Future<void> stopAlleErinnerungen() async {
+    await _plugin.cancelAll();
+  }
 }
