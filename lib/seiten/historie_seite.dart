@@ -8,6 +8,7 @@ import '../widgets/gewicht_diagramm.dart';
 import 'tag_detail_seite.dart';
 import '../widgets/historie_karte.dart';
 import '../provider/einstellungen_provider.dart';
+import '../widgets/gewicht_statistik_karte.dart';
 
 /// Historie-Seite.
 /// Zeigt alle gespeicherten Tage und den Gewichtsverlauf.
@@ -56,6 +57,13 @@ class _HistorieSeiteStatus extends State<HistorieSeite> {
           ),
 
           AppStyle.abstandMittel,
+          GewichtStatistikKarte(
+            aktuellesGewicht: tage.isEmpty ? 0 : tage.first.gewicht,
+            startGewicht: einstellungenProvider.startGewicht,
+            zielGewicht: einstellungenProvider.zielGewicht,
+          ),
+
+        AppStyle.abstandKlein,
           
        GewichtDiagramm(
         tage: tage,
