@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../provider/einstellungen_provider.dart';
 import '../style/app_style.dart';
 import '../style/app_texte.dart';
+import '../services/erinnerung_service.dart';
 
 /// Einstellungsseite der App.
 /// Hier kann der Nutzer persönliche Werte ändern.
@@ -22,6 +23,7 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
   final TextEditingController startGewichtController = TextEditingController();
   final TextEditingController wasserZielController = TextEditingController();
   final TextEditingController schritteZielController = TextEditingController();
+  final ErinnerungService erinnerungService = ErinnerungService();
 
   @override
   void dispose() {
@@ -342,6 +344,15 @@ Future<void> schritteZielAendern() async {
               subtitle: Text('${provider.schritteZiel} Schritte'),
               trailing: AppStyle.weiterIcon,
               onTap: schritteZielAendern,
+            ),
+          ),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.notifications),
+              title: const Text('Test-Erinnerung'),
+              subtitle: const Text('Benachrichtigung sofort anzeigen'),
+              trailing: AppStyle.weiterIcon,
+              onTap: erinnerungService.testErinnerungAnzeigen,
             ),
           ),
         ],
