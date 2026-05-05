@@ -13,6 +13,7 @@ import '../provider/einstellungen_provider.dart';
 import '../widgets/profil_uebersicht_karte.dart';
 import '../widgets/coach_hinweis_karte.dart';
 import '../widgets/tages_reflexion_karte.dart';
+import '../provider/historie_provider.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -95,6 +96,7 @@ Future<void> backupImportieren() async {
     final themeProvider = context.watch<ThemeProvider>();
     final eintrag = provider.eintrag;
     final einstellungenProvider = context.watch<EinstellungenProvider>();
+    final historieProvider = context.watch<HistorieProvider>();
 
     if (provider.wirdGeladen) {
       return const Scaffold(
@@ -162,10 +164,12 @@ Future<void> backupImportieren() async {
 
           CoachHinweisKarte(
             groesse: einstellungenProvider.groesse,
-            aktuellesGewicht: provider.eintrag.gewicht,
+            aktuellesGewicht: eintrag.gewicht,
             zielGewicht: einstellungenProvider.zielGewicht,
+            tage: historieProvider.tage,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
           ),
-          
           AppStyle.abstandKlein,
 
           TagesReflexionKarte(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../style/app_style.dart';
+import '../services/coach_service.dart';
+import '../modelle/tages_eintrag.dart';
 
 /// Karte mit einfachem Coach-Hinweis.
 /// Der Hinweis basiert aktuell auf BMI und Fortschritt.
@@ -9,12 +11,18 @@ class CoachHinweisKarte extends StatelessWidget {
   final int groesse;
   final double aktuellesGewicht;
   final double zielGewicht;
+  final List<TagesEintrag> tage;
+  final int wasserZiel;
+  final int schritteZiel;
 
   const CoachHinweisKarte({
     super.key,
     required this.groesse,
     required this.aktuellesGewicht,
     required this.zielGewicht,
+    required this.tage,
+    required this.wasserZiel,
+    required this.schritteZiel,
   });
 
   /// Berechnet den BMI aus Größe und Gewicht.
@@ -24,23 +32,15 @@ class CoachHinweisKarte extends StatelessWidget {
   }
 
   /// Erstellt einen einfachen Gesundheits-Hinweis.
-  String hinweisErstellen() {
-    final bmi = bmiBerechnen();
+ String hinweisErstellen() {
+  final service = CoachService();
 
-    if (aktuellesGewicht <= zielGewicht) {
-      return 'Super! Du hast dein Zielgewicht erreicht oder unterschritten. Achte jetzt auf stabile Gewohnheiten.';
-    }
-
-    if (bmi >= 30) {
-      return 'Konzentriere dich heute auf kleine Schritte: Wasser trinken, eine bewusste Mahlzeit und etwas Bewegung.';
-    }
-
-    if (bmi >= 25) {
-      return 'Du bist auf einem guten Weg. Versuche heute eine Mahlzeit bewusst zu planen und regelmäßig Wasser zu trinken.';
-    }
-
-    return 'Dein Gewicht liegt im normalen Bereich. Fokus heute: ausgewogene Ernährung und Bewegung beibehalten.';
-  }
+  return service.erstelleHinweis(
+    tage: tage,
+    wasserZiel: wasserZiel,
+    schritteZiel: schritteZiel,
+  );
+}
 
   @override
   Widget build(BuildContext context) {
