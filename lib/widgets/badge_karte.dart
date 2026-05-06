@@ -15,7 +15,7 @@ class BadgeKarte extends StatelessWidget {
     required this.schritteZiel,
   });
 
-  List<_Badge> get badges {
+  List<_Badge> get _badges {
     final liste = <_Badge>[];
 
     if (eintrag.wasser >= wasserZiel) {
@@ -54,7 +54,7 @@ class BadgeKarte extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: badges.map((badge) {
+              children: _badges.map((badge) {
                 return Chip(
                   avatar: Icon(badge.icon, size: 18),
                   label: Text(badge.name),
