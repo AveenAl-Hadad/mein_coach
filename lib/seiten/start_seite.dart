@@ -75,22 +75,7 @@ class _StartSeiteStatus extends State<StartSeite> {
     ).showSnackBar(const SnackBar(content: Text(AppTexte.backupExportiert)));
   }
 
-  /// Importiert ein Backup und lädt danach die aktuellen Tagesdaten neu.
-  Future<void> backupImportieren() async {
-    final tagesProvider = context.read<TagesProvider>();
-
-    await backupService.backupImportieren();
-
-    if (!mounted) return;
-
-    await tagesProvider.datenLaden();
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text(AppTexte.backupImportiert)));
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -119,11 +104,7 @@ class _StartSeiteStatus extends State<StartSeite> {
             icon: AppStyle.backupExportIcon,
             onPressed: backupExportieren,
           ),
-          IconButton(
-            tooltip: AppTexte.backupImportieren,
-            icon: AppStyle.backupImportIcon,
-            onPressed: backupImportieren,
-          ),
+          
           IconButton(
             icon: themeProvider.istDunkel
                 ? AppStyle.hellIcon
