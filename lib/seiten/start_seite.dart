@@ -29,6 +29,7 @@ import '../widgets/wochen_uebersicht_karte.dart';
 import '../widgets/beste_leistung_karte.dart';
 import '../widgets/tagesabschluss_karte.dart';
 import '../widgets/monats_statistik_karte.dart';
+import '../services/pdf_export_service.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -43,7 +44,18 @@ class StartSeite extends StatefulWidget {
 class _StartSeiteStatus extends State<StartSeite> {
   final TextEditingController eingabeController = TextEditingController();
   final BackupService backupService = BackupService();
+  final PdfExportService pdfExportService = PdfExportService();
 
+  Future<void> pdfExportieren() async {
+    final provider = context.read<TagesProvider>();
+    final einstellungenProvider = context.read<EinstellungenProvider>();
+
+    await pdfExportService.tagesberichtExportieren(
+      eintrag: provider.eintrag,
+      wasserZiel: einstellungenProvider.wasserZiel,
+      schritteZiel: einstellungenProvider.schritteZiel,
+    );
+  }
   /// Öffnet einen Dialog, damit der Nutzer das Gewicht manuell eingeben kann.
   Future<void> gewichtEingeben(TagesProvider provider) async {
     final controller = TextEditingController(
@@ -115,6 +127,12 @@ class _StartSeiteStatus extends State<StartSeite> {
             tooltip: AppTexte.backupExportieren,
             icon: AppStyle.backupExportIcon,
             onPressed: backupExportieren,
+          ),
+
+          IconButton(
+            tooltip: 'PDF exportieren',
+            icon: const Icon(Icons.picture_as_pdf),
+            onPressed: pdfExportieren,
           ),
           
           IconButton(
