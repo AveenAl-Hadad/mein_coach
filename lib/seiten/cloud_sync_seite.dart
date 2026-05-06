@@ -20,6 +20,7 @@ class _CloudSyncSeiteState extends State<CloudSyncSeite> {
 
   bool wirdGeladen = false;
   String status = '';
+  String? angemeldeteEmail;
 
   @override
   void dispose() {
@@ -29,7 +30,20 @@ class _CloudSyncSeiteState extends State<CloudSyncSeite> {
     passwortController.dispose();
     super.dispose();
   }
+  @override
+    void initState() {
+      super.initState();
+      loginStatusLaden();
+    }
+  Future<void> loginStatusLaden() async {
+    final email = await syncService.angemeldeteEmail();
 
+    if (!mounted) return;
+
+    setState(() {
+      angemeldeteEmail = email;
+    });
+  }
   Future<void> ausfuehren(Future<void> Function() aktion) async {
     setState(() {
       wirdGeladen = true;
@@ -38,6 +52,7 @@ class _CloudSyncSeiteState extends State<CloudSyncSeite> {
 
     try {
       await aktion();
+      await loginStatusLaden();
 
       setState(() {
         status = 'Erfolgreich ausgeführt.';
@@ -105,6 +120,24 @@ class _CloudSyncSeiteState extends State<CloudSyncSeite> {
           const Text(
             'Firebase Login + Cloud Sync',
             style: AppStyle.titelGross,
+          ),
+          
+          AppStyle.abstandKlein,
+
+          Card(
+            child: ListTile(
+              leading: Icon(
+                angemeldeteEmail == null ? Icons.lock_open : Icons.verified_user,
+              ),
+              title: Text(
+                angemeldeteEmail == null
+                    ? 'Nicht angemeldet'
+                    : 'Angemeldet',
+              ),
+              subtitle: Text(
+                angemeldeteEmail ?? 'Bitte mit E-Mail anmelden',
+              ),
+            ),
           ),
 
           AppStyle.abstandMittel,
