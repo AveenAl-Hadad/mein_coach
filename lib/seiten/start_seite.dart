@@ -27,6 +27,7 @@ import '../widgets/badge_karte.dart';
 import '../widgets/gewohnheiten_score_karte.dart';
 import '../widgets/wochen_uebersicht_karte.dart';
 import '../widgets/beste_leistung_karte.dart';
+import '../widgets/tagesabschluss_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -210,6 +211,14 @@ class _StartSeiteStatus extends State<StartSeite> {
           BesteLeistungKarte(
             tage: historieProvider.tage,
           ),
+          AppStyle.abstandKlein,
+
+          TagesabschlussKarte(
+            eintrag: eintrag,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+
           AppStyle.abstandKlein,
 
           WochenStatistikKarte(
