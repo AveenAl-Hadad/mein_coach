@@ -17,6 +17,7 @@ import '../provider/historie_provider.dart';
 import '../widgets/erfolge_karte.dart';
 import '../widgets/streak_karte.dart';
 import '../widgets/ziel_fortschritt_karte.dart';
+import '../widgets/ziel_kreis_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -186,7 +187,9 @@ class _StartSeiteStatus extends State<StartSeite> {
             beimStimmungAendern: provider.stimmungSpeichern,
             beimNotizAendern: provider.notizSpeichern,
           ),
+
           AppStyle.abstandKlein,
+
           TrackingKarte(
             titel: AppTexte.gewicht,
             untertitel: '${eintrag.gewicht.toStringAsFixed(1)} kg',
@@ -195,18 +198,22 @@ class _StartSeiteStatus extends State<StartSeite> {
             beimTippen: () => gewichtEingeben(provider),
           ),
 
-          TrackingKarte(
-            titel: AppTexte.wasser,
-            untertitel:
-                '${eintrag.wasser} / ${einstellungenProvider.wasserZiel} Gläser',
-            aktionPlus: provider.wasserErhoehen,
+          ZielKreisKarte(
+            titel: 'Wasser-Ziel',
+            aktuell: eintrag.wasser.toDouble(),
+            ziel: einstellungenProvider.wasserZiel.toDouble(),
+            einheit: 'Gläser',
+            icon: Icons.water_drop,
           ),
-          
-          TrackingKarte(
-            titel: AppTexte.schritte,
-            untertitel:
-                '${eintrag.schritte} / ${einstellungenProvider.schritteZiel} Schritte',
-            aktionPlus: provider.schritteErhoehen,
+
+          AppStyle.abstandKlein,
+
+          ZielKreisKarte(
+            titel: 'Schritte-Ziel',
+            aktuell: eintrag.schritte.toDouble(),
+            ziel: einstellungenProvider.schritteZiel.toDouble(),
+            einheit: 'Schritte',
+            icon: Icons.directions_walk,
           ),
          
           AppStyle.abstandGross,
