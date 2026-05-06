@@ -16,7 +16,7 @@ import '../widgets/tages_reflexion_karte.dart';
 import '../provider/historie_provider.dart';
 import '../widgets/erfolge_karte.dart';
 import '../widgets/streak_karte.dart';
-import '../widgets/ziel_fortschritt_karte.dart';
+
 import '../widgets/ziel_kreis_karte.dart';
 
 /// Startseite der App.
@@ -162,22 +162,20 @@ class _StartSeiteStatus extends State<StartSeite> {
           ),
           AppStyle.abstandKlein,
 
-          ZielFortschrittKarte(
+          TrackingKarte(
             titel: 'Wasser',
-            aktuell: eintrag.wasser,
-            ziel: einstellungenProvider.wasserZiel,
-            einheit: 'Gläser',
-            icon: Icons.water_drop,
+            untertitel: '${eintrag.wasser} / ${einstellungenProvider.wasserZiel} Gläser',
+            aktionMinus: provider.wasserVerringern,
+            aktionPlus: provider.wasserErhoehen,
           ),
 
           AppStyle.abstandKlein,
 
-          ZielFortschrittKarte(
+          TrackingKarte(
             titel: 'Schritte',
-            aktuell: eintrag.schritte,
-            ziel: einstellungenProvider.schritteZiel,
-            einheit: 'Schritte',
-            icon: Icons.directions_walk,
+            untertitel: '${eintrag.schritte} / ${einstellungenProvider.schritteZiel} Schritte',
+            aktionMinus: provider.schritteVerringern,
+            aktionPlus: provider.schritteErhoehen,
           ),
           AppStyle.abstandKlein,
 

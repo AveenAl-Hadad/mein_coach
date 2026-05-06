@@ -77,6 +77,12 @@ class TagesProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+  Future<void> wasserVerringern() async {
+    await _service.wasserVerringern(eintrag);
+      await historieAktualisieren();
+
+    notifyListeners();
+  }
 
   /// Erhöht Schritte.
   Future<void> schritteErhoehen() async {
@@ -85,6 +91,14 @@ class TagesProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+  Future<void> schritteVerringern() async {
+    await _service.schritteVerringern(eintrag);
+      await historieAktualisieren();
+
+    notifyListeners();
+  }
+
+
 
   /// Wechselt zu einem bestimmten Datum.
   Future<void> datumWechseln(String datum) async {

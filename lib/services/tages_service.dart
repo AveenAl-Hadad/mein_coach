@@ -31,12 +31,19 @@ class TagesService {
     eintrag.wasser++;
     await speichern(eintrag);
   }
-
+ Future<void> wasserVerringern(TagesEintrag eintrag) async {
+    eintrag.wasser--;
+    await speichern(eintrag);
+  }
   Future<void> schritteErhoehen(TagesEintrag eintrag) async {
     eintrag.schritte += 500;
     await speichern(eintrag);
   }
-
+Future<void> schritteVerringern(TagesEintrag eintrag) async {
+    eintrag.schritte -= 500;
+    await speichern(eintrag);
+  }
+  
   Future<void> mahlzeitHinzufuegen(
     TagesEintrag eintrag,
     String text, {
