@@ -19,6 +19,7 @@ import '../widgets/streak_karte.dart';
 import '../widgets/wochen_statistik_karte.dart';
 import '../widgets/ziel_kreis_karte.dart';
 import '../widgets/gewicht_verlauf_karte.dart';
+import '../widgets/aktivitaet_verlauf_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -159,6 +160,11 @@ class _StartSeiteStatus extends State<StartSeite> {
           AppStyle.abstandKlein,
 
           GewichtVerlaufKarte(
+            tage: historieProvider.tage,
+          ),
+          AppStyle.abstandKlein,
+
+          AktivitaetVerlaufKarte(
             tage: historieProvider.tage,
           ),
 
