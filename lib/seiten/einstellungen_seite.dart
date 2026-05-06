@@ -5,6 +5,7 @@ import '../provider/einstellungen_provider.dart';
 import '../style/app_style.dart';
 import '../style/app_texte.dart';
 import '../services/erinnerung_service.dart';
+import 'cloud_sync_seite.dart';
 
 /// Einstellungsseite der App.
 /// Hier kann der Nutzer persönliche Werte ändern.
@@ -380,6 +381,25 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
                 }
 
                 await provider.wasserErinnerungAktivSpeichern(aktiv);
+              },
+            ),
+          ),
+
+          AppStyle.abstandMittel,
+
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.cloud_sync),
+              title: const Text('Cloud Sync'),
+              subtitle: const Text('Firebase Login und Daten synchronisieren'),
+              trailing: AppStyle.weiterIcon,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const CloudSyncSeite(),
+                  ),
+                );
               },
             ),
           ),

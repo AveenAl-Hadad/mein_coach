@@ -138,6 +138,7 @@ class _StartSeiteStatus extends State<StartSeite> {
             startGewicht: einstellungenProvider.startGewicht,
             zielGewicht: einstellungenProvider.zielGewicht,
           ),
+
           AppStyle.abstandKlein,
 
           CoachHinweisKarte(
@@ -162,6 +163,7 @@ class _StartSeiteStatus extends State<StartSeite> {
           GewichtVerlaufKarte(
             tage: historieProvider.tage,
           ),
+
           AppStyle.abstandKlein,
 
           AktivitaetVerlaufKarte(
@@ -175,6 +177,7 @@ class _StartSeiteStatus extends State<StartSeite> {
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
           ),
+
           AppStyle.abstandKlein,
 
           StreakKarte(
@@ -182,6 +185,7 @@ class _StartSeiteStatus extends State<StartSeite> {
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
           ),
+          
           AppStyle.abstandKlein,
 
           TrackingKarte(
