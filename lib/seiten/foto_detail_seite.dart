@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 
-/// Detailseite für ein Mahlzeitenfoto.
-/// Zeigt das gespeicherte Foto groß an.
 class FotoDetailSeite extends StatelessWidget {
   final String bildPfad;
   final String titel;
@@ -17,19 +15,23 @@ class FotoDetailSeite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text(titel),
-        centerTitle: true,
       ),
       body: Center(
-        child: kIsWeb
-            ? const Text('Fotoanzeige funktioniert aktuell nur in Android/Windows.')
-            : InteractiveViewer(
-                child: Image.file(
-                  File(bildPfad),
-                  fit: BoxFit.contain,
-                ),
-              ),
+        child: Hero(
+          tag: bildPfad,
+          child: InteractiveViewer(
+            minScale: 0.8,
+            maxScale: 4,
+            child: Image.file(
+              File(bildPfad),
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
       ),
     );
   }

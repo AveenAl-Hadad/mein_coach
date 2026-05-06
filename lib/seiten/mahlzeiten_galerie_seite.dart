@@ -1,18 +1,19 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../modelle/mahlzeit.dart';
 import '../provider/historie_provider.dart';
-import '../seiten/foto_detail_seite.dart';
 import '../style/app_style.dart';
+import 'foto_detail_seite.dart';
 
 class MahlzeitenGalerieSeite extends StatelessWidget {
   const MahlzeitenGalerieSeite({super.key});
 
-  List<_GalerieEintrag> _eintraegeAusHistorie(HistorieProvider provider) {
+  List<_GalerieEintrag> _eintraegeAusHistorie(
+    HistorieProvider provider,
+  ) {
     final eintraege = <_GalerieEintrag>[];
 
     for (final tag in provider.tage) {
@@ -30,77 +31,108 @@ class MahlzeitenGalerieSeite extends StatelessWidget {
       }
     }
 
-    return eintraege;
+    return eintraege.reversed.toList();
   }
 
   @override
   Widget build(BuildContext context) {
     final historie = context.watch<HistorieProvider>();
+
     final eintraege = _eintraegeAusHistorie(historie);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mahlzeiten-Galerie'),
+        title: const Text('Mahlzeiten Galerie'),
         centerTitle: true,
       ),
       body: eintraege.isEmpty
           ? const Center(
-              child: Text('Noch keine Mahlzeitenfotos gespeichert.'),
+              child: Text(
+                'Noch keine Fotos vorhanden 🍽️',
+                style: TextStyle(fontSize: 18),
+              ),
             )
           : GridView.builder(
               padding: AppStyle.standardPadding,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              itemCount: eintraege.length,
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 0.82,
+                childAspectRatio: 0.8,
               ),
-              itemCount: eintraege.length,
               itemBuilder: (context, index) {
                 final eintrag = eintraege[index];
                 final mahlzeit = eintrag.mahlzeit;
 
-                return Card(
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => FotoDetailSeite(
-                            bildPfad: mahlzeit.bildPfad!,
-                            titel: mahlzeit.text,
-                          ),
+                return InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => FotoDetailSeite(
+                          bildPfad: mahlzeit.bildPfad!,
+                          titel: mahlzeit.text,
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
+                  child: Card(
+                    elevation: 4,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
                       children: [
                         Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: kIsWeb
-                                ? const Icon(Icons.image_not_supported, size: 48)
-                                : Image.file(
-                                    File(mahlzeit.bildPfad!),
-                                    fit: BoxFit.cover,
-                                  ),
+                          child: Hero(
+                            tag: mahlzeit.bildPfad!,
+                            child: Image.file(
+                              File(mahlzeit.bildPfad!),
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
+
                         Padding(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(12),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
                             children: [
                               Text(
                                 mahlzeit.text,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
                               ),
+
+                              const SizedBox(height: 4),
+
                               Text(
-                                '${mahlzeit.kategorie} • ${eintrag.datum}',
-                                style: AppStyle.kleinText,
+                                mahlzeit.kategorie,
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+
+                              const SizedBox(height: 4),
+
+                              Text(
+                                eintrag.datum,
+                                style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                  fontSize: 12,
+                                ),
                               ),
                             ],
                           ),
