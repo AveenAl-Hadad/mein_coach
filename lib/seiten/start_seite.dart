@@ -16,7 +16,7 @@ import '../widgets/tages_reflexion_karte.dart';
 import '../provider/historie_provider.dart';
 import '../widgets/erfolge_karte.dart';
 import '../widgets/streak_karte.dart';
-
+import '../widgets/wochen_statistik_karte.dart';
 import '../widgets/ziel_kreis_karte.dart';
 
 /// Startseite der App.
@@ -146,6 +146,15 @@ class _StartSeiteStatus extends State<StartSeite> {
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
           ),
+          
+          AppStyle.abstandKlein,
+
+          WochenStatistikKarte(
+            tage: historieProvider.tage,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+
           AppStyle.abstandKlein,
 
           ErfolgeKarte(
