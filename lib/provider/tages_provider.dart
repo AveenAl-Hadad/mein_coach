@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import '../modelle/tages_eintrag.dart';
 import '../services/tages_service.dart';
 import 'historie_provider.dart';
+import '../services/firebase_sync_service.dart';
+
 
 /// Provider für den aktuellen TagesEintrag.
 /// Er verwaltet Daten, Ladezustand und Änderungen.
 class TagesProvider extends ChangeNotifier {
   final TagesService _service = TagesService();
+  final FirebaseSyncService _syncService = FirebaseSyncService();
+
   HistorieProvider? historieProvider;
   TagesEintrag eintrag = TagesEintrag.heute();
   bool wirdGeladen = true;
@@ -31,71 +35,58 @@ class TagesProvider extends ChangeNotifier {
       bildPfad: bildPfad,
     );
 
-    await historieAktualisieren();
-    notifyListeners();
+   await historieAktualisierenUndSynchronisieren();
   }
 
   /// Löscht eine Mahlzeit.
   Future<void> mahlzeitLoeschen(int index) async {
     await _service.mahlzeitLoeschen(eintrag, index);
-    await historieAktualisieren();
-    notifyListeners();
+   await historieAktualisierenUndSynchronisieren();
   }
 
   /// Setzt den aktuell ausgewählten Tag zurück.
   Future<void> tagZuruecksetzen() async {
     eintrag = await _service.tagZuruecksetzen(eintrag.datum);
-    await historieAktualisieren();
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();
   }
 
   /// Erhöht das Gewicht.
   Future<void> gewichtErhoehen() async {
     await _service.gewichtErhoehen(eintrag);
-    await historieAktualisieren();
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();
+   
   }
 
   /// Verringert das Gewicht.
   Future<void> gewichtVerringern() async {
     await _service.gewichtVerringern(eintrag);
-    await historieAktualisieren();
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();
   }
 
   /// Setzt das Gewicht manuell.
   Future<void> gewichtSetzen(double wert) async {
     await _service.gewichtSetzen(eintrag, wert);
-    await historieAktualisieren();
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();
   }
 
   /// Erhöht Wasser.
   Future<void> wasserErhoehen() async {
     await _service.wasserErhoehen(eintrag);
-      await historieAktualisieren();
-
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();
   }
   Future<void> wasserVerringern() async {
     await _service.wasserVerringern(eintrag);
-      await historieAktualisieren();
-
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();
   }
 
   /// Erhöht Schritte.
   Future<void> schritteErhoehen() async {
     await _service.schritteErhoehen(eintrag);
-      await historieAktualisieren();
-
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();
   }
   Future<void> schritteVerringern() async {
     await _service.schritteVerringern(eintrag);
-      await historieAktualisieren();
-
-    notifyListeners();
+    await historieAktualisierenUndSynchronisieren();    
   }
 
 
@@ -121,6 +112,18 @@ class TagesProvider extends ChangeNotifier {
   void historieProviderSetzen(HistorieProvider provider) {
     historieProvider = provider;
   }
+
+  Future<void> historieAktualisierenUndSynchronisieren() async {
+  await historieAktualisieren();
+
+  try {
+    await _syncService.cloudUpload();
+  } catch (_) {
+    // App funktioniert offline weiter, auch wenn Cloud Sync nicht eingerichtet ist.
+  }
+
+  notifyListeners();
+}
   /// Aktualisiert die Historie, falls sie verbunden ist.
   Future<void> historieAktualisieren() async {
     await historieProvider?.aktualisieren();
@@ -128,14 +131,12 @@ class TagesProvider extends ChangeNotifier {
   /// Ändert die Stimmung und speichert sie.
 Future<void> stimmungSpeichern(String stimmung) async {
   await _service.stimmungSpeichern(eintrag, stimmung);
-  await historieAktualisieren();
-  notifyListeners();
+  await historieAktualisierenUndSynchronisieren();
 }
 
 /// Ändert die Tagesnotiz und speichert sie.
 Future<void> notizSpeichern(String notiz) async {
   await _service.notizSpeichern(eintrag, notiz);
-  await historieAktualisieren();
-  notifyListeners();
+  await historieAktualisierenUndSynchronisieren();
 }
 }
