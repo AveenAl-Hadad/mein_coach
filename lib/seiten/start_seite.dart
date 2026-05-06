@@ -23,6 +23,7 @@ import '../widgets/aktivitaet_verlauf_karte.dart';
 import '../widgets/ki_tagesanalyse_karte.dart';
 import '../widgets/xp_level_karte.dart';
 import '../widgets/tages_challenge_karte.dart';
+import '../widgets/badge_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -172,6 +173,14 @@ class _StartSeiteStatus extends State<StartSeite> {
           AppStyle.abstandKlein,
 
           TagesChallengeKarte(
+            eintrag: eintrag,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+
+          AppStyle.abstandKlein,
+
+          BadgeKarte(
             eintrag: eintrag,
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
