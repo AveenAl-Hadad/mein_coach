@@ -20,6 +20,7 @@ import '../widgets/wochen_statistik_karte.dart';
 import '../widgets/ziel_kreis_karte.dart';
 import '../widgets/gewicht_verlauf_karte.dart';
 import '../widgets/aktivitaet_verlauf_karte.dart';
+import '../widgets/ki_tagesanalyse_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -146,6 +147,14 @@ class _StartSeiteStatus extends State<StartSeite> {
             aktuellesGewicht: eintrag.gewicht,
             zielGewicht: einstellungenProvider.zielGewicht,
             tage: historieProvider.tage,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+
+          AppStyle.abstandKlein,
+
+          KiTagesanalyseKarte(
+            eintrag: eintrag,
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
           ),
