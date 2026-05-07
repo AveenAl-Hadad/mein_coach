@@ -6,6 +6,8 @@ import '../style/app_style.dart';
 import '../style/app_texte.dart';
 import '../services/erinnerung_service.dart';
 import 'cloud_sync_seite.dart';
+import 'dart:io';
+import '../services/profilbild_service.dart';
 
 /// Einstellungsseite der App.
 /// Hier kann der Nutzer persönliche Werte ändern.
@@ -24,7 +26,14 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
   final TextEditingController wasserZielController = TextEditingController();
   final TextEditingController schritteZielController = TextEditingController();
   final ErinnerungService erinnerungService = ErinnerungService();
+  final ProfilbildService profilbildService = ProfilbildService();
+  String? profilbildPfad;
 
+@override
+void initState() {
+  super.initState();
+  profilbildLaden();
+}
   @override
   void dispose() {
     zielGewichtController.dispose();
@@ -36,6 +45,35 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
     super.dispose();
   }
 
+  Future<void> profilbildLaden() async {
+    final pfad = await profilbildService.profilbildLaden();
+
+    if (!mounted) return;
+
+    setState(() {
+      profilbildPfad = pfad;
+    });
+  }
+
+  Future<void> profilbildAuswaehlen() async {
+    final pfad = await profilbildService.profilbildAuswaehlen();
+
+    if (!mounted) return;
+
+    setState(() {
+      profilbildPfad = pfad;
+    });
+  }
+
+  Future<void> profilbildLoeschen() async {
+    await profilbildService.profilbildLoeschen();
+
+    if (!mounted) return;
+
+    setState(() {
+      profilbildPfad = null;
+    });
+  }
   /// Öffnet einen Dialog zum Ändern des Zielgewichts.
   Future<void> zielGewichtAendern() async {
     final provider = context.read<EinstellungenProvider>();
@@ -281,6 +319,52 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
         padding: AppStyle.standardPadding,
         children: [
           const Text(AppTexte.profil, style: AppStyle.titelMittel),
+
+          AppStyle.abstandKlein,
+
+          Card(
+            child: Padding(
+              padding: AppStyle.standardPadding,
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 48,
+                    backgroundImage: profilbildPfad == null
+                        ? null
+                        : FileImage(File(profilbildPfad!)),
+                    child: profilbildPfad == null
+                        ? const Icon(Icons.person, size: 48)
+                        : null,
+                  ),
+                  AppStyle.abstandKlein,
+                  Text(
+                    provider.name.isEmpty ? 'Dein Profil' : provider.name,
+                    style: AppStyle.titelMittel,
+                  ),
+                  AppStyle.abstandKlein,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: profilbildAuswaehlen,
+                          icon: const Icon(Icons.photo),
+                          label: const Text('Bild wählen'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: profilbildLoeschen,
+                          icon: const Icon(Icons.delete),
+                          label: const Text('Löschen'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
 
           AppStyle.abstandKlein,
 
