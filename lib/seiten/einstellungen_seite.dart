@@ -8,6 +8,8 @@ import '../services/erinnerung_service.dart';
 import 'cloud_sync_seite.dart';
 import 'dart:io';
 import '../services/profilbild_service.dart';
+import '../services/ki_erinnerung_service.dart';
+import '../provider/tages_provider.dart';
 
 /// Einstellungsseite der App.
 /// Hier kann der Nutzer persönliche Werte ändern.
@@ -27,12 +29,14 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
   final TextEditingController schritteZielController = TextEditingController();
   final ErinnerungService erinnerungService = ErinnerungService();
   final ProfilbildService profilbildService = ProfilbildService();
+  final KiErinnerungService kiErinnerungService = KiErinnerungService();
   String? profilbildPfad;
 
 @override
 void initState() {
   super.initState();
   profilbildLaden();
+  kiErinnerungService.initialisieren();
 }
   @override
   void dispose() {
@@ -378,6 +382,7 @@ void initState() {
               onTap: nameAendern,
             ),
           ),
+          AppStyle.abstandKlein,
 
           Card(
             child: ListTile(
@@ -387,6 +392,7 @@ void initState() {
               onTap: groesseAendern,
             ),
           ),
+          AppStyle.abstandKlein,
 
           Card(
             child: ListTile(
@@ -407,6 +413,7 @@ void initState() {
               onTap: zielGewichtAendern,
             ),
           ),
+          AppStyle.abstandKlein,
           Card(
             child: ListTile(
               title: const Text(AppTexte.wasserZiel),
@@ -415,7 +422,7 @@ void initState() {
               onTap: wasserZielAendern,
             ),
           ),
-
+          AppStyle.abstandKlein,
           Card(
             child: ListTile(
               title: const Text(AppTexte.schritteZiel),
@@ -424,6 +431,7 @@ void initState() {
               onTap: schritteZielAendern,
             ),
           ),
+          AppStyle.abstandKlein,
           Card(
             child: ListTile(
               leading: const Icon(Icons.notifications),
@@ -433,6 +441,7 @@ void initState() {
               onTap: erinnerungService.testErinnerungAnzeigen,
             ),
           ),
+          AppStyle.abstandKlein,
           Card(
             child: ListTile(
               leading: const Icon(Icons.water_drop),
@@ -441,6 +450,7 @@ void initState() {
               onTap: erinnerungService.wasserErinnerungStarten,
             ),
           ),
+          AppStyle.abstandKlein,
           Card(
             child: ListTile(
               leading: const Icon(Icons.stop),
@@ -450,6 +460,8 @@ void initState() {
               },
             ),
           ),
+          AppStyle.abstandKlein,
+
           Card(
             child: SwitchListTile(
               secondary: const Icon(Icons.notifications_active),
@@ -487,6 +499,30 @@ void initState() {
               },
             ),
           ),
+          AppStyle.abstandKlein,
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.psychology),
+              title: const Text('KI Erinnerung testen'),
+              subtitle: const Text(
+                'Motivations Nachricht anzeigen',
+              ),
+              trailing: AppStyle.weiterIcon,
+              onTap: () async {
+                final tagesProvider = context.read<TagesProvider>();
+                final einstellungenProvider =
+                    context.read<EinstellungenProvider>();
+
+                await kiErinnerungService.motivationSenden(
+                  eintrag: tagesProvider.eintrag,
+                  wasserZiel: einstellungenProvider.wasserZiel,
+                  schritteZiel:
+                      einstellungenProvider.schritteZiel,
+                );
+              },
+            ),
+          ),
+          AppStyle.abstandKlein,
         ],
       ),
     );
