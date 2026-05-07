@@ -120,6 +120,26 @@ class FirebaseSyncService {
     await _speicher.alleTageSpeichern(tage);
   }
 
+  Future<Map<String, dynamic>?> profilDownload() async {
+    final prefs = await SharedPreferences.getInstance();
+    final daten = _firebaseDaten(prefs);
+
+    final response = await http.get(
+      Uri.parse(
+        '${daten.databaseUrl}/users/${daten.uid}/profil.json?auth=${daten.idToken}',
+      ),
+    );
+
+    if (response.statusCode >= 400) {
+      throw Exception('Profil Download fehlgeschlagen: ${response.body}');
+    }
+
+    if (response.body == 'null') {
+      return null;
+    }
+
+    return Map<String, dynamic>.from(jsonDecode(response.body));
+  }
   Future<void> _auth({
     required String email,
     required String passwort,

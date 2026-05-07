@@ -563,6 +563,63 @@ void initState() {
               },
             ),
           ),
+          AppStyle.abstandKlein,
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.cloud_download),
+              title: const Text('Profil aus Cloud laden'),
+              subtitle: const Text('Name, Ziele und Körperdaten wiederherstellen'),
+              trailing: AppStyle.weiterIcon,
+              onTap: () async {
+                final provider = context.read<EinstellungenProvider>();
+                final messenger = ScaffoldMessenger.of(context);
+
+                try {
+                  final profil = await firebaseSyncService.profilDownload();
+
+                  if (profil == null) {
+                    if (!mounted) return;
+
+                    messenger.showSnackBar(
+                      const SnackBar(
+                        content: Text('Kein Cloud Profil gefunden.'),
+                      ),
+                    );
+
+                    return;
+                  }
+
+                  await provider.nameSpeichern(profil['name'] ?? '');
+                  await provider.groesseSpeichern(profil['groesse'] ?? 170);
+                  await provider.startGewichtSpeichern(
+                    (profil['startGewicht'] as num).toDouble(),
+                  );
+                  await provider.zielGewichtSpeichern(
+                    (profil['zielGewicht'] as num).toDouble(),
+                  );
+                  await provider.wasserZielSpeichern(profil['wasserZiel'] ?? 8);
+                  await provider.schritteZielSpeichern(profil['schritteZiel'] ?? 8000);
+
+                  if (!mounted) return;
+
+                  messenger.showSnackBar(
+                    const SnackBar(
+                      content: Text('Profil wurde aus der Cloud geladen.'),
+                    ),
+                  );
+                } catch (fehler) {
+                  if (!mounted) return;
+
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: Text('Fehler: $fehler'),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
+
         ],
       ),
     );
