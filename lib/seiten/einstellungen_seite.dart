@@ -11,6 +11,7 @@ import '../services/profilbild_service.dart';
 import '../services/ki_erinnerung_service.dart';
 import '../provider/tages_provider.dart';
 import '../services/firebase_sync_service.dart';
+import 'gemini_einstellungen_seite.dart';
 
 /// Einstellungsseite der App.
 /// Hier kann der Nutzer persönliche Werte ändern.
@@ -616,6 +617,23 @@ void initState() {
                     ),
                   );
                 }
+              },
+            ),
+          ),
+          AppStyle.abstandKlein,
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.smart_toy),
+              title: const Text('Gemini KI Einstellungen'),
+              subtitle: const Text('API-Key für echten KI Coach speichern'),
+              trailing: AppStyle.weiterIcon,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const GeminiEinstellungenSeite(),
+                  ),
+                );
               },
             ),
           ),

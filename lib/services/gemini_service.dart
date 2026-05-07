@@ -12,7 +12,9 @@ class GeminiService {
   }
 
   Future<String> nachrichtSenden(String nachricht) async {
-    final apiKey = 'AIzaSyCJ2SlSi9YJOWfA3m932ASPKRtrlOyy4oU';
+    //final apiKey = 'AIzaSyCJ2SlSi9YJOWfA3m932ASPKRtrlOyy4oU';
+    final prefs = await SharedPreferences.getInstance();
+    final apiKey = prefs.getString(_apiKeyKey) ?? '';
    
 
     if (apiKey.isEmpty) {
