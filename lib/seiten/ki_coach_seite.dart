@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../provider/einstellungen_provider.dart';
-import '../provider/historie_provider.dart';
-import '../services/ki_coach_service.dart';
-import '../style/app_style.dart';
+import '../services/gemini_service.dart';
 
 class KiCoachSeite extends StatefulWidget {
   const KiCoachSeite({super.key});
@@ -14,63 +10,59 @@ class KiCoachSeite extends StatefulWidget {
 }
 
 class _KiCoachSeiteState extends State<KiCoachSeite> {
-  final TextEditingController apiKeyController = TextEditingController();
-  final TextEditingController frageController = TextEditingController();
+  final TextEditingController controller =
+      TextEditingController();
 
-  final KiCoachService kiCoachService = KiCoachService();
+  final GeminiService geminiService = GeminiService();
+
+  final List<_ChatNachricht> nachrichten = [];
 
   bool wirdGeladen = false;
-  String antwort = '';
 
-  @override
-  void dispose() {
-    apiKeyController.dispose();
-    frageController.dispose();
-    super.dispose();
-  }
+  Future<void> senden() async {
+    final text = controller.text.trim();
 
-  Future<void> apiKeySpeichern() async {
-    await kiCoachService.apiKeySpeichern(apiKeyController.text);
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('OpenAI API-Key gespeichert'),
-      ),
-    );
-  }
-
-  Future<void> coachFragen() async {
-    final historieProvider = context.read<HistorieProvider>();
-    final einstellungenProvider = context.read<EinstellungenProvider>();
+    if (text.isEmpty) return;
 
     setState(() {
-      wirdGeladen = true;
-      antwort = '';
-    });
-
-    try {
-      final neueAntwort = await kiCoachService.tippErstellen(
-        tage: historieProvider.tage,
-        wasserZiel: einstellungenProvider.wasserZiel,
-        schritteZiel: einstellungenProvider.schritteZiel,
-        zielGewicht: einstellungenProvider.zielGewicht,
-        frage: frageController.text,
+      nachrichten.add(
+        _ChatNachricht(
+          text: text,
+          istNutzer: true,
+        ),
       );
 
+      wirdGeladen = true;
+    });
+
+    controller.clear();
+
+    try {
+      final antwort =
+          await geminiService.nachrichtSenden(text);
+
       setState(() {
-        antwort = neueAntwort;
+        nachrichten.add(
+          _ChatNachricht(
+            text: antwort,
+            istNutzer: false,
+          ),
+        );
       });
     } catch (fehler) {
       setState(() {
-        antwort = 'Fehler: $fehler';
-      });
-    } finally {
-      setState(() {
-        wirdGeladen = false;
+        nachrichten.add(
+          _ChatNachricht(
+            text: 'Fehler: $fehler',
+            istNutzer: false,
+          ),
+        );
       });
     }
+
+    setState(() {
+      wirdGeladen = false;
+    });
   }
 
   @override
@@ -78,77 +70,94 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('KI Coach'),
-        centerTitle: true,
       ),
-      body: ListView(
-        padding: AppStyle.standardPadding,
+      body: Column(
         children: [
-          const Text(
-            'ChatGPT Coach',
-            style: AppStyle.titelGross,
-          ),
-          AppStyle.abstandKlein,
-          const Text(
-            'Speichere deinen OpenAI API-Key und frage deinen Coach nach Tipps.',
-          ),
-          AppStyle.abstandMittel,
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: nachrichten.length,
+              itemBuilder: (context, index) {
+                final nachricht = nachrichten[index];
 
-          TextField(
-            controller: apiKeyController,
-            obscureText: true,
-            decoration: const InputDecoration(
-              labelText: 'OpenAI API-Key',
-              border: OutlineInputBorder(),
+                return Align(
+                  alignment: nachricht.istNutzer
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 12,
+                    ),
+                    padding: const EdgeInsets.all(14),
+                    constraints: const BoxConstraints(
+                      maxWidth: 320,
+                    ),
+                    decoration: BoxDecoration(
+                      color: nachricht.istNutzer
+                          ? Colors.green
+                          : Colors.grey.shade300,
+                      borderRadius:
+                          BorderRadius.circular(18),
+                    ),
+                    child: Text(
+                      nachricht.text,
+                      style: TextStyle(
+                        color: nachricht.istNutzer
+                            ? Colors.white
+                            : Colors.black,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
-          AppStyle.abstandKlein,
-
-          ElevatedButton.icon(
-            onPressed: apiKeySpeichern,
-            icon: const Icon(Icons.save),
-            label: const Text('API-Key speichern'),
-          ),
-
-          AppStyle.abstandGross,
-
-          TextField(
-            controller: frageController,
-            minLines: 3,
-            maxLines: 5,
-            decoration: const InputDecoration(
-              labelText: 'Deine Frage',
-              hintText: 'z.B. Was soll ich heute besser machen?',
-              border: OutlineInputBorder(),
-            ),
-          ),
-
-          AppStyle.abstandKlein,
-
-          ElevatedButton.icon(
-            onPressed: wirdGeladen ? null : coachFragen,
-            icon: const Icon(Icons.auto_awesome),
-            label: const Text('Coach fragen'),
-          ),
-
-          AppStyle.abstandGross,
 
           if (wirdGeladen)
-            const Center(
+            const Padding(
+              padding: EdgeInsets.all(8),
               child: CircularProgressIndicator(),
             ),
 
-          if (antwort.isNotEmpty)
-            Card(
-              child: Padding(
-                padding: AppStyle.standardPadding,
-                child: Text(
-                  antwort,
-                  style: AppStyle.normalText,
-                ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: controller,
+                      decoration:
+                          const InputDecoration(
+                        hintText:
+                            'Frage deinen KI Coach...',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 8),
+
+                  IconButton(
+                    onPressed: senden,
+                    icon: const Icon(Icons.send),
+                  ),
+                ],
               ),
             ),
+          ),
         ],
       ),
     );
   }
+}
+
+class _ChatNachricht {
+  final String text;
+  final bool istNutzer;
+
+  _ChatNachricht({
+    required this.text,
+    required this.istNutzer,
+  });
 }
