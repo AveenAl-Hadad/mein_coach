@@ -533,7 +533,7 @@ void initState() {
               trailing: AppStyle.weiterIcon,
               onTap: () async {
                 final provider = context.read<EinstellungenProvider>();
-
+                final messenger = ScaffoldMessenger.of(context);
                 try {
                   await firebaseSyncService.profilUpload(
                     name: provider.name,
@@ -546,15 +546,15 @@ void initState() {
 
                   if (!mounted) return;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Profil wurde in der Cloud gespeichert.'),
+                     messenger.showSnackBar(
+                        const SnackBar(
+                          content: Text('Profil wurde in der Cloud gespeichert.'),
                     ),
                   );
                 } catch (fehler) {
                   if (!mounted) return;
 
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  messenger.showSnackBar(
                     SnackBar(
                       content: Text('Fehler: $fehler'),
                     ),
