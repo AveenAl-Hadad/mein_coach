@@ -65,6 +65,37 @@ class FirebaseSyncService {
     }
   }
 
+  Future<void> profilUpload({
+    required String name,
+    required int groesse,
+    required double startGewicht,
+    required double zielGewicht,
+    required int wasserZiel,
+    required int schritteZiel,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final daten = _firebaseDaten(prefs);
+
+    final response = await http.put(
+      Uri.parse(
+        '${daten.databaseUrl}/users/${daten.uid}/profil.json?auth=${daten.idToken}',
+      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'name': name,
+        'groesse': groesse,
+        'startGewicht': startGewicht,
+        'zielGewicht': zielGewicht,
+        'wasserZiel': wasserZiel,
+        'schritteZiel': schritteZiel,
+        'aktualisiertAm': DateTime.now().toIso8601String(),
+      }),
+    );
+
+    if (response.statusCode >= 400) {
+      throw Exception('Profil Upload fehlgeschlagen: ${response.body}');
+    }
+  }
   Future<void> cloudDownload() async {
     final prefs = await SharedPreferences.getInstance();
     final daten = _firebaseDaten(prefs);

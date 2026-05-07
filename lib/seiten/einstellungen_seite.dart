@@ -10,6 +10,7 @@ import 'dart:io';
 import '../services/profilbild_service.dart';
 import '../services/ki_erinnerung_service.dart';
 import '../provider/tages_provider.dart';
+import '../services/firebase_sync_service.dart';
 
 /// Einstellungsseite der App.
 /// Hier kann der Nutzer persönliche Werte ändern.
@@ -30,6 +31,7 @@ class _EinstellungenSeiteStatus extends State<EinstellungenSeite> {
   final ErinnerungService erinnerungService = ErinnerungService();
   final ProfilbildService profilbildService = ProfilbildService();
   final KiErinnerungService kiErinnerungService = KiErinnerungService();
+  final FirebaseSyncService firebaseSyncService = FirebaseSyncService();
   String? profilbildPfad;
 
 @override
@@ -523,6 +525,44 @@ void initState() {
             ),
           ),
           AppStyle.abstandKlein,
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.cloud_upload),
+              title: const Text('Profil in Cloud speichern'),
+              subtitle: const Text('Name, Ziele und Körperdaten sichern'),
+              trailing: AppStyle.weiterIcon,
+              onTap: () async {
+                final provider = context.read<EinstellungenProvider>();
+
+                try {
+                  await firebaseSyncService.profilUpload(
+                    name: provider.name,
+                    groesse: provider.groesse,
+                    startGewicht: provider.startGewicht,
+                    zielGewicht: provider.zielGewicht,
+                    wasserZiel: provider.wasserZiel,
+                    schritteZiel: provider.schritteZiel,
+                  );
+
+                  if (!mounted) return;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Profil wurde in der Cloud gespeichert.'),
+                    ),
+                  );
+                } catch (fehler) {
+                  if (!mounted) return;
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Fehler: $fehler'),
+                    ),
+                  );
+                }
+              },
+            ),
+          ),
         ],
       ),
     );
