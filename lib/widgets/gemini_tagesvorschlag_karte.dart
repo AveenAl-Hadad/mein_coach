@@ -4,6 +4,7 @@ import '../modelle/tages_eintrag.dart';
 import '../services/gemini_service.dart';
 import '../style/app_style.dart';
 import '../services/gemini_vorschlag_speicher_service.dart';
+import 'package:flutter/services.dart';
 
 class GeminiTagesvorschlagKarte extends StatefulWidget {
   final TagesEintrag eintrag;
@@ -22,8 +23,7 @@ class GeminiTagesvorschlagKarte extends StatefulWidget {
       _GeminiTagesvorschlagKarteState();
 }
 
-class _GeminiTagesvorschlagKarteState
-    extends State<GeminiTagesvorschlagKarte> {
+class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
   final GeminiService geminiService = GeminiService();
   final GeminiVorschlagSpeicherService speicherService = GeminiVorschlagSpeicherService();
 
@@ -110,6 +110,19 @@ class _GeminiTagesvorschlagKarteState
     });
   }
 
+  Future<void> vorschlagKopieren() async {
+    await Clipboard.setData(
+      ClipboardData(text: antwort),
+    );
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Tagesvorschlag wurde kopiert.'),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -139,6 +152,13 @@ class _GeminiTagesvorschlagKarteState
               AppStyle.abstandKlein,
               Row(
                 children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: antwort.isEmpty ? null : vorschlagKopieren,
+                      icon: const Icon(Icons.copy),
+                      label: const Text('Kopieren'),
+                    ),
+                  ),
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: wirdGeladen ? null : vorschlagLoeschen,
