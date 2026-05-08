@@ -3,6 +3,7 @@ import '../services/gemini_service.dart';
 import '../modelle/chat_nachricht.dart';
 import '../services/chat_speicher_service.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter/services.dart';
 
 class KiCoachSeite extends StatefulWidget {
   const KiCoachSeite({super.key});
@@ -240,13 +241,40 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
                       borderRadius:
                           BorderRadius.circular(18),
                     ),
-                    child: Text(
-                      nachricht.text,
-                      style: TextStyle(
-                        color: nachricht.istNutzer
-                            ? Colors.white
-                            : Colors.black,
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          nachricht.text,
+                          style: TextStyle(
+                            color: nachricht.istNutzer ? Colors.white : Colors.black,
+                          ),
+                        ),
+
+                        if (!nachricht.istNutzer) ...[
+                          const SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              tooltip: 'Antwort kopieren',
+                              icon: const Icon(Icons.copy, size: 18),
+                              onPressed: () async {
+                                await Clipboard.setData(
+                                  ClipboardData(text: nachricht.text),
+                                );
+
+                                if (!context.mounted) return;
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Antwort wurde kopiert.'),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                 );
