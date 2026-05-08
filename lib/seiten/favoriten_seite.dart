@@ -5,6 +5,7 @@ import '../provider/historie_provider.dart';
 import '../services/favorit_service.dart';
 import '../services/gemini_vorschlag_speicher_service.dart';
 import '../style/app_style.dart';
+import 'package:flutter/services.dart';
 
 class FavoritenSeite extends StatefulWidget {
   const FavoritenSeite({super.key});
@@ -78,6 +79,19 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
         favoriten.remove(eintrag);
       });
     }
+    Future<void> favoritKopieren(_FavoritEintrag eintrag) async {
+      await Clipboard.setData(
+        ClipboardData(text: eintrag.text),
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Favorit wurde kopiert.'),
+        ),
+      );
+    }
   
   @override
   Widget build(BuildContext context) {
@@ -142,6 +156,11 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
                                         tooltip: 'Favorit entfernen',
                                         icon: const Icon(Icons.delete),
                                         onPressed: () => favoritEntfernen(favorit),
+                                      ),
+                                      IconButton(
+                                        tooltip: 'Favorit kopieren',
+                                        icon: const Icon(Icons.copy),
+                                        onPressed: () => favoritKopieren(favorit),
                                       ),
                                     ],
                                   ),
