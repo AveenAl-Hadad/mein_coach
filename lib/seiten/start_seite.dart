@@ -30,6 +30,7 @@ import '../widgets/beste_leistung_karte.dart';
 import '../widgets/tagesabschluss_karte.dart';
 import '../widgets/monats_statistik_karte.dart';
 import '../services/pdf_export_service.dart';
+import '../widgets/gemini_tagesvorschlag_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -128,13 +129,11 @@ class _StartSeiteStatus extends State<StartSeite> {
             icon: AppStyle.backupExportIcon,
             onPressed: backupExportieren,
           ),
-
           IconButton(
             tooltip: 'PDF exportieren',
             icon: const Icon(Icons.picture_as_pdf),
             onPressed: pdfExportieren,
           ),
-          
           IconButton(
             icon: themeProvider.istDunkel
                 ? AppStyle.hellIcon
@@ -157,6 +156,7 @@ class _StartSeiteStatus extends State<StartSeite> {
         padding: AppStyle.standardPadding,
         children: [
           const Text(AppTexte.heute, style: AppStyle.titelGross),
+
           AppStyle.abstandKlein,
 
           ProfilUebersichtKarte(
@@ -180,6 +180,14 @@ class _StartSeiteStatus extends State<StartSeite> {
           AppStyle.abstandKlein,
 
           KiTagesanalyseKarte(
+            eintrag: eintrag,
+            wasserZiel: einstellungenProvider.wasserZiel,
+            schritteZiel: einstellungenProvider.schritteZiel,
+          ),
+
+          AppStyle.abstandKlein,
+
+          GeminiTagesvorschlagKarte(
             eintrag: eintrag,
             wasserZiel: einstellungenProvider.wasserZiel,
             schritteZiel: einstellungenProvider.schritteZiel,
@@ -230,6 +238,7 @@ class _StartSeiteStatus extends State<StartSeite> {
           BesteLeistungKarte(
             tage: historieProvider.tage,
           ),
+         
           AppStyle.abstandKlein,
 
           TagesabschlussKarte(
@@ -299,6 +308,7 @@ class _StartSeiteStatus extends State<StartSeite> {
             aktionMinus: provider.schritteVerringern,
             aktionPlus: provider.schritteErhoehen,
           ),
+          
           AppStyle.abstandKlein,
 
           TagesReflexionKarte(
