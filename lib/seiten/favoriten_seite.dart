@@ -89,6 +89,12 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
       setState(() {
         favoriten.remove(eintrag);
       });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Favorit wurde gelöscht.'),
+        ),
+      );
     }
     Future<void> favoritKopieren(_FavoritEintrag eintrag) async {
       await Clipboard.setData(
