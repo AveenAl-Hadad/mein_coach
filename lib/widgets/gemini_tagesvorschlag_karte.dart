@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../modelle/tages_eintrag.dart';
 import '../services/gemini_service.dart';
 import '../style/app_style.dart';
+import '../services/gemini_vorschlag_speicher_service.dart';
 
 class GeminiTagesvorschlagKarte extends StatefulWidget {
   final TagesEintrag eintrag;
@@ -24,9 +25,27 @@ class GeminiTagesvorschlagKarte extends StatefulWidget {
 class _GeminiTagesvorschlagKarteState
     extends State<GeminiTagesvorschlagKarte> {
   final GeminiService geminiService = GeminiService();
+  final GeminiVorschlagSpeicherService speicherService = GeminiVorschlagSpeicherService();
 
   bool wirdGeladen = false;
   String antwort = '';
+
+  @override
+  void initState() {
+    super.initState();
+    vorschlagLaden();
+  }
+
+  Future<void> vorschlagLaden() async {
+    final gespeicherteAntwort =
+        await speicherService.laden(widget.eintrag.datum);
+
+    if (!mounted) return;
+
+    setState(() {
+      antwort = gespeicherteAntwort;
+    });
+  }
 
   Future<void> vorschlagErstellen() async {
     setState(() {
@@ -39,25 +58,26 @@ class _GeminiTagesvorschlagKarteState
         .join(', ');
 
     final prompt = '''
-Analysiere meinen heutigen Tag kurz auf Deutsch.
+      Analysiere meinen heutigen Tag kurz auf Deutsch.
 
-Daten:
-- Datum: ${widget.eintrag.datum}
-- Gewicht: ${widget.eintrag.gewicht.toStringAsFixed(1)} kg
-- Wasser: ${widget.eintrag.wasser} von ${widget.wasserZiel} Gläsern
-- Schritte: ${widget.eintrag.schritte} von ${widget.schritteZiel}
-- Stimmung: ${widget.eintrag.stimmung}
-- Notiz: ${widget.eintrag.notiz}
-- Mahlzeiten: ${mahlzeiten.isEmpty ? 'Keine Mahlzeiten gespeichert' : mahlzeiten}
+      Daten:
+      - Datum: ${widget.eintrag.datum}
+      - Gewicht: ${widget.eintrag.gewicht.toStringAsFixed(1)} kg
+      - Wasser: ${widget.eintrag.wasser} von ${widget.wasserZiel} Gläsern
+      - Schritte: ${widget.eintrag.schritte} von ${widget.schritteZiel}
+      - Stimmung: ${widget.eintrag.stimmung}
+      - Notiz: ${widget.eintrag.notiz}
+      - Mahlzeiten: ${mahlzeiten.isEmpty ? 'Keine Mahlzeiten gespeichert' : mahlzeiten}
 
-Gib mir:
-1. kurzes Lob
-2. einen Verbesserungstipp
-3. eine kleine Challenge für heute
-''';
+      Gib mir:
+      1. kurzes Lob
+      2. einen Verbesserungstipp
+      3. eine kleine Challenge für heute
+      ''';
 
     try {
       final neueAntwort = await geminiService.nachrichtSenden(prompt);
+      await speicherService.speichern(datum: widget.eintrag.datum, text: neueAntwort,);
 
       if (!mounted) return;
 
