@@ -6,6 +6,7 @@ import '../services/favorit_service.dart';
 import '../services/gemini_vorschlag_speicher_service.dart';
 import '../style/app_style.dart';
 import 'package:flutter/services.dart';
+import '../services/favorit_pdf_service.dart';
 
 class FavoritenSeite extends StatefulWidget {
   const FavoritenSeite({super.key});
@@ -21,6 +22,7 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
 
   final List<_FavoritEintrag> favoriten = [];
   final TextEditingController suchController = TextEditingController();
+  final FavoritPdfService favoritPdfService = FavoritPdfService();
   String suchText = '';
 
   bool wirdGeladen = true;
@@ -92,7 +94,13 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
         ),
       );
     }
-  
+    Future<void> favoritAlsPdfExportieren(_FavoritEintrag eintrag) async {
+      await favoritPdfService.exportieren(
+        datum: eintrag.datum,
+        text: eintrag.text,
+      );
+    }
+ 
   @override
   Widget build(BuildContext context) {
     final gefilterteFavoriten = favoriten.where((favorit) {
@@ -161,6 +169,11 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
                                         tooltip: 'Favorit kopieren',
                                         icon: const Icon(Icons.copy),
                                         onPressed: () => favoritKopieren(favorit),
+                                      ),
+                                      IconButton(
+                                        tooltip: 'Favorit als PDF',
+                                        icon: const Icon(Icons.picture_as_pdf),
+                                        onPressed: () => favoritAlsPdfExportieren(favorit),
                                       ),
                                     ],
                                   ),
