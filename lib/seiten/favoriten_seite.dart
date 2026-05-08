@@ -59,7 +59,19 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
       wirdGeladen = false;
     });
   }
+  Future<void> favoritEntfernen(_FavoritEintrag eintrag) async {
+    await favoritService.favoritSpeichern(
+      datum: eintrag.datum,
+      istFavorit: false,
+    );
 
+    if (!mounted) return;
+
+    setState(() {
+      favoriten.remove(eintrag);
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,9 +97,20 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              favorit.datum,
-                              style: AppStyle.titelMittel,
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    favorit.datum,
+                                    style: AppStyle.titelMittel,
+                                  ),
+                                ),
+                                IconButton(
+                                  tooltip: 'Favorit entfernen',
+                                  icon: const Icon(Icons.delete),
+                                  onPressed: () => favoritEntfernen(favorit),
+                                ),
+                              ],
                             ),
                             AppStyle.abstandKlein,
                             Text(favorit.text),
