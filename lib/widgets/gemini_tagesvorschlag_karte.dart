@@ -6,6 +6,7 @@ import '../style/app_style.dart';
 import '../services/gemini_vorschlag_speicher_service.dart';
 import 'package:flutter/services.dart';
 import '../services/gemini_pdf_service.dart';
+import '../services/favorit_service.dart';
 
 class GeminiTagesvorschlagKarte extends StatefulWidget {
   final TagesEintrag eintrag;
@@ -28,6 +29,8 @@ class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
   final GeminiService geminiService = GeminiService();
   final GeminiVorschlagSpeicherService speicherService = GeminiVorschlagSpeicherService();
   final GeminiPdfService pdfService = GeminiPdfService();
+  final FavoritService favoritService = FavoritService();
+  bool istFavorit = false;
   bool wirdGeladen = false;
   String antwort = '';
 
@@ -35,6 +38,7 @@ class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
   void initState() {
     super.initState();
     vorschlagLaden();
+    favoritLaden();
   }
 
   Future<void> vorschlagLaden() async {
@@ -132,6 +136,31 @@ class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
     );
   }
   
+  Future<void> favoritLaden() async {
+  final wert = await favoritService.istFavorit(widget.eintrag.datum);
+
+  if (!mounted) return;
+
+  setState(() {
+    istFavorit = wert;
+  });
+}
+
+Future<void> favoritWechseln() async {
+  final neuerWert = !istFavorit;
+
+  await favoritService.favoritSpeichern(
+    datum: widget.eintrag.datum,
+    istFavorit: neuerWert,
+  );
+
+  if (!mounted) return;
+
+  setState(() {
+    istFavorit = neuerWert;
+  });
+}
+ 
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -190,6 +219,17 @@ class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
                           : pdfExportieren,
                       icon: const Icon(Icons.picture_as_pdf),
                       label: const Text('PDF'),
+                    ),
+                  ),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: antwort.isEmpty ? null : favoritWechseln,
+                      icon: Icon(
+                        istFavorit ? Icons.star : Icons.star_border,
+                      ),
+                      label: Text(
+                        istFavorit ? 'Favorit' : 'Merken',
+                      ),
                     ),
                   ),
                 ],
