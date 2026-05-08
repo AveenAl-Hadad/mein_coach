@@ -83,12 +83,26 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
       wirdGeladen = false;
     });
   }
+  Future<void> chatLoeschen() async {
+  await chatSpeicherService.chatLoeschen();
+
+  setState(() {
+    nachrichten.clear();
+  });
+}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('KI Coach'),
+        actions: [
+          IconButton(
+            tooltip: 'Chat löschen',
+            icon: const Icon(Icons.delete),
+            onPressed: chatLoeschen,
+          ),
+        ],
       ),
       body: Column(
         children: [
