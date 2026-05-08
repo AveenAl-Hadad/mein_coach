@@ -7,6 +7,7 @@ import '../services/gemini_vorschlag_speicher_service.dart';
 import '../style/app_style.dart';
 import 'package:flutter/services.dart';
 import '../services/favorit_pdf_service.dart';
+import '../services/favoriten_cloud_service.dart';
 
 class FavoritenSeite extends StatefulWidget {
   const FavoritenSeite({super.key});
@@ -19,6 +20,8 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
   final FavoritService favoritService = FavoritService();
   final GeminiVorschlagSpeicherService speicherService =
       GeminiVorschlagSpeicherService();
+  final FavoritenCloudService favoritenCloudService =
+    FavoritenCloudService();
 
   final List<_FavoritEintrag> favoriten = [];
   final TextEditingController suchController = TextEditingController();
@@ -100,6 +103,32 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
         text: eintrag.text,
       );
     }
+    Future<void> favoritCloudUpload(_FavoritEintrag eintrag,) async {
+    try {
+      await favoritenCloudService.favoritHochladen(
+        datum: eintrag.datum,
+        text: eintrag.text,
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Favorit in Cloud gespeichert.',
+          ),
+        ),
+      );
+    } catch (fehler) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Fehler: $fehler'),
+        ),
+      );
+    }
+  }
  
   @override
   Widget build(BuildContext context) {
@@ -174,6 +203,11 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
                                         tooltip: 'Favorit als PDF',
                                         icon: const Icon(Icons.picture_as_pdf),
                                         onPressed: () => favoritAlsPdfExportieren(favorit),
+                                      ),
+                                      IconButton(
+                                        tooltip: 'In Cloud speichern',
+                                        icon: const Icon(Icons.cloud_upload),
+                                        onPressed: () => favoritCloudUpload(favorit),
                                       ),
                                     ],
                                   ),
