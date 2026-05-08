@@ -5,6 +5,7 @@ import '../services/gemini_service.dart';
 import '../style/app_style.dart';
 import '../services/gemini_vorschlag_speicher_service.dart';
 import 'package:flutter/services.dart';
+import '../services/gemini_pdf_service.dart';
 
 class GeminiTagesvorschlagKarte extends StatefulWidget {
   final TagesEintrag eintrag;
@@ -26,7 +27,7 @@ class GeminiTagesvorschlagKarte extends StatefulWidget {
 class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
   final GeminiService geminiService = GeminiService();
   final GeminiVorschlagSpeicherService speicherService = GeminiVorschlagSpeicherService();
-
+  final GeminiPdfService pdfService = GeminiPdfService();
   bool wirdGeladen = false;
   String antwort = '';
 
@@ -123,6 +124,14 @@ class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
       ),
     );
   }
+  
+  Future<void> pdfExportieren() async {
+    await pdfService.pdfExportieren(
+      datum: widget.eintrag.datum,
+      text: antwort,
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -172,6 +181,15 @@ class _GeminiTagesvorschlagKarteState extends State<GeminiTagesvorschlagKarte> {
                       onPressed: wirdGeladen ? null : vorschlagErstellen,
                       icon: const Icon(Icons.refresh),
                       label: const Text('Neu erstellen'),
+                    ),
+                  ),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: antwort.isEmpty
+                          ? null
+                          : pdfExportieren,
+                      icon: const Icon(Icons.picture_as_pdf),
+                      label: const Text('PDF'),
                     ),
                   ),
                 ],
