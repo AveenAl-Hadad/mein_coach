@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
 import '../services/gemini_service.dart';
+import '../modelle/chat_nachricht.dart';
+import '../services/chat_speicher_service.dart';
 
 class KiCoachSeite extends StatefulWidget {
   const KiCoachSeite({super.key});
@@ -10,13 +11,27 @@ class KiCoachSeite extends StatefulWidget {
 }
 
 class _KiCoachSeiteState extends State<KiCoachSeite> {
-  final TextEditingController controller =
-      TextEditingController();
-
+  final TextEditingController controller = TextEditingController();
   final GeminiService geminiService = GeminiService();
+  final List<ChatNachricht> nachrichten = [];
+  final ChatSpeicherService chatSpeicherService = ChatSpeicherService();
 
-  final List<_ChatNachricht> nachrichten = [];
+  @override
+  void initState() {
+    super.initState();
+    chatLaden();
+  }
 
+  Future<void> chatLaden() async {
+    final geladeneNachrichten = await chatSpeicherService.chatLaden();
+
+    if (!mounted) return;
+
+    setState(() {
+      nachrichten.clear();
+      nachrichten.addAll(geladeneNachrichten);
+    });
+  }
   bool wirdGeladen = false;
 
   Future<void> senden() async {
@@ -26,11 +41,12 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
 
     setState(() {
       nachrichten.add(
-        _ChatNachricht(
+        ChatNachricht(
           text: text,
           istNutzer: true,
+          zeit: DateTime.now().toIso8601String(),
         ),
-      );
+    );
 
       wirdGeladen = true;
     });
@@ -43,18 +59,20 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
 
       setState(() {
         nachrichten.add(
-          _ChatNachricht(
+          ChatNachricht(
             text: antwort,
             istNutzer: false,
+            zeit: DateTime.now().toIso8601String(),
           ),
         );
       });
     } catch (fehler) {
       setState(() {
         nachrichten.add(
-          _ChatNachricht(
+          ChatNachricht(
             text: 'Fehler: $fehler',
             istNutzer: false,
+            zeit: DateTime.now().toIso8601String(),
           ),
         );
       });
@@ -152,12 +170,3 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
   }
 }
 
-class _ChatNachricht {
-  final String text;
-  final bool istNutzer;
-
-  _ChatNachricht({
-    required this.text,
-    required this.istNutzer,
-  });
-}
