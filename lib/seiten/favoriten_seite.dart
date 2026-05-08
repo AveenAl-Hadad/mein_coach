@@ -78,6 +78,12 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
         istFavorit: false,
       );
 
+      try {
+        await favoritenCloudService.favoritLoeschen(eintrag.datum);
+      } catch (_) {
+        // Falls keine Cloud eingerichtet ist, wird nur lokal gelöscht.
+      }
+
       if (!mounted) return;
 
       setState(() {
@@ -170,7 +176,7 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
       );
     }
   }
-  
+   
   @override
   Widget build(BuildContext context) {
     final gefilterteFavoriten = favoriten.where((favorit) {

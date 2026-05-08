@@ -72,7 +72,19 @@ class FavoritenCloudService {
         .map((eintrag) => Map<String, dynamic>.from(eintrag))
         .toList();
   }
+  Future<void> favoritLoeschen(String datum) async {
+    final daten = await _firebaseDaten();
 
+    final response = await http.delete(
+      Uri.parse(
+        '${daten.databaseUrl}/users/${daten.uid}/favoriten/$datum.json?auth=${daten.idToken}',
+      ),
+    );
+
+    if (response.statusCode >= 400) {
+      throw Exception('Cloud Löschen fehlgeschlagen.');
+    }
+  }
 
 }
 
