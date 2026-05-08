@@ -70,12 +70,13 @@ Gib mir:
       setState(() {
         antwort = 'Fehler: $fehler';
       });
-    } finally {
-      if (!mounted) return;
-
-      setState(() {
-        wirdGeladen = false;
-      });
+    } 
+    finally {
+      if (mounted) {
+        setState(() {
+          wirdGeladen = false;
+        });
+      }
     }
   }
 
