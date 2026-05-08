@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/gemini_service.dart';
 import '../modelle/chat_nachricht.dart';
 import '../services/chat_speicher_service.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class KiCoachSeite extends StatefulWidget {
   const KiCoachSeite({super.key});
@@ -15,6 +16,9 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
   final GeminiService geminiService = GeminiService();
   final List<ChatNachricht> nachrichten = [];
   final ChatSpeicherService chatSpeicherService = ChatSpeicherService();
+  final SpeechToText speechToText = SpeechToText();
+
+  bool hoertZu = false;   
 
   @override
   void initState() {
@@ -42,6 +46,31 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
       } else {
         nachrichten.addAll(geladeneNachrichten);
       }
+    });
+  }
+  Future<void> spracheStarten() async {
+    final verfuegbar = await speechToText.initialize();
+
+    if (!verfuegbar) return;
+
+    setState(() {
+      hoertZu = true;
+    });
+
+    await speechToText.listen(
+      onResult: (result) {
+        setState(() {
+          controller.text = result.recognizedWords;
+        });
+      },
+    );
+  }
+
+  Future<void> spracheStoppen() async {
+    await speechToText.stop();
+
+    setState(() {
+      hoertZu = false;
     });
   }
   Future<void> schnellfrage(String frage) async {
@@ -221,6 +250,15 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
                             'Frage deinen KI Coach...',
                         border: OutlineInputBorder(),
                       ),
+                    ),
+                  ),
+                  
+                   IconButton(
+                    onPressed: hoertZu
+                        ? spracheStoppen
+                        : spracheStarten,
+                    icon: Icon(
+                      hoertZu ? Icons.mic : Icons.mic_none,
                     ),
                   ),
 
