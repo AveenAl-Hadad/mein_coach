@@ -7,6 +7,7 @@ import 'einstellungen_seite.dart';
 import 'mahlzeiten_galerie_seite.dart';
 import 'ki_coach_seite.dart';
 import 'cloud_sync_seite.dart';
+import 'favoriten_seite.dart';
 
 
 /// Hauptnavigation der App.
@@ -28,6 +29,7 @@ class _HauptNavigationStatus extends State<HauptNavigation> {
     KiCoachSeite(),
     CloudSyncSeite(),
     MahlzeitenGalerieSeite(),
+    FavoritenSeite(),
    
   ];
 
@@ -72,7 +74,10 @@ class _HauptNavigationStatus extends State<HauptNavigation> {
             icon: Icon(Icons.cloud_sync),
             label: 'Cloud',
           ),
-
+          BottomNavigationBarItem(
+            icon: Icon(Icons.star),
+            label: 'Favoriten',
+          ),
       ],
       ),
     );
