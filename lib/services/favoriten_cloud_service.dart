@@ -49,6 +49,31 @@ class FavoritenCloudService {
       );
     }
   }
+  Future<List<Map<String, dynamic>>> favoritenHerunterladen() async {
+    final daten = await _firebaseDaten();
+
+    final response = await http.get(
+      Uri.parse(
+        '${daten.databaseUrl}/users/${daten.uid}/favoriten.json?auth=${daten.idToken}',
+      ),
+    );
+
+    if (response.statusCode >= 400) {
+      throw Exception('Cloud Download fehlgeschlagen.');
+    }
+
+    if (response.body == 'null') {
+      return [];
+    }
+
+    final body = jsonDecode(response.body) as Map<String, dynamic>;
+
+    return body.values
+        .map((eintrag) => Map<String, dynamic>.from(eintrag))
+        .toList();
+  }
+
+
 }
 
 class _FirebaseDaten {

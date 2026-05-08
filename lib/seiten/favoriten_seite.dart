@@ -129,7 +129,48 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
       );
     }
   }
- 
+    Future<void> favoritenCloudDownload() async {
+    try {
+      final cloudFavoriten =
+          await favoritenCloudService.favoritenHerunterladen();
+
+      for (final favorit in cloudFavoriten) {
+        final datum = favorit['datum'] ?? '';
+        final text = favorit['text'] ?? '';
+
+        if (datum.toString().isEmpty || text.toString().isEmpty) continue;
+
+        await favoritService.favoritSpeichern(
+          datum: datum,
+          istFavorit: true,
+        );
+
+        await speicherService.speichern(
+          datum: datum,
+          text: text,
+        );
+      }
+
+      await favoritenLaden();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Favoriten aus Cloud geladen.'),
+        ),
+      );
+    } catch (fehler) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Fehler: $fehler'),
+        ),
+      );
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     final gefilterteFavoriten = favoriten.where((favorit) {
@@ -142,6 +183,13 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
       appBar: AppBar(
         title: const Text('Favoriten'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            tooltip: 'Favoriten aus Cloud laden',
+            icon: const Icon(Icons.cloud_download),
+            onPressed: favoritenCloudDownload,
+          ),
+        ],
       ),
        body: wirdGeladen
         ? const Center(child: CircularProgressIndicator())
