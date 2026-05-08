@@ -140,12 +140,41 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     });
   }
   Future<void> chatLoeschen() async {
-  await chatSpeicherService.chatLoeschen();
-
-  setState(() {
-    nachrichten.clear();
-  });
-}
+    final bestaetigt = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Chat löschen?'),
+          content: const Text(
+            'Möchtest du den kompletten KI-Chat wirklich löschen?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Abbrechen'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Löschen'),
+            ),
+          ],
+        );
+      },
+    );
+    if (bestaetigt != true) return;
+    await chatSpeicherService.chatLoeschen();
+    setState(() {
+      nachrichten.clear();
+      nachrichten.add(
+        ChatNachricht(
+          text:
+              'Hallo 👋 Ich bin dein KI Coach. Frag mich z.B.: Was kann ich heute besser machen?',
+          istNutzer: false,
+          zeit: DateTime.now().toIso8601String(),
+        ),
+      );
+    });
+  }
   
   void nachUntenScrollen() {
     Future.delayed(const Duration(milliseconds: 100), () {
