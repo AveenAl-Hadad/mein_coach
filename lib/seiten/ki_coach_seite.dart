@@ -29,7 +29,19 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
 
     setState(() {
       nachrichten.clear();
-      nachrichten.addAll(geladeneNachrichten);
+
+      if (geladeneNachrichten.isEmpty) {
+        nachrichten.add(
+          ChatNachricht(
+            text:
+                'Hallo 👋 Ich bin dein KI Coach. Frag mich z.B.: Was kann ich heute besser machen?',
+            istNutzer: false,
+            zeit: DateTime.now().toIso8601String(),
+          ),
+        );
+      } else {
+        nachrichten.addAll(geladeneNachrichten);
+      }
     });
   }
   bool wirdGeladen = false;
