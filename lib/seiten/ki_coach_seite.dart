@@ -159,6 +159,19 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     });
   }
 
+  String zeitFormatieren(String isoZeit) {
+    final datum = DateTime.tryParse(isoZeit);
+
+    if (datum == null) {
+      return '';
+    }
+
+    final stunde = datum.hour.toString().padLeft(2, '0');
+    final minute = datum.minute.toString().padLeft(2, '0');
+
+    return '$stunde:$minute';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,6 +226,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
               ],
             ),
           ),
+          
           Expanded(
             child: ListView.builder(
               controller: scrollController,
@@ -248,6 +262,16 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
                           nachricht.text,
                           style: TextStyle(
                             color: nachricht.istNutzer ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          zeitFormatieren(nachricht.zeit),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: nachricht.istNutzer
+                                ? Colors.white70
+                                : Colors.black54,
                           ),
                         ),
 
