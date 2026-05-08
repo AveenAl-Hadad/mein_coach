@@ -100,6 +100,16 @@ class _GeminiTagesvorschlagKarteState
     }
   }
 
+  Future<void> vorschlagLoeschen() async {
+    await speicherService.loeschen(widget.eintrag.datum);
+
+    if (!mounted) return;
+
+    setState(() {
+      antwort = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -126,6 +136,26 @@ class _GeminiTagesvorschlagKarteState
             if (antwort.isNotEmpty) ...[
               AppStyle.abstandMittel,
               Text(antwort),
+              AppStyle.abstandKlein,
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: wirdGeladen ? null : vorschlagLoeschen,
+                      icon: const Icon(Icons.delete),
+                      label: const Text('Löschen'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: wirdGeladen ? null : vorschlagErstellen,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Neu erstellen'),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ],
         ),
