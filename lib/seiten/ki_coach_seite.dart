@@ -4,6 +4,10 @@ import '../modelle/chat_nachricht.dart';
 import '../services/chat_speicher_service.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/tages_provider.dart';
+import '../provider/einstellungen_provider.dart';
 
 class KiCoachSeite extends StatefulWidget {
   const KiCoachSeite({super.key});
@@ -107,8 +111,11 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     controller.clear();
 
     try {
-      final antwort =
-          await geminiService.nachrichtSenden(text);
+      final kontext = coachKontextErstellen();
+
+      final antwort = await geminiService.nachrichtSenden(
+        '$kontext\n\nMeine Frage: $text',
+      );
 
       setState(() {
         nachrichten.add(
@@ -199,6 +206,25 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     final minute = datum.minute.toString().padLeft(2, '0');
 
     return '$stunde:$minute';
+  }
+  String coachKontextErstellen() {
+    final tagesProvider = context.read<TagesProvider>();
+    final einstellungenProvider = context.read<EinstellungenProvider>();
+
+    final eintrag = tagesProvider.eintrag;
+
+    return '''
+  Meine heutigen Daten:
+  - Datum: ${eintrag.datum}
+  - Gewicht: ${eintrag.gewicht.toStringAsFixed(1)} kg
+  - Wasser: ${eintrag.wasser} von ${einstellungenProvider.wasserZiel} Gläsern
+  - Schritte: ${eintrag.schritte} von ${einstellungenProvider.schritteZiel}
+  - Stimmung: ${eintrag.stimmung}
+  - Notiz: ${eintrag.notiz.isEmpty ? 'Keine Notiz' : eintrag.notiz}
+  - Mahlzeiten: ${eintrag.mahlzeiten.map((m) => '${m.kategorie}: ${m.text}').join(', ')}
+
+  Bitte antworte freundlich, kurz und auf Deutsch.
+  ''';
   }
 
   @override
