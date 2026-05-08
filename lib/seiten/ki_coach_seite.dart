@@ -279,8 +279,10 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
                     ),
                     decoration: BoxDecoration(
                       color: nachricht.istNutzer
-                          ? Colors.green
-                          : Colors.grey.shade300,
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade800
+                            : Colors.grey.shade300,
                       borderRadius:
                           BorderRadius.circular(18),
                     ),
@@ -290,7 +292,11 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
                         Text(
                           nachricht.text,
                           style: TextStyle(
-                            color: nachricht.istNutzer ? Colors.white : Colors.black,
+                           color: nachricht.istNutzer
+                            ? Colors.white
+                            : Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -342,8 +348,10 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
               margin: const EdgeInsets.only(left: 12, bottom: 8),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(18),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.grey.shade800
+                    : Colors.grey.shade300,  
+                  borderRadius: BorderRadius.circular(18),
               ),
               child: const Text('KI Coach tippt gerade ...'),
             ),
