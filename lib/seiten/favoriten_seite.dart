@@ -73,29 +73,53 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
       });
     }
     Future<void> favoritEntfernen(_FavoritEintrag eintrag) async {
-      await favoritService.favoritSpeichern(
-        datum: eintrag.datum,
-        istFavorit: false,
-      );
+    final bestaetigt = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Favorit löschen?'),
+          content: const Text(
+            'Möchtest du diesen Favorit wirklich löschen?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Abbrechen'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Löschen'),
+            ),
+          ],
+        );
+      },
+    );
 
-      try {
-        await favoritenCloudService.favoritLoeschen(eintrag.datum);
-      } catch (_) {
-        // Falls keine Cloud eingerichtet ist, wird nur lokal gelöscht.
-      }
+    if (bestaetigt != true) return;
 
-      if (!mounted) return;
+    await favoritService.favoritSpeichern(
+      datum: eintrag.datum,
+      istFavorit: false,
+    );
 
-      setState(() {
-        favoriten.remove(eintrag);
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Favorit wurde gelöscht.'),
-        ),
-      );
+    try {
+      await favoritenCloudService.favoritLoeschen(eintrag.datum);
+    } catch (_) {
+      // Falls keine Cloud eingerichtet ist, wird nur lokal gelöscht.
     }
+
+    if (!mounted) return;
+
+    setState(() {
+      favoriten.remove(eintrag);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Favorit wurde gelöscht.'),
+      ),
+    );
+  }
     Future<void> favoritKopieren(_FavoritEintrag eintrag) async {
       await Clipboard.setData(
         ClipboardData(text: eintrag.text),
