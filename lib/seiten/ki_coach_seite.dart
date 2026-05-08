@@ -13,6 +13,7 @@ class KiCoachSeite extends StatefulWidget {
 
 class _KiCoachSeiteState extends State<KiCoachSeite> {
   final TextEditingController controller = TextEditingController();
+  final ScrollController scrollController = ScrollController();
   final GeminiService geminiService = GeminiService();
   final List<ChatNachricht> nachrichten = [];
   final ChatSpeicherService chatSpeicherService = ChatSpeicherService();
@@ -21,6 +22,12 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
   bool hoertZu = false; 
   bool wirdGeladen = false;  
 
+  @override
+  void dispose() {
+    controller.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
   @override
   void initState() {
     super.initState();
@@ -95,6 +102,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
       wirdGeladen = true;
    });
    await chatSpeicherService.chatSpeichern(nachrichten);
+   nachUntenScrollen();
     controller.clear();
 
     try {
@@ -111,6 +119,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
         );
       });
       await chatSpeicherService.chatSpeichern(nachrichten);
+      nachUntenScrollen();
     } catch (fehler) {
       setState(() {
         nachrichten.add(
@@ -122,6 +131,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
         );
       });
       await chatSpeicherService.chatSpeichern(nachrichten);
+      nachUntenScrollen();
     }
 
     setState(() {
@@ -135,6 +145,18 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     nachrichten.clear();
   });
 }
+  
+  void nachUntenScrollen() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      if (!scrollController.hasClients) return;
+
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +214,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
           ),
           Expanded(
             child: ListView.builder(
+              controller: scrollController,
               padding: const EdgeInsets.all(12),
               itemCount: nachrichten.length,
               itemBuilder: (context, index) {
@@ -201,6 +224,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
                   alignment: nachricht.istNutzer
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
+                  
                   child: Container(
                     margin: const EdgeInsets.only(
                       bottom: 12,
