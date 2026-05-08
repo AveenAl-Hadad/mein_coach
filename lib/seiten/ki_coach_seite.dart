@@ -18,7 +18,8 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
   final ChatSpeicherService chatSpeicherService = ChatSpeicherService();
   final SpeechToText speechToText = SpeechToText();
 
-  bool hoertZu = false;   
+  bool hoertZu = false; 
+  bool wirdGeladen = false;  
 
   @override
   void initState() {
@@ -77,7 +78,6 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     controller.text = frage;
     await senden();
   }
-  bool wirdGeladen = false;
 
   Future<void> senden() async {
     final text = controller.text.trim();
@@ -230,11 +230,19 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
             ),
           ),
 
-          if (wirdGeladen)
-            const Padding(
-              padding: EdgeInsets.all(8),
-              child: CircularProgressIndicator(),
+         if (wirdGeladen)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.only(left: 12, bottom: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: const Text('KI Coach tippt gerade ...'),
             ),
+          ),
 
           SafeArea(
             child: Padding(
@@ -277,6 +285,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
     );
   }
 }
+
 class _SchnellButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
