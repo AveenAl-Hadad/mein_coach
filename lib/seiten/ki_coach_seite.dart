@@ -46,11 +46,10 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
           istNutzer: true,
           zeit: DateTime.now().toIso8601String(),
         ),
-    );
-
+      );
       wirdGeladen = true;
-    });
-
+   });
+   await chatSpeicherService.chatSpeichern(nachrichten);
     controller.clear();
 
     try {
@@ -66,6 +65,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
           ),
         );
       });
+      await chatSpeicherService.chatSpeichern(nachrichten);
     } catch (fehler) {
       setState(() {
         nachrichten.add(
@@ -76,6 +76,7 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
           ),
         );
       });
+      await chatSpeicherService.chatSpeichern(nachrichten);
     }
 
     setState(() {
