@@ -44,6 +44,10 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
       }
     });
   }
+  Future<void> schnellfrage(String frage) async {
+    controller.text = frage;
+    await senden();
+  }
   bool wirdGeladen = false;
 
   Future<void> senden() async {
@@ -118,6 +122,45 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
       ),
       body: Column(
         children: [
+          SizedBox(
+            height: 58,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
+              children: [
+                _SchnellButton(
+                  text: '💪 Motiviere mich',
+                  onTap: () => schnellfrage(
+                    'Motiviere mich für heute.',
+                  ),
+                ),
+
+                _SchnellButton(
+                  text: '🥗 Ernährung',
+                  onTap: () => schnellfrage(
+                    'Gib mir einen Ernährungstipp.',
+                  ),
+                ),
+
+                _SchnellButton(
+                  text: '🏃 Workout',
+                  onTap: () => schnellfrage(
+                    'Gib mir einen Workout Tipp.',
+                  ),
+                ),
+
+                _SchnellButton(
+                  text: '📈 Verbessern',
+                  onTap: () => schnellfrage(
+                    'Wie kann ich meinen Tag verbessern?',
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(12),
@@ -192,6 +235,26 @@ class _KiCoachSeiteState extends State<KiCoachSeite> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+class _SchnellButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+
+  const _SchnellButton({
+    required this.text,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: ActionChip(
+        label: Text(text),
+        onPressed: onTap,
       ),
     );
   }
