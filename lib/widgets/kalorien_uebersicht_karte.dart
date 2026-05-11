@@ -56,6 +56,7 @@ class KalorienUebersichtKarte extends StatelessWidget {
       aktuellesGewicht: eintrag.gewicht,
       zielGewicht: zielGewicht,
     );
+    final gewichtDifferenz = eintrag.gewicht - zielGewicht;
 
     return Card(
       child: Padding(
@@ -131,7 +132,12 @@ class KalorienUebersichtKarte extends StatelessWidget {
             ),
 
             const SizedBox(height: 12),
-
+            Text(
+              gewichtDifferenz <= 0
+                  ? 'Du hast dein Zielgewicht erreicht.'
+                  : 'Noch ${gewichtDifferenz.toStringAsFixed(1)} kg bis zum Zielgewicht.',
+            ),
+            const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: () {
                 Navigator.push(
