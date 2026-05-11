@@ -81,6 +81,14 @@ class KalorienUebersichtKarte extends StatelessWidget {
             Text('Tagesziel: ${kalorienZiel.round()} kcal'),
             Text('Grundumsatz: ${grundumsatz.round()} kcal'),
             Text('Tagesbedarf: ${tagesbedarf.round()} kcal'),
+            const SizedBox(height: 8),
+            const Text(
+              'Das Tagesziel ist dein geschätzter Bedarf minus 500 kcal zum Abnehmen.',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey,
+              ),
+            ),
             Text('Gegessen: $gegessen kcal'),
             Text('Fortschritt: $prozent %'),
             Text(uebrig >= 0 ? 'Übrig: ${uebrig.round()} kcal'
