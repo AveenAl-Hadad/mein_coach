@@ -58,26 +58,36 @@ class KalorienEinstellungenSeite extends StatelessWidget {
             items: const [
               DropdownMenuItem(
                 value: 1.2,
-                child: Text('Wenig Bewegung'),
+                child: Text('Wenig Bewegung – Büro, kaum Sport'),
               ),
               DropdownMenuItem(
                 value: 1.4,
-                child: Text('Leicht aktiv'),
+                child: Text('Leicht aktiv – etwas Bewegung'),
               ),
               DropdownMenuItem(
                 value: 1.6,
-                child: Text('Aktiv'),
+                child: Text('Aktiv – Sport 2–4x pro Woche'),
               ),
               DropdownMenuItem(
                 value: 1.8,
-                child: Text('Sehr aktiv'),
+                child: Text('Sehr aktiv – viel Sport/Arbeit'),
               ),
             ],
+                        
             onChanged: (wert) {
               if (wert == null) return;
               einstellungen.aktivitaetsFaktorSpeichern(wert);
             },
           ),
+          const SizedBox(height: 8),
+
+          const Text(
+           'Die Aktivität beeinflusst deinen Tagesbedarf. Je aktiver du bist, desto mehr Kalorien verbraucht dein Körper.',
+            style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey,
+            ),
+          ),            
         ],
       ),
     );
