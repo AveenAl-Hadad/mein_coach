@@ -12,6 +12,7 @@ import '../services/ki_erinnerung_service.dart';
 import '../provider/tages_provider.dart';
 import '../services/firebase_sync_service.dart';
 import 'gemini_einstellungen_seite.dart';
+import 'kalorien_einstellungen_seite.dart';
 
 /// Einstellungsseite der App.
 /// Hier kann der Nutzer persönliche Werte ändern.
@@ -375,6 +376,23 @@ void initState() {
 
           AppStyle.abstandKlein,
 
+          ListTile(
+            leading: const Icon(Icons.local_fire_department),
+            title: const Text('Kalorien-Einstellungen'),
+            subtitle: const Text('Alter, Geschlecht und Aktivität ändern'),
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const KalorienEinstellungenSeite(),
+                ),
+              );
+            },
+          ),
+         
+          AppStyle.abstandKlein,
+          
           Card(
             child: ListTile(
               title: const Text(AppTexte.name),
@@ -385,6 +403,7 @@ void initState() {
               onTap: nameAendern,
             ),
           ),
+          
           AppStyle.abstandKlein,
 
           Card(
@@ -407,6 +426,7 @@ void initState() {
           ),
 
           AppStyle.abstandMittel,
+
           Card(
             child: ListTile(
               leading: AppStyle.zielIcon,
@@ -416,7 +436,9 @@ void initState() {
               onTap: zielGewichtAendern,
             ),
           ),
+          
           AppStyle.abstandKlein,
+          
           Card(
             child: ListTile(
               title: const Text(AppTexte.wasserZiel),
@@ -425,7 +447,9 @@ void initState() {
               onTap: wasserZielAendern,
             ),
           ),
+          
           AppStyle.abstandKlein,
+
           Card(
             child: ListTile(
               title: const Text(AppTexte.schritteZiel),
@@ -434,7 +458,9 @@ void initState() {
               onTap: schritteZielAendern,
             ),
           ),
+          
           AppStyle.abstandKlein,
+          
           Card(
             child: ListTile(
               leading: const Icon(Icons.notifications),
@@ -444,7 +470,9 @@ void initState() {
               onTap: erinnerungService.testErinnerungAnzeigen,
             ),
           ),
+          
           AppStyle.abstandKlein,
+
           Card(
             child: ListTile(
               leading: const Icon(Icons.water_drop),
@@ -453,7 +481,9 @@ void initState() {
               onTap: erinnerungService.wasserErinnerungStarten,
             ),
           ),
+          
           AppStyle.abstandKlein,
+
           Card(
             child: ListTile(
               leading: const Icon(Icons.stop),
@@ -463,7 +493,9 @@ void initState() {
               },
             ),
           ),
+          
           AppStyle.abstandKlein,
+
 
           Card(
             child: SwitchListTile(
@@ -502,7 +534,9 @@ void initState() {
               },
             ),
           ),
+          
           AppStyle.abstandKlein,
+
           Card(
             child: ListTile(
               leading: const Icon(Icons.psychology),
@@ -525,7 +559,9 @@ void initState() {
               },
             ),
           ),
+          
           AppStyle.abstandKlein,
+
           Card(
             child: ListTile(
               leading: const Icon(Icons.cloud_upload),
@@ -564,7 +600,9 @@ void initState() {
               },
             ),
           ),
+          
           AppStyle.abstandKlein,
+
           Card(
             child: ListTile(
               leading: const Icon(Icons.cloud_download),
@@ -620,7 +658,9 @@ void initState() {
               },
             ),
           ),
+          
           AppStyle.abstandKlein,
+          
           Card(
             child: ListTile(
               leading: const Icon(Icons.smart_toy),
