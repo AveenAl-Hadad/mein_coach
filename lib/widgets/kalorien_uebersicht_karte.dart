@@ -49,6 +49,7 @@ class KalorienUebersichtKarte extends StatelessWidget {
 
     final gegessen = gegesseneKalorien();
     final uebrig = kalorienZiel - gegessen;
+    final prozent = kalorienZiel <= 0 ? 0 : ((gegessen / kalorienZiel) * 100).round();
 
     final wochen = KalorienService.wochenBisZiel(
       aktuellesGewicht: eintrag.gewicht,
@@ -73,6 +74,7 @@ class KalorienUebersichtKarte extends StatelessWidget {
 
             Text('Tagesziel: ${kalorienZiel.round()} kcal'),
             Text('Gegessen: $gegessen kcal'),
+            Text('Fortschritt: $prozent %'),
             Text(
               uebrig >= 0
                   ? 'Übrig: ${uebrig.round()} kcal'
