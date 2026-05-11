@@ -84,6 +84,13 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
       );
       return;
     }
+    if (kalorien == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Hinweis: Du hast 0 Kalorien eingetragen.'),
+        ),
+      );
+    }
 
     widget.beimHinzufuegen(text, ausgewaehlteKategorie, bildPfad, kalorien,);
 
