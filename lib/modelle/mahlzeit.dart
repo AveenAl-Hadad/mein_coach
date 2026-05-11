@@ -1,16 +1,18 @@
 /// Modell für eine Mahlzeit.
-/// Speichert Text, Kategorie und Uhrzeit.
+/// Speichert Text, Kategorie, Uhrzeit, Bild und Kalorien.
 class Mahlzeit {
   final String text;
   final String kategorie;
   final String uhrzeit;
   final String? bildPfad;
+  final int kalorien;
 
   Mahlzeit({
     required this.text,
     required this.kategorie,
     required this.uhrzeit,
     this.bildPfad,
+    this.kalorien = 0,
   });
 
   Map<String, dynamic> zuJson() {
@@ -19,6 +21,7 @@ class Mahlzeit {
       'kategorie': kategorie,
       'uhrzeit': uhrzeit,
       'bildPfad': bildPfad,
+      'kalorien': kalorien,
     };
   }
 
@@ -28,6 +31,7 @@ class Mahlzeit {
       kategorie: json['kategorie'] ?? '',
       uhrzeit: json['uhrzeit'] ?? '',
       bildPfad: json['bildPfad'],
+      kalorien: json['kalorien'] ?? 0,
     );
   }
 }

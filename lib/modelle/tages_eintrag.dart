@@ -84,10 +84,15 @@ class TagesEintrag {
   }
 
   /// Erstellt eine kurze Zusammenfassung für Listen.
-  String zusammenfassung() {
-    return '${gewicht.toStringAsFixed(1)} kg • '
-        '$wasser Gläser • '
-        '$schritte Schritte • '
-        '${mahlzeiten.length} Mahlzeiten';
-  }
+String zusammenfassung() {
+  final kalorienGesamt = mahlzeiten.fold<int>(
+    0,
+    (summe, mahlzeit) => summe + mahlzeit.kalorien,
+  );
+
+  return '${gewicht.toStringAsFixed(1)} kg • '
+      '$wasser Gläser • '
+      '$schritte Schritte • '
+      '$kalorienGesamt kcal';
+}
 }
