@@ -8,6 +8,7 @@ import '../style/app_style.dart';
 import 'package:flutter/services.dart';
 import '../services/favorit_pdf_service.dart';
 import '../services/favoriten_cloud_service.dart';
+import 'package:intl/intl.dart';
 
 class FavoritenSeite extends StatefulWidget {
   const FavoritenSeite({super.key});
@@ -18,16 +19,14 @@ class FavoritenSeite extends StatefulWidget {
 
 class _FavoritenSeiteState extends State<FavoritenSeite> {
   final FavoritService favoritService = FavoritService();
-  final GeminiVorschlagSpeicherService speicherService =
-      GeminiVorschlagSpeicherService();
-  final FavoritenCloudService favoritenCloudService =
-    FavoritenCloudService();
+  final GeminiVorschlagSpeicherService speicherService = GeminiVorschlagSpeicherService();
+  final FavoritenCloudService favoritenCloudService = FavoritenCloudService();
 
   final List<_FavoritEintrag> favoriten = [];
   final TextEditingController suchController = TextEditingController();
   final FavoritPdfService favoritPdfService = FavoritPdfService();
   String suchText = '';
-
+ 
   bool wirdGeladen = true;
 
   @override
@@ -39,6 +38,12 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
     void initState() {
       super.initState();
       favoritenLaden();
+    }
+
+    String datumFormatieren(DateTime datum) {
+      return DateFormat(
+        'dd.MM.yyyy • HH:mm',
+      ).format(datum);
     }
 
     Future<void> favoritenLaden() async {
@@ -58,6 +63,7 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
           _FavoritEintrag(
             datum: tag.datum,
             text: text,
+            erstelltAm: DateTime.now(),
           ),
         );
       }
@@ -206,7 +212,8 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
       );
     }
   }
-   
+    
+    
   @override
   Widget build(BuildContext context) {
     final gefilterteFavoriten = favoriten.where((favorit) {
@@ -268,10 +275,25 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          favorit.datum,
-                                          style: AppStyle.titelMittel,
-                                        ),
+                                        child: 
+                                         Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                favorit.datum,
+                                                style: AppStyle.titelMittel,
+                                              ),
+                                              Text(
+                                                datumFormatieren(
+                                                  favorit.erstelltAm,
+                                                ),
+                                                style: TextStyle(
+                                                  color: Colors.grey.shade600,
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                       ),
                                       IconButton(
                                         tooltip: 'Favorit entfernen',
@@ -313,9 +335,11 @@ class _FavoritenSeiteState extends State<FavoritenSeite> {
 class _FavoritEintrag {
   final String datum;
   final String text;
+  final DateTime erstelltAm;
 
   _FavoritEintrag({
     required this.datum,
     required this.text,
+    required this.erstelltAm,
   });
 }
