@@ -7,8 +7,7 @@ import 'package:image_picker/image_picker.dart';
 /// Der Nutzer kann Text, Kategorie und optional ein Foto auswählen.
 class MahlzeitEingabe extends StatefulWidget {
   final TextEditingController controller;
-  final void Function(String text, String kategorie, String? bildPfad)
-      beimHinzufuegen;
+  final void Function(String text, String kategorie, String? bildPfad, int kalorien) beimHinzufuegen;
 
   const MahlzeitEingabe({
     super.key,
@@ -22,6 +21,7 @@ class MahlzeitEingabe extends StatefulWidget {
 
 class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
   final ImagePicker bildAuswahl = ImagePicker();
+  final TextEditingController kalorienController = TextEditingController();
 
   String ausgewaehlteKategorie = 'Sonstiges';
   String? bildPfad;
@@ -34,6 +34,12 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
     'Getränk',
     'Sonstiges',
   ];
+
+  @override
+  void dispose() {
+    kalorienController.dispose();
+    super.dispose();
+  }
 
   /// Öffnet die Galerie und speichert den Bildpfad.
   Future<void> fotoAuswaehlen() async {
@@ -58,12 +64,16 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
 
   /// Gibt Text, Kategorie und Bildpfad an die Startseite weiter.
   void mahlzeitHinzufuegen() {
+    final kalorien = int.tryParse(kalorienController.text) ?? 0;
     widget.beimHinzufuegen(
       widget.controller.text,
       ausgewaehlteKategorie,
       bildPfad,
+      kalorien,
+
     );
 
+    kalorienController.clear();
     setState(() {
       bildPfad = null;
     });
@@ -101,6 +111,16 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
                 decoration: const InputDecoration(
                   hintText: 'z.B. Haferflocken mit Banane',
                 ),
+              ),
+            ),
+            Expanded(
+              child: TextField(
+                controller: kalorienController,
+                decoration: const InputDecoration(
+                  labelText: 'Kalorien',
+                  hintText: 'z.B. 450',
+                ),
+                keyboardType: TextInputType.number,
               ),
             ),
             IconButton(
