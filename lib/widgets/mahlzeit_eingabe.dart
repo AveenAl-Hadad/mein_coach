@@ -62,22 +62,30 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
     });
   }
 
-  /// Gibt Text, Kategorie und Bildpfad an die Startseite weiter.
+  /// Gibt Text, Kategorie und Bildpfad an die Startseite weiter.  
   void mahlzeitHinzufuegen() {
+    final text = widget.controller.text.trim();
+
+    if (text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Bitte gib zuerst eine Mahlzeit ein.'),
+        ),
+      );
+      return;
+    } // ende if
+
     final kalorien = int.tryParse(kalorienController.text) ?? 0;
-    widget.beimHinzufuegen(
-      widget.controller.text,
-      ausgewaehlteKategorie,
-      bildPfad,
-      kalorien,
 
-    );
-
+    widget.beimHinzufuegen(text, ausgewaehlteKategorie, bildPfad, kalorien,);
+    
+    widget.controller.clear();
     kalorienController.clear();
+
     setState(() {
       bildPfad = null;
     });
-  }
+}
 
   @override
   Widget build(BuildContext context) {
