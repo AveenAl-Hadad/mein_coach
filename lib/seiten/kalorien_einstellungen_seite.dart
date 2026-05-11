@@ -19,18 +19,36 @@ class KalorienEinstellungenSeite extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          const SizedBox(height: 16),
           Text(
-            'Alter: ${einstellungen.alter}',
+            'Größe: ${einstellungen.groesse} cm',
             style: const TextStyle(fontSize: 18),
           ),
           Slider(
-            value: einstellungen.alter.toDouble(),
-            min: 12,
-            max: 100,
-            divisions: 88,
-            label: einstellungen.alter.toString(),
+            value: einstellungen.groesse.toDouble(),
+            min: 120,
+            max: 220,
+            divisions: 100,
+            label: einstellungen.groesse.toString(),
             onChanged: (wert) {
-              einstellungen.alterSpeichern(wert.round());
+              einstellungen.groesseSpeichern(wert.round());
+            },
+          ),
+
+          const SizedBox(height: 16),
+
+          Text(
+            'Zielgewicht: ${einstellungen.zielGewicht.toStringAsFixed(1)} kg',
+            style: const TextStyle(fontSize: 18),
+          ),
+          Slider(
+            value: einstellungen.zielGewicht,
+            min: 40,
+            max: 150,
+            divisions: 110,
+            label: einstellungen.zielGewicht.toStringAsFixed(1),
+            onChanged: (wert) {
+              einstellungen.zielGewichtSpeichern(wert);
             },
           ),
 
