@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../modelle/tages_eintrag.dart';
 import '../services/kalorien_service.dart';
+import '../seiten/kalorien_einstellungen_seite.dart';
 
 /// Karte für Kalorienübersicht.
 /// Zeigt Tagesziel, gegessene Kalorien und geschätzte Abnehmzeit.
@@ -100,6 +101,7 @@ class KalorienUebersichtKarte extends StatelessWidget {
                   ),
                 ),
               ),
+              
             Text('Gegessen: $gegessen kcal'),
             Text('Fortschritt: $prozent %'),
             Text(uebrig >= 0 ? 'Übrig: ${uebrig.round()} kcal'
@@ -109,6 +111,7 @@ class KalorienUebersichtKarte extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+
             const SizedBox(height: 12),
 
             LinearProgressIndicator(
@@ -125,6 +128,21 @@ class KalorienUebersichtKarte extends StatelessWidget {
               wochen == 0
                   ? 'Zielgewicht erreicht'
                   : 'Geschätzte Abnehmzeit: ca. $wochen Wochen',
+            ),
+
+            const SizedBox(height: 12),
+
+            OutlinedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const KalorienEinstellungenSeite(),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.settings),
+              label: const Text('Kalorien-Einstellungen bearbeiten'),
             ),
           ],
         ),
