@@ -62,12 +62,18 @@ class KalorienUebersichtKarte extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Kalorienziel',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+            const Row(
+              children: [
+                Icon(Icons.local_fire_department),
+                SizedBox(width: 8),
+                Text(
+                  'Kalorienziel',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 12),
@@ -75,10 +81,8 @@ class KalorienUebersichtKarte extends StatelessWidget {
             Text('Tagesziel: ${kalorienZiel.round()} kcal'),
             Text('Gegessen: $gegessen kcal'),
             Text('Fortschritt: $prozent %'),
-            Text(
-              uebrig >= 0
-                  ? 'Übrig: ${uebrig.round()} kcal'
-                  : 'Zu viel gegessen: ${uebrig.abs().round()} kcal',
+            Text(uebrig >= 0 ? 'Übrig: ${uebrig.round()} kcal'
+             : 'Zu viel gegessen: ${uebrig.abs().round()} kcal',
               style: TextStyle(
                 color: uebrig >= 0 ? Colors.green : Colors.red,
                 fontWeight: FontWeight.bold,
