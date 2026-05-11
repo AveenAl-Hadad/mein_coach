@@ -34,6 +34,15 @@ class KalorienEinstellungenSeite extends StatelessWidget {
               einstellungen.groesseSpeichern(wert.round());
             },
           ),
+          const SizedBox(height: 16),
+
+          Text(
+            'Aktuelles Gewicht änderst du auf der Startseite.',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey,
+            ),
+          ),
 
           const SizedBox(height: 16),
 
