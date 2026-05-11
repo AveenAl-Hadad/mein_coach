@@ -89,6 +89,17 @@ class KalorienUebersichtKarte extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
+            if (kalorienZiel < 1200)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(
+                  'Warnung: Das Kalorienziel ist sehr niedrig. Bitte achte auf deine Gesundheit.',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             Text('Gegessen: $gegessen kcal'),
             Text('Fortschritt: $prozent %'),
             Text(uebrig >= 0 ? 'Übrig: ${uebrig.round()} kcal'
