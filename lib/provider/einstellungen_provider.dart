@@ -13,6 +13,9 @@ class EinstellungenProvider extends ChangeNotifier {
   static const String _wasserZielSchluessel = 'wasser_ziel';
   static const String _schritteZielSchluessel = 'schritte_ziel';
   static const String _wasserErinnerungAktivSchluessel = 'wasser_erinnerung_aktiv';
+  static const String _alterSchluessel = 'alter';
+  static const String _istMaennlichSchluessel = 'ist_maennlich';
+  static const String _aktivitaetsFaktorSchluessel = 'aktivitaets_faktor';
 
 bool wasserErinnerungAktiv = false;
 
@@ -23,6 +26,9 @@ bool wasserErinnerungAktiv = false;
   String name = '';
   int groesse = 170;
   double startGewicht = 80.0;
+  int alter = 18;
+  bool istMaennlich = true;
+  double aktivitaetsFaktor = 1.4;
 
   /// Lädt das gespeicherte Zielgewicht.
   Future<void> einstellungenLaden() async {
@@ -38,8 +44,43 @@ bool wasserErinnerungAktiv = false;
     wasserErinnerungAktiv =
     speicher.getBool(_wasserErinnerungAktivSchluessel) ?? false;
 
+    alter = speicher.getInt(_alterSchluessel) ?? 18;
+    istMaennlich = speicher.getBool(_istMaennlichSchluessel) ?? true;
+    aktivitaetsFaktor = speicher.getDouble(_aktivitaetsFaktorSchluessel) ?? 1.4;
+
     notifyListeners();
   }
+  /// Speichert das Alter.
+  Future<void> alterSpeichern(int neuesAlter) async {
+    final speicher = await SharedPreferences.getInstance();
+
+    alter = neuesAlter;
+    await speicher.setInt(_alterSchluessel, neuesAlter);
+
+    notifyListeners();
+  }
+
+  /// Speichert das Geschlecht.
+  Future<void> geschlechtSpeichern(bool maennlich) async {
+    final speicher = await SharedPreferences.getInstance();
+
+    istMaennlich = maennlich;
+    await speicher.setBool(_istMaennlichSchluessel, maennlich);
+
+    notifyListeners();
+  }
+
+  /// Speichert den Aktivitätsfaktor.
+  Future<void> aktivitaetsFaktorSpeichern(double neuerFaktor) async {
+    final speicher = await SharedPreferences.getInstance();
+
+    aktivitaetsFaktor = neuerFaktor;
+    await speicher.setDouble(_aktivitaetsFaktorSchluessel, neuerFaktor);
+
+    notifyListeners();
+  }
+
+
   /// Speichert, ob Wasser-Erinnerungen aktiv sind.
   Future<void> wasserErinnerungAktivSpeichern(bool aktiv) async {
     final speicher = await SharedPreferences.getInstance();
