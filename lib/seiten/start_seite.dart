@@ -31,6 +31,7 @@ import '../widgets/tagesabschluss_karte.dart';
 import '../widgets/monats_statistik_karte.dart';
 import '../services/pdf_export_service.dart';
 import '../widgets/gemini_tagesvorschlag_karte.dart';
+import '../widgets/kalorien_uebersicht_karte.dart';
 
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
@@ -166,6 +167,17 @@ class _StartSeiteStatus extends State<StartSeite> {
             zielGewicht: einstellungenProvider.zielGewicht,
           ),
 
+          AppStyle.abstandKlein,
+
+          KalorienUebersichtKarte(
+            eintrag: eintrag,
+            alter: einstellungenProvider.alter,
+            groesse: einstellungenProvider.groesse,
+            zielGewicht: einstellungenProvider.zielGewicht,
+            istMaennlich: einstellungenProvider.istMaennlich,
+            aktivitaetsFaktor: einstellungenProvider.aktivitaetsFaktor,
+          ),
+          
           AppStyle.abstandKlein,
 
           CoachHinweisKarte(
