@@ -73,14 +73,23 @@ class KalorienUebersichtKarte extends StatelessWidget {
 
             Text('Tagesziel: ${kalorienZiel.round()} kcal'),
             Text('Gegessen: $gegessen kcal'),
-            Text('Übrig: ${uebrig.round()} kcal'),
-
+            Text(
+              uebrig >= 0
+                  ? 'Übrig: ${uebrig.round()} kcal'
+                  : 'Zu viel gegessen: ${uebrig.abs().round()} kcal',
+              style: TextStyle(
+                color: uebrig >= 0 ? Colors.green : Colors.red,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 12),
 
             LinearProgressIndicator(
               value: kalorienZiel <= 0
                   ? 0
-                  : (gegessen / kalorienZiel).clamp(0, 1),
+                  : (gegessen / kalorienZiel).clamp(0.0, 1.0),
+              minHeight: 10,
+              borderRadius: BorderRadius.circular(20),
             ),
 
             const SizedBox(height: 12),
