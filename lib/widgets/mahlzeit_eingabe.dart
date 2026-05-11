@@ -76,9 +76,17 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
     } // ende if
 
     final kalorien = int.tryParse(kalorienController.text) ?? 0;
+    if (kalorien < 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Kalorien dürfen nicht negativ sein.'),
+        ),
+      );
+      return;
+    }
 
     widget.beimHinzufuegen(text, ausgewaehlteKategorie, bildPfad, kalorien,);
-    
+
     widget.controller.clear();
     kalorienController.clear();
 
