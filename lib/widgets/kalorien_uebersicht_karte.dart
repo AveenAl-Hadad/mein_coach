@@ -79,6 +79,8 @@ class KalorienUebersichtKarte extends StatelessWidget {
             const SizedBox(height: 12),
 
             Text('Tagesziel: ${kalorienZiel.round()} kcal'),
+            Text('Grundumsatz: ${grundumsatz.round()} kcal'),
+            Text('Tagesbedarf: ${tagesbedarf.round()} kcal'),
             Text('Gegessen: $gegessen kcal'),
             Text('Fortschritt: $prozent %'),
             Text(uebrig >= 0 ? 'Übrig: ${uebrig.round()} kcal'
