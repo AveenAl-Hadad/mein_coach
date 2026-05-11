@@ -27,12 +27,14 @@ class TagesProvider extends ChangeNotifier {
     String text, {
     String kategorie = 'Sonstiges',
     String? bildPfad,
+    required int kalorien,
   }) async {
     await _service.mahlzeitHinzufuegen(
       eintrag,
       text,
       kategorie: kategorie,
       bildPfad: bildPfad,
+      kalorien: kalorien,
     );
 
    await historieAktualisierenUndSynchronisieren();

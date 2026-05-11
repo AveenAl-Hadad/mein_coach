@@ -49,6 +49,7 @@ Future<void> schritteVerringern(TagesEintrag eintrag) async {
     String text, {
     String kategorie = 'Sonstiges',
     String? bildPfad,
+    required int kalorien,
   }) async {
     if (text.trim().isEmpty) return;
 
@@ -61,6 +62,7 @@ Future<void> schritteVerringern(TagesEintrag eintrag) async {
       kategorie: kategorie,
       uhrzeit: '$stunde:$minute',
       bildPfad: bildPfad,
+      kalorien: kalorien,
     );
 
     eintrag.mahlzeiten.add(mahlzeit);

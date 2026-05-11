@@ -33,6 +33,7 @@ import '../services/pdf_export_service.dart';
 import '../widgets/gemini_tagesvorschlag_karte.dart';
 import '../widgets/kalorien_uebersicht_karte.dart';
 
+
 /// Startseite der App.
 /// Zeigt die heutigen Daten und nutzt den TagesProvider
 /// für Laden, Speichern und Änderungen.
@@ -47,6 +48,7 @@ class _StartSeiteStatus extends State<StartSeite> {
   final TextEditingController eingabeController = TextEditingController();
   final BackupService backupService = BackupService();
   final PdfExportService pdfExportService = PdfExportService();
+
 
   Future<void> pdfExportieren() async {
     final provider = context.read<TagesProvider>();
@@ -364,11 +366,12 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           MahlzeitEingabe(
             controller: eingabeController,
-            beimHinzufuegen: (text, kategorie, bildPfad) {
+            beimHinzufuegen: (text, kategorie, bildPfad, kalorien) {
               provider.mahlzeitHinzufuegen(
                 text,
                 kategorie: kategorie,
                 bildPfad: bildPfad,
+                kalorien: kalorien,
               );
               eingabeController.clear();
             },
