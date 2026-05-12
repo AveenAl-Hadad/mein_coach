@@ -19,6 +19,21 @@ class KalorienWochenanalyseKarte extends StatelessWidget {
     return sortiert.take(7).toList();
   }
 
+Widget infoZeile(String titel, String wert) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 4),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(titel),
+        Text(
+          wert,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+}
   @override
   Widget build(BuildContext context) {
     final letzteTage = letzteSiebenTage();
@@ -56,9 +71,9 @@ class KalorienWochenanalyseKarte extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            Text('Durchschnitt: ${durchschnitt.round()} kcal'),
-            Text('Höchster Tag: $hoechsterWert kcal'),
-            Text('Niedrigster Tag: $niedrigsterWert kcal'),
+            infoZeile('Durchschnitt:', '${durchschnitt.round()} kcal'),
+            infoZeile('Höchster Tag:', '$hoechsterWert kcal'),
+            infoZeile('Niedrigster Tag:', '$niedrigsterWert kcal'),
           ],
         ),
       ),
