@@ -46,7 +46,26 @@ class KalorienUebersichtKarte extends StatelessWidget {
   );
 }
 
-  @override
+  double berechneKalorienZiel(double gewicht) {
+  final grundumsatz = KalorienService.grundumsatz(
+    istMaennlich: istMaennlich,
+    alter: alter,
+    gewicht: gewicht,
+    groesse: groesse.toDouble(),
+  );
+
+  final tagesbedarf = KalorienService.tagesbedarf(
+    grundumsatz: grundumsatz,
+    aktivitaetsFaktor: aktivitaetsFaktor,
+  );
+
+  return KalorienService.abnehmKalorien(
+    tagesbedarf: tagesbedarf,
+  );
+}
+ 
+ 
+ @override
   Widget build(BuildContext context) {
     final grundumsatz = KalorienService.grundumsatz(
       istMaennlich: istMaennlich,
@@ -60,8 +79,8 @@ class KalorienUebersichtKarte extends StatelessWidget {
       aktivitaetsFaktor: aktivitaetsFaktor,
     );
 
-    final kalorienZiel = KalorienService.abnehmKalorien(
-      tagesbedarf: tagesbedarf,
+    final kalorienZiel = berechneKalorienZiel(
+      eintrag.gewicht,
     );
 
     final gegessen = gegesseneKalorien();
