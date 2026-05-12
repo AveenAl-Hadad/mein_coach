@@ -28,10 +28,7 @@ class KalorienUebersichtKarte extends StatelessWidget {
   });
 
   int gegesseneKalorien() {
-    return eintrag.mahlzeiten.fold<int>(
-      0,
-      (summe, mahlzeit) => summe + mahlzeit.kalorien,
-    );
+    return eintrag.gesamtKalorien();
   }
 
   Widget infoZeile(String titel, String wert) {

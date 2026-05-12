@@ -95,4 +95,13 @@ String zusammenfassung() {
       '$schritte Schritte • '
       '$kalorienGesamt kcal';
 }
+
+/// Gesamte Kalorien aller Mahlzeiten.
+int gesamtKalorien() {
+  return mahlzeiten.fold<int>(
+    0,
+    (summe, mahlzeit) => summe + mahlzeit.kalorien,
+  );
+}
+
 }
