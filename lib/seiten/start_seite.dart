@@ -32,6 +32,7 @@ import '../widgets/monats_statistik_karte.dart';
 import '../services/pdf_export_service.dart';
 import '../widgets/gemini_tagesvorschlag_karte.dart';
 import '../widgets/kalorien_uebersicht_karte.dart';
+import '../widgets/kalorien_wochenanalyse_karte.dart';
 
 
 /// Startseite der App.
@@ -180,6 +181,12 @@ class _StartSeiteStatus extends State<StartSeite> {
             aktivitaetsFaktor: einstellungenProvider.aktivitaetsFaktor,
           ),
           
+         AppStyle.abstandKlein,
+
+        KalorienWochenanalyseKarte(
+          tage: historieProvider.tage,
+        ),
+         
           AppStyle.abstandKlein,
 
           CoachHinweisKarte(
