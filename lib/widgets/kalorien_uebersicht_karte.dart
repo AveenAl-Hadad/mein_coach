@@ -30,6 +30,22 @@ class KalorienUebersichtKarte extends StatelessWidget {
     );
   }
 
+  Widget infoZeile(String titel, String wert) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 3),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(titel),
+        Text(
+          wert,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     final grundumsatz = KalorienService.grundumsatz(
@@ -83,9 +99,9 @@ class KalorienUebersichtKarte extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            Text('Tagesziel: ${kalorienZiel.round()} kcal'),
-            Text('Grundumsatz: ${grundumsatz.round()} kcal'),
-            Text('Tagesbedarf: ${tagesbedarf.round()} kcal'),
+            infoZeile('Tagesziel', '${kalorienZiel.round()} kcal'),
+            infoZeile('Grundumsatz', '${grundumsatz.round()} kcal'),
+            infoZeile('Tagesbedarf', '${tagesbedarf.round()} kcal'),
             const SizedBox(height: 8),
             const Text(
               'Das Tagesziel ist dein geschätzter Bedarf minus 500 kcal zum Abnehmen.',
@@ -106,8 +122,8 @@ class KalorienUebersichtKarte extends StatelessWidget {
                 ),
               ),
               
-            Text('Gegessen: $gegessen kcal'),
-            Text('Fortschritt: $prozent %'),
+            infoZeile('Gegessen', '$gegessen kcal'),
+            infoZeile('Fortschritt', '$prozent %'),
             Text(uebrig >= 0 ? 'Übrig: ${uebrig.round()} kcal'
              : 'Zu viel gegessen: ${uebrig.abs().round()} kcal',
               style: TextStyle(
