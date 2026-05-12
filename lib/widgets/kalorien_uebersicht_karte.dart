@@ -56,6 +56,9 @@ class KalorienUebersichtKarte extends StatelessWidget {
       aktuellesGewicht: eintrag.gewicht,
       zielGewicht: zielGewicht,
     );
+    final monate = (wochen / 4).floor();
+    final restWochen = wochen % 4;
+
     final gewichtDifferenz = eintrag.gewicht - zielGewicht;
 
     return Card(
@@ -127,7 +130,9 @@ class KalorienUebersichtKarte extends StatelessWidget {
 
             Text(
               wochen == 0
-                  ? 'Zielgewicht erreicht'
+              ? 'Zielgewicht erreicht'
+              : monate > 0
+                  ? 'Geschätzte Abnehmzeit: ca. $monate Monate und $restWochen Wochen'
                   : 'Geschätzte Abnehmzeit: ca. $wochen Wochen',
             ),
 
