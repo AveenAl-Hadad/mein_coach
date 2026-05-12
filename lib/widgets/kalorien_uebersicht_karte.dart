@@ -4,6 +4,7 @@ import '../services/kalorien_service.dart';
 import '../seiten/kalorien_einstellungen_seite.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../services/ernaehrungs_tipps_service.dart';
+import '../services/mahlzeiten_vorschlag_service.dart';
 
 /// Karte für Kalorienübersicht.
 /// Zeigt Tagesziel, gegessene Kalorien und geschätzte Abnehmzeit.
@@ -88,6 +89,9 @@ class KalorienUebersichtKarte extends StatelessWidget {
     final gegessen = gegesseneKalorien();
     final uebrig = kalorienZiel - gegessen;
     final tipps = ErnaehrungsTippsService.tippsFuerKalorien(
+      uebrig.round(),
+    );
+    final vorschlaege = MahlzeitenVorschlagService.vorschlaegeFuerKalorien(
       uebrig.round(),
     );
     final prozent = kalorienZiel <= 0 ? 0 : ((gegessen / kalorienZiel) * 100).round();
@@ -212,6 +216,33 @@ class KalorienUebersichtKarte extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(tipp),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            const Text(
+              'Mahlzeiten-Vorschläge',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            ...vorschlaege.map(
+              (vorschlag) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.restaurant_menu, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(vorschlag),
                     ),
                   ],
                 ),
