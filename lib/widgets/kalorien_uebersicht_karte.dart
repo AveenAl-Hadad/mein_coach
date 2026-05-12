@@ -5,6 +5,7 @@ import '../seiten/kalorien_einstellungen_seite.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import '../services/ernaehrungs_tipps_service.dart';
 import '../services/mahlzeiten_vorschlag_service.dart';
+import '../services/wasser_tipp_service.dart';
 
 /// Karte für Kalorienübersicht.
 /// Zeigt Tagesziel, gegessene Kalorien und geschätzte Abnehmzeit.
@@ -94,6 +95,8 @@ class KalorienUebersichtKarte extends StatelessWidget {
     final vorschlaege = MahlzeitenVorschlagService.vorschlaegeFuerKalorien(
       uebrig.round(),
     );
+    final wasserTipp = WasserTippService.tipp(gegessen);
+    
     final prozent = kalorienZiel <= 0 ? 0 : ((gegessen / kalorienZiel) * 100).round();
 
     final wochen = KalorienService.wochenBisZiel(
@@ -247,6 +250,17 @@ class KalorienUebersichtKarte extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Icon(Icons.water_drop, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(wasserTipp),
+                ),
+              ],
             ),
 
             const SizedBox(height: 12),        
