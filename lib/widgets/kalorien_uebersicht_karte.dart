@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../modelle/tages_eintrag.dart';
 import '../services/kalorien_service.dart';
 import '../seiten/kalorien_einstellungen_seite.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
 /// Karte für Kalorienübersicht.
 /// Zeigt Tagesziel, gegessene Kalorien und geschätzte Abnehmzeit.
@@ -153,12 +154,34 @@ class KalorienUebersichtKarte extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            LinearProgressIndicator(
-              value: kalorienZiel <= 0
-                  ? 0
-                  : (gegessen / kalorienZiel).clamp(0.0, 1.0),
-              minHeight: 10,
-              borderRadius: BorderRadius.circular(20),
+            Center(
+              child: CircularPercentIndicator(
+                radius: 70,
+                lineWidth: 12,
+                percent: kalorienZiel <= 0
+                    ? 0
+                    : (gegessen / kalorienZiel).clamp(0.0, 1.0),
+                center: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '$prozent%',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text('verbraucht'),
+                  ],
+                ),
+                progressColor: uebrig >= 0
+                    ? Colors.green
+                    : Colors.red,
+                backgroundColor: Colors.grey.shade300,
+                circularStrokeCap: CircularStrokeCap.round,
+                animation: true,
+                animationDuration: 800,
+              ),
             ),
 
             const SizedBox(height: 12),
