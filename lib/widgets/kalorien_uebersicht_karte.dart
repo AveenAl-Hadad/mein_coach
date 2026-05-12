@@ -3,6 +3,7 @@ import '../modelle/tages_eintrag.dart';
 import '../services/kalorien_service.dart';
 import '../seiten/kalorien_einstellungen_seite.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import '../services/ernaehrungs_tipps_service.dart';
 
 /// Karte für Kalorienübersicht.
 /// Zeigt Tagesziel, gegessene Kalorien und geschätzte Abnehmzeit.
@@ -86,6 +87,9 @@ class KalorienUebersichtKarte extends StatelessWidget {
 
     final gegessen = gegesseneKalorien();
     final uebrig = kalorienZiel - gegessen;
+    final tipps = ErnaehrungsTippsService.tippsFuerKalorien(
+      uebrig.round(),
+    );
     final prozent = kalorienZiel <= 0 ? 0 : ((gegessen / kalorienZiel) * 100).round();
 
     final wochen = KalorienService.wochenBisZiel(
@@ -122,7 +126,9 @@ class KalorienUebersichtKarte extends StatelessWidget {
             infoZeile('Tagesziel', '${kalorienZiel.round()} kcal'),
             infoZeile('Grundumsatz', '${grundumsatz.round()} kcal'),
             infoZeile('Tagesbedarf', '${tagesbedarf.round()} kcal'),
+
             const SizedBox(height: 8),
+
             const Text(
               'Das Tagesziel ist dein geschätzter Bedarf minus 500 kcal zum Abnehmen.',
               style: TextStyle(
@@ -184,7 +190,35 @@ class KalorienUebersichtKarte extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
+
+            const Text(
+              'Tipps',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            ...tipps.map(
+              (tipp) => Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.check_circle_outline, size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(tipp),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 12),        
 
             Text(
               wochen == 0
