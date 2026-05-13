@@ -46,6 +46,19 @@ String wochentagKurz(String datumText) {
 
   return tage[datum.weekday - 1];
 }
+int berechneStreak(List<int> kalorienListe, double durchschnitt) {
+  int streak = 0;
+
+  for (final kalorien in kalorienListe.reversed) {
+    if (kalorien <= durchschnitt) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
   @override
   Widget build(BuildContext context) {
     final letzteTage = letzteSiebenTage();
@@ -66,6 +79,7 @@ String wochentagKurz(String datumText) {
 
     final hoechsterWert = kalorienListe.reduce((a, b) => a > b ? a : b);
     final niedrigsterWert = kalorienListe.reduce((a, b) => a < b ? a : b);
+    final streak = berechneStreak( kalorienListe,  durchschnitt,);
 
     return Card(
       child: Padding(
@@ -86,6 +100,7 @@ String wochentagKurz(String datumText) {
             infoZeile('Durchschnitt:', '${durchschnitt.round()} kcal'),
             infoZeile('Höchster Tag:', '$hoechsterWert kcal'),
             infoZeile('Niedrigster Tag:', '$niedrigsterWert kcal'),
+            infoZeile('Aktuelle Serie', '$streak Tage'),
 
             const SizedBox(height: 16),
 
