@@ -35,6 +35,17 @@ Widget infoZeile(String titel, String wert) {
     ),
   );
 }
+String wochentagKurz(String datumText) {
+  final datum = DateTime.tryParse(datumText);
+
+  if (datum == null) {
+    return '';
+  }
+
+  const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+  return tage[datum.weekday - 1];
+}
   @override
   Widget build(BuildContext context) {
     final letzteTage = letzteSiebenTage();
@@ -85,12 +96,29 @@ Widget infoZeile(String titel, String wert) {
                   alignment: BarChartAlignment.spaceAround,
                   maxY: (hoechsterWert + 300).toDouble(),
                   barTouchData: BarTouchData(enabled: true),
-                  titlesData: const FlTitlesData(
+                  titlesData: FlTitlesData(
                     leftTitles: AxisTitles(
                       sideTitles: SideTitles(showTitles: true, reservedSize: 40),
                     ),
                     bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          final index = value.toInt();
+
+                          if (index < 0 || index >= letzteTage.length) {
+                            return const SizedBox();
+                          }
+
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              wochentagKurz(letzteTage[index].datum),
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                     topTitles: AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
