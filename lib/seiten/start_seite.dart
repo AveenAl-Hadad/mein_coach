@@ -63,18 +63,26 @@ class _StartSeiteStatus extends State<StartSeite> {
   }
   /// Öffnet einen Dialog, damit der Nutzer das Gewicht manuell eingeben kann.
   Future<void> gewichtEingeben(TagesProvider provider) async {
-    final controller = TextEditingController(
-      text: provider.eintrag.gewicht.toStringAsFixed(1),
-    );
-    final eingabe = await showDialog<String>(
-      context: context,
-      builder: (context) => GewichtDialog(controller: controller),
-    );
-    if (eingabe == null) return;
-    final wert = double.tryParse(eingabe.replaceAll(',', '.'));
-    if (wert == null) return;
-    await provider.gewichtSetzen(wert);
-  }
+  final historieProvider = context.read<HistorieProvider>();
+
+  final controller = TextEditingController(
+    text: provider.eintrag.gewicht.toStringAsFixed(1),
+  );
+
+  final eingabe = await showDialog<String>(
+    context: context,
+    builder: (context) => GewichtDialog(controller: controller),
+  );
+
+  if (eingabe == null) return;
+
+  final wert = double.tryParse(eingabe.replaceAll(',', '.'));
+
+  if (wert == null) return;
+
+  await provider.gewichtSetzen(wert);
+  await historieProvider.aktualisieren();
+}
 
   /// Öffnet den Kalender und wechselt zum ausgewählten Datum.
   Future<void> datumAuswaehlen(TagesProvider provider) async {
@@ -289,6 +297,7 @@ class _StartSeiteStatus extends State<StartSeite> {
           GewichtVerlaufKarte(
             tage: historieProvider.tage,
           ),
+          
 
           AppStyle.abstandKlein,
 
@@ -373,13 +382,14 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           MahlzeitEingabe(
             controller: eingabeController,
-            beimHinzufuegen: (text, kategorie, bildPfad, kalorien) {
-              provider.mahlzeitHinzufuegen(
+            beimHinzufuegen: (text, kategorie, bildPfad, kalorien) async {
+              await provider.mahlzeitHinzufuegen(
                 text,
                 kategorie: kategorie,
                 bildPfad: bildPfad,
                 kalorien: kalorien,
               );
+              await historieProvider.aktualisieren();
               eingabeController.clear();
             },
           ),
@@ -406,7 +416,10 @@ class _StartSeiteStatus extends State<StartSeite> {
               if (eintrag.mahlzeiten[i].kategorie == kategorie)
                 MahlzeitKarte(
                   mahlzeit: eintrag.mahlzeiten[i],
-                  beimLoeschen: () => provider.mahlzeitLoeschen(i),
+                  beimLoeschen: () async{
+                    await provider.mahlzeitLoeschen(i);
+                    await historieProvider.aktualisieren();
+                  },               
                 ),
           ],
         ],
