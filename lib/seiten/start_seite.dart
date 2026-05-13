@@ -382,16 +382,17 @@ class _StartSeiteStatus extends State<StartSeite> {
 
           MahlzeitEingabe(
             controller: eingabeController,
-            beimHinzufuegen: (text, kategorie, bildPfad, kalorien) async {
+            beimHinzufuegen: (text,kategorie,bildPfad,menge,einheit, groesse,kalorienProEinheit, ) async {
               await provider.mahlzeitHinzufuegen(
                 text,
                 kategorie: kategorie,
                 bildPfad: bildPfad,
-                kalorien: kalorien,
+                menge: menge,
+                einheit: einheit,
+                groesse: groesse,
+                kalorienProEinheit: kalorienProEinheit,
               );
-              await historieProvider.aktualisieren();
-              eingabeController.clear();
-            },
+            }
           ),
 
           AppStyle.abstandMittel,
