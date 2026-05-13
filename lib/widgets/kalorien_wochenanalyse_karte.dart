@@ -138,6 +138,9 @@ String wochentagKurz(String datumText) {
                           BarChartRodData(
                             toY: kalorienListe[index].toDouble(),
                             width: 16,
+                            color: kalorienListe[index] <= durchschnitt
+                                ? Colors.green
+                                : Colors.orange,
                             borderRadius: BorderRadius.circular(6),
                           ),
                         ],
