@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../modelle/tages_eintrag.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 /// Karte für die Kalorien-Wochenanalyse.
 /// Zeigt Durchschnitt, höchsten Tag und niedrigsten Tag.
@@ -74,6 +75,50 @@ Widget infoZeile(String titel, String wert) {
             infoZeile('Durchschnitt:', '${durchschnitt.round()} kcal'),
             infoZeile('Höchster Tag:', '$hoechsterWert kcal'),
             infoZeile('Niedrigster Tag:', '$niedrigsterWert kcal'),
+
+            const SizedBox(height: 16),
+
+            SizedBox(
+              height: 160,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: (hoechsterWert + 300).toDouble(),
+                  barTouchData: BarTouchData(enabled: true),
+                  titlesData: const FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true, reservedSize: 40),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    rightTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                  ),
+                  borderData: FlBorderData(show: false),
+                  gridData: const FlGridData(show: true),
+                  barGroups: List.generate(
+                    kalorienListe.length,
+                    (index) {
+                      return BarChartGroupData(
+                        x: index,
+                        barRods: [
+                          BarChartRodData(
+                            toY: kalorienListe[index].toDouble(),
+                            width: 16,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
