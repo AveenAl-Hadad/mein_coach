@@ -3,19 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// Eingabefeld für neue Mahlzeiten.
-/// Der Nutzer kann Text, Kategorie und optional ein Foto auswählen.
 class MahlzeitEingabe extends StatefulWidget {
   final TextEditingController controller;
+
   final void Function(
-  String text,
-  String kategorie,
-  String? bildPfad,
-  double menge,
-  String einheit,
-  String groesse,
-  int kalorienProEinheit,
-) beimHinzufuegen;
+    String text,
+    String kategorie,
+    String? bildPfad,
+    double menge,
+    String einheit,
+    String groesse,
+    int kalorienProEinheit,
+  ) beimHinzufuegen;
 
   const MahlzeitEingabe({
     super.key,
@@ -29,13 +28,14 @@ class MahlzeitEingabe extends StatefulWidget {
 
 class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
   final ImagePicker bildAuswahl = ImagePicker();
+
   final TextEditingController mengeController = TextEditingController();
   final TextEditingController kalorienProEinheitController =
       TextEditingController();
 
+  String ausgewaehlteKategorie = 'Sonstiges';
   String ausgewaehlteEinheit = 'gramm';
   String ausgewaehlteGroesse = 'normal';
-  String ausgewaehlteKategorie = 'Sonstiges';
   String? bildPfad;
 
   final List<String> kategorien = const [
@@ -54,7 +54,6 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
     super.dispose();
   }
 
-  /// Öffnet die Galerie und speichert den Bildpfad.
   Future<void> fotoAuswaehlen() async {
     final bild = await bildAuswahl.pickImage(
       source: ImageSource.gallery,
@@ -68,14 +67,12 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
     });
   }
 
-  /// Entfernt das ausgewählte Foto wieder.
   void fotoEntfernen() {
     setState(() {
       bildPfad = null;
     });
   }
 
-  /// Gibt Text, Kategorie und Bildpfad an die Startseite weiter.  
   void mahlzeitHinzufuegen() {
     final text = widget.controller.text.trim();
 
@@ -86,11 +83,12 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
         ),
       );
       return;
-    } // ende if
+    }
 
     final menge = double.tryParse(
-      mengeController.text.replaceAll(',', '.'),
-    ) ?? 0;
+          mengeController.text.replaceAll(',', '.'),
+        ) ??
+        0;
 
     final kalorienProEinheit =
         int.tryParse(kalorienProEinheitController.text) ?? 0;
@@ -114,32 +112,16 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
       kalorienProEinheit,
     );
 
-    if (kalorien < 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Kalorien dürfen nicht negativ sein.'),
-        ),
-      );
-      return;
-    }
-    if (kalorien == 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Hinweis: Du hast 0 Kalorien eingetragen.'),
-        ),
-      );
-    }
-
-    widget.beimHinzufuegen(text, ausgewaehlteKategorie, bildPfad, menge, ausgewaehlteEinheit, ausgewaehlteGroesse, kalorienProEinheit);
-
     widget.controller.clear();
     mengeController.clear();
     kalorienProEinheitController.clear();
 
     setState(() {
       bildPfad = null;
+      ausgewaehlteEinheit = 'gramm';
+      ausgewaehlteGroesse = 'normal';
     });
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -165,16 +147,16 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
           },
         ),
 
+        TextField(
+          controller: widget.controller,
+          decoration: const InputDecoration(
+            labelText: 'Mahlzeit',
+            hintText: 'z.B. Haferflocken mit Banane',
+          ),
+        ),
+
         Row(
           children: [
-            Expanded(
-              child: TextField(
-                controller: widget.controller,
-                decoration: const InputDecoration(
-                  hintText: 'z.B. Haferflocken mit Banane',
-                ),
-              ),
-            ),
             Expanded(
               child: TextField(
                 controller: mengeController,
@@ -185,9 +167,7 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
                 keyboardType: TextInputType.number,
               ),
             ),
-
             const SizedBox(width: 8),
-
             Expanded(
               child: DropdownButtonFormField<String>(
                 initialValue: ausgewaehlteEinheit,
@@ -206,15 +186,18 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
                 ],
                 onChanged: (wert) {
                   if (wert == null) return;
+
                   setState(() {
                     ausgewaehlteEinheit = wert;
                   });
                 },
               ),
             ),
+          ],
+        ),
 
-            const SizedBox(width: 8),
-
+        Row(
+          children: [
             Expanded(
               child: DropdownButtonFormField<String>(
                 initialValue: ausgewaehlteGroesse,
@@ -237,15 +220,14 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
                 ],
                 onChanged: (wert) {
                   if (wert == null) return;
+
                   setState(() {
                     ausgewaehlteGroesse = wert;
                   });
                 },
               ),
             ),
-
             const SizedBox(width: 8),
-
             Expanded(
               child: TextField(
                 controller: kalorienProEinheitController,
@@ -258,6 +240,11 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
                 keyboardType: TextInputType.number,
               ),
             ),
+          ],
+        ),
+
+        Row(
+          children: [
             IconButton(
               onPressed: fotoAuswaehlen,
               icon: const Icon(Icons.photo_camera),
