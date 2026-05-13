@@ -87,6 +87,16 @@ class KalorienWochenanalyseKarte extends StatelessWidget {
     }
 
     final kalorienListe = letzteTage.map((tag) => tag.gesamtKalorien()).toList();
+    if (kalorienListe.every((kalorien) => kalorien == 0)) {
+      return const Card(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Text(
+            'Trage zuerst Mahlzeiten mit Kalorien ein, damit die Wochenanalyse angezeigt werden kann.',
+          ),
+        ),
+      );
+    }
 
     final durchschnitt =
         kalorienListe.reduce((a, b) => a + b) / kalorienListe.length;
