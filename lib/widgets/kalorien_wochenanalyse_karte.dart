@@ -20,45 +20,59 @@ class KalorienWochenanalyseKarte extends StatelessWidget {
     return sortiert.take(7).toList();
   }
 
-Widget infoZeile(String titel, String wert) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 4),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(titel),
-        Text(
-          wert,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ],
-    ),
-  );
-}
-String wochentagKurz(String datumText) {
-  final datum = DateTime.tryParse(datumText);
-
-  if (datum == null) {
-    return '';
+  Widget infoZeile(String titel, String wert) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(titel),
+          Text(
+            wert,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
   }
+  String wochentagKurz(String datumText) {
+    final datum = DateTime.tryParse(datumText);
 
-  const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-
-  return tage[datum.weekday - 1];
-}
-int berechneStreak(List<int> kalorienListe, double durchschnitt) {
-  int streak = 0;
-
-  for (final kalorien in kalorienListe.reversed) {
-    if (kalorien <= durchschnitt) {
-      streak++;
-    } else {
-      break;
+    if (datum == null) {
+      return '';
     }
+
+    const tage = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+
+    return tage[datum.weekday - 1];
+  }
+  int berechneStreak(List<int> kalorienListe, double durchschnitt) {
+    int streak = 0;
+
+    for (final kalorien in kalorienListe.reversed) {
+      if (kalorien <= durchschnitt) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  }
+  String motivationFuerStreak(int streak) {
+  if (streak >= 5) {
+    return 'Stark! Du bist seit mehreren Tagen im guten Bereich.';
   }
 
-  return streak;
+  if (streak >= 2) {
+    return 'Gut gemacht! Du baust langsam eine Serie auf.';
+  }
+
+  return 'Heute ist ein guter Tag, um neu zu starten.';
 }
+
+
+
   @override
   Widget build(BuildContext context) {
     final letzteTage = letzteSiebenTage();
@@ -80,6 +94,7 @@ int berechneStreak(List<int> kalorienListe, double durchschnitt) {
     final hoechsterWert = kalorienListe.reduce((a, b) => a > b ? a : b);
     final niedrigsterWert = kalorienListe.reduce((a, b) => a < b ? a : b);
     final streak = berechneStreak( kalorienListe,  durchschnitt,);
+    final motivation = motivationFuerStreak(streak);
 
     return Card(
       child: Padding(
@@ -101,6 +116,15 @@ int berechneStreak(List<int> kalorienListe, double durchschnitt) {
             infoZeile('Höchster Tag:', '$hoechsterWert kcal'),
             infoZeile('Niedrigster Tag:', '$niedrigsterWert kcal'),
             infoZeile('Aktuelle Serie', '$streak Tage'),
+
+            const SizedBox(height: 8),
+
+            Text(
+              motivation,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
 
             const SizedBox(height: 16),
 
