@@ -24,21 +24,27 @@ class TagesProvider extends ChangeNotifier {
 
   /// Fügt eine Mahlzeit mit Kategorie hinzu.
     Future<void> mahlzeitHinzufuegen(
-    String text, {
-    String kategorie = 'Sonstiges',
-    String? bildPfad,
-    required int kalorien,
-  }) async {
-    await _service.mahlzeitHinzufuegen(
-      eintrag,
-      text,
-      kategorie: kategorie,
-      bildPfad: bildPfad,
-      kalorien: kalorien,
-    );
+  String text, {
+  String kategorie = 'Sonstiges',
+  String? bildPfad,
+  required double menge,
+  required String einheit,
+  required String groesse,
+  required int kalorienProEinheit,
+}) async {
+  await _service.mahlzeitHinzufuegen(
+    eintrag,
+    text,
+    kategorie: kategorie,
+    bildPfad: bildPfad,
+    menge: menge,
+    einheit: einheit,
+    groesse: groesse,
+    kalorienProEinheit: kalorienProEinheit,
+  );
 
-   await historieAktualisierenUndSynchronisieren();
-  }
+  await historieAktualisierenUndSynchronisieren();
+}
 
   /// Löscht eine Mahlzeit.
   Future<void> mahlzeitLoeschen(int index) async {
