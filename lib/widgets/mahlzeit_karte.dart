@@ -53,7 +53,11 @@ class MahlzeitKarte extends StatelessWidget {
           : const Icon(Icons.restaurant),
        
         title: Text(mahlzeit.text),
-        subtitle: Text('${mahlzeit.kategorie} • ${mahlzeit.uhrzeit} • ${mahlzeit.kalorien} kcal'),
+        subtitle: Text(
+          '${mahlzeit.kategorie} • ${mahlzeit.uhrzeit}\n'
+          '${mahlzeit.menge.toStringAsFixed(0)} ${mahlzeit.einheit} • '
+          '${mahlzeit.groesse} • ${mahlzeit.kalorien} kcal',
+        ),
         trailing: beimLoeschen == null
             ? null
             : IconButton(
