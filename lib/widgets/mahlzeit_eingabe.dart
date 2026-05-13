@@ -7,7 +7,15 @@ import 'package:image_picker/image_picker.dart';
 /// Der Nutzer kann Text, Kategorie und optional ein Foto auswählen.
 class MahlzeitEingabe extends StatefulWidget {
   final TextEditingController controller;
-  final void Function(String text, String kategorie, String? bildPfad, int kalorien) beimHinzufuegen;
+  final void Function(
+  String text,
+  String kategorie,
+  String? bildPfad,
+  double menge,
+  String einheit,
+  String groesse,
+  int kalorienProEinheit,
+) beimHinzufuegen;
 
   const MahlzeitEingabe({
     super.key,
@@ -21,8 +29,12 @@ class MahlzeitEingabe extends StatefulWidget {
 
 class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
   final ImagePicker bildAuswahl = ImagePicker();
-  final TextEditingController kalorienController = TextEditingController();
+  final TextEditingController mengeController = TextEditingController();
+  final TextEditingController kalorienProEinheitController =
+      TextEditingController();
 
+  String ausgewaehlteEinheit = 'gramm';
+  String ausgewaehlteGroesse = 'normal';
   String ausgewaehlteKategorie = 'Sonstiges';
   String? bildPfad;
 
@@ -37,7 +49,8 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
 
   @override
   void dispose() {
-    kalorienController.dispose();
+    mengeController.dispose();
+    kalorienProEinheitController.dispose();
     super.dispose();
   }
 
@@ -75,7 +88,32 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
       return;
     } // ende if
 
-    final kalorien = int.tryParse(kalorienController.text) ?? 0;
+    final menge = double.tryParse(
+      mengeController.text.replaceAll(',', '.'),
+    ) ?? 0;
+
+    final kalorienProEinheit =
+        int.tryParse(kalorienProEinheitController.text) ?? 0;
+
+    if (menge <= 0 || kalorienProEinheit <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Bitte Menge und Kalorien richtig eingeben.'),
+        ),
+      );
+      return;
+    }
+
+    widget.beimHinzufuegen(
+      text,
+      ausgewaehlteKategorie,
+      bildPfad,
+      menge,
+      ausgewaehlteEinheit,
+      ausgewaehlteGroesse,
+      kalorienProEinheit,
+    );
+
     if (kalorien < 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -92,10 +130,11 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
       );
     }
 
-    widget.beimHinzufuegen(text, ausgewaehlteKategorie, bildPfad, kalorien,);
+    widget.beimHinzufuegen(text, ausgewaehlteKategorie, bildPfad, menge, ausgewaehlteEinheit, ausgewaehlteGroesse, kalorienProEinheit);
 
     widget.controller.clear();
-    kalorienController.clear();
+    mengeController.clear();
+    kalorienProEinheitController.clear();
 
     setState(() {
       bildPfad = null;
@@ -138,10 +177,83 @@ class _MahlzeitEingabeStatus extends State<MahlzeitEingabe> {
             ),
             Expanded(
               child: TextField(
-                controller: kalorienController,
+                controller: mengeController,
                 decoration: const InputDecoration(
-                  labelText: 'Kalorien',
-                  hintText: 'z.B. 450',
+                  labelText: 'Menge',
+                  hintText: 'z.B. 150',
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                initialValue: ausgewaehlteEinheit,
+                decoration: const InputDecoration(
+                  labelText: 'Einheit',
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: 'gramm',
+                    child: Text('Gramm'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'stueck',
+                    child: Text('Stück'),
+                  ),
+                ],
+                onChanged: (wert) {
+                  if (wert == null) return;
+                  setState(() {
+                    ausgewaehlteEinheit = wert;
+                  });
+                },
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            Expanded(
+              child: DropdownButtonFormField<String>(
+                initialValue: ausgewaehlteGroesse,
+                decoration: const InputDecoration(
+                  labelText: 'Größe',
+                ),
+                items: const [
+                  DropdownMenuItem(
+                    value: 'klein',
+                    child: Text('Klein'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'normal',
+                    child: Text('Normal'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'gross',
+                    child: Text('Groß'),
+                  ),
+                ],
+                onChanged: (wert) {
+                  if (wert == null) return;
+                  setState(() {
+                    ausgewaehlteGroesse = wert;
+                  });
+                },
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            Expanded(
+              child: TextField(
+                controller: kalorienProEinheitController,
+                decoration: InputDecoration(
+                  labelText: ausgewaehlteEinheit == 'gramm'
+                      ? 'kcal pro 100g'
+                      : 'kcal pro Stück',
+                  hintText: 'z.B. 250',
                 ),
                 keyboardType: TextInputType.number,
               ),
