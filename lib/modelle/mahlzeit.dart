@@ -6,6 +6,11 @@ class Mahlzeit {
   final String uhrzeit;
   final String? bildPfad;
   final int kalorien;
+  final double menge;
+  final String einheit; // gramm oder stueck
+  final String groesse; // klein, normal, gross
+  final int kalorienProEinheit;
+
 
   Mahlzeit({
     required this.text,
@@ -13,6 +18,10 @@ class Mahlzeit {
     required this.uhrzeit,
     this.bildPfad,
     this.kalorien = 0,
+    this.menge = 0,
+    this.einheit = 'gramm',
+    this.groesse = 'normal',
+    this.kalorienProEinheit = 0,
   });
 
   Map<String, dynamic> zuJson() {
@@ -22,6 +31,10 @@ class Mahlzeit {
       'uhrzeit': uhrzeit,
       'bildPfad': bildPfad,
       'kalorien': kalorien,
+      'menge': menge,
+      'einheit': einheit,
+      'groesse': groesse,
+      'kalorienProEinheit': kalorienProEinheit,
     };
   }
 
@@ -32,6 +45,10 @@ class Mahlzeit {
       uhrzeit: json['uhrzeit'] ?? '',
       bildPfad: json['bildPfad'],
       kalorien: json['kalorien'] ?? 0,
+      menge: (json['menge'] ?? 0).toDouble(),
+      einheit: json['einheit'] ?? 'gramm',    
+      groesse: json['groesse'] ?? 'normal',
+      kalorienProEinheit: json['kalorienProEinheit'] ?? 0,
     );
   }
 }
